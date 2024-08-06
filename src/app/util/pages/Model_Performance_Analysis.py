@@ -5,7 +5,7 @@ import sys
 from src.commons.commons import load_config_file
 from src.commons.commons import read_datasets_from_dict
 from src.commons.commons import all_capitals
-from src.visualization.scatter_plots import scatter_plot_metric_feature
+from src.visualization.scatter_plots import multivariate_metric_feature
 from src.commons.commons import snake_case
 from src.commons.commons import pretty_string
 from src.app.util.constants import ModelPerformanceAnalysisPage
@@ -129,7 +129,7 @@ def visualize_data(data, set, model, regions, x_axis, y_axis, aggregated):
         st.session_state.dict_cases = {}
 
     # Visualize scatter plot
-    fig = scatter_plot_metric_feature(
+    fig = multivariate_metric_feature(
         data=filtered_data,
         x_axis=const.mapping_buttons_columns[x_axis],
         y_axis=const.mapping_buttons_metrics[y_axis],

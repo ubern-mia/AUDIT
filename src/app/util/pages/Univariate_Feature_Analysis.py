@@ -3,7 +3,7 @@ from streamlit_plotly_events import plotly_events
 
 from src.app.util.constants import UnivariatePage
 from src.commons.commons import load_config_file, read_datasets_from_dict, run_itk_snap
-from src.visualization.boxplot import boxplot
+from src.visualization.boxplot import boxplot, boxplot_highlighter
 from src.visualization.histograms import custom_histogram, custom_distplot
 
 const = UnivariatePage()
@@ -50,6 +50,7 @@ def setup_datasets_sidebar(data_paths):
                 options=data_paths.keys(),
                 default=data_paths.keys()
             )
+        with st.sidebar.expander("Features", expanded=True):
             select_x_axis = st.selectbox(
                 label="X-axis variable:",
                 options=allowed_features.keys(),
@@ -105,7 +106,7 @@ def setup_filtering_options(df, feature):
     with st.sidebar.expander("Filtering", expanded=False):
         filtering_method = st.radio(
             label="Filter data based on",
-            options=["None", "Removing outliers", "Clipping outliers", "Standard deviations"],
+            options=["No filter", "Removing outliers", "Clipping outliers", "Standard deviations"],
             captions=["",
                       "It remove values outside a specified range",
                       "It restricts the range of data by capping values below and above a threshold to the lower "
@@ -175,7 +176,7 @@ def main_plotting_logic(data, plot_type, select_x_axis, n_bins, bins_size):
     st.markdown(const.description)
 
 
-def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels):
+def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels, plot_type, highlight_subject):
     """
     Function to handle interactive boxplot and ITK-SNAP integration.
 
@@ -185,7 +186,9 @@ def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels):
     """
     st.markdown("**Click on a point to visualize it in ITK-SNAP app.**")
     data.reset_index(drop=True, inplace=True)
-    boxplot_fig = boxplot(data, x_axis=allowed_features.get(select_x_axis), color_var="set")
+    boxplot_fig = boxplot_highlighter(data, x_axis=allowed_features.get(select_x_axis), color_var="set",
+                                      plot_type=plot_type, highlight_point=highlight_subject)
+
     selected_points = plotly_events(boxplot_fig, click_event=True, override_height=None)
 
     # Handle selected point
@@ -214,23 +217,28 @@ def univariate():
     st.header(const.header)
     st.markdown(const.sub_header)
 
-    # Select type of plot
-    plot_type = st.selectbox(label="Type of plot to visualize", options=["Histogram", "Probability"], index=1)
-
     # Load datasets
     df = read_datasets_from_dict(data_paths)
 
-    # Set up sidebar options
+    # Set up sidebar and plot options
     selected_sets, select_x_axis = setup_datasets_sidebar(data_paths)
-    n_bins, bins_size = setup_histogram_options(plot_type)
     filtering_method, remove_low, remove_up, clip_low, clip_up, num_std_devs = setup_filtering_options(df, select_x_axis)
 
     # filtering data
     df = filter_datasets(df, filtering_method, selected_sets, select_x_axis, remove_low, remove_up, clip_low, clip_up, num_std_devs)
+    with st.sidebar.expander(label="Highlight subject"):
+        highlight_subject = st.selectbox(label='Enter patient ID to highlight', options=[None] + list(df.ID.unique()),
+                                         index=0)
+    # Run interactive boxplot logic
+    st.subheader("Boxplot")
+    st.markdown(const.description_boxplot)
+    plot_type = st.selectbox(label="Type of plot to visualize", options=["Box", "Violin"], index=0)
+    main_interactive_boxplot(datasets_root_path, df, select_x_axis, config.get("labels"), plot_type, highlight_subject)
 
     # Run main plotting logic
+    st.subheader("Continuous distribution")
+    st.markdown(const.description_distribution)
+    plot_type = st.selectbox(label="Type of plot to visualize", options=["Histogram", "Probability"], index=1)
+    n_bins, bins_size = setup_histogram_options(plot_type)
     main_plotting_logic(df, plot_type, select_x_axis, n_bins, bins_size)
-
-    # Run interactive boxplot logic
-    main_interactive_boxplot(datasets_root_path, df, select_x_axis, config.get("labels"))
 

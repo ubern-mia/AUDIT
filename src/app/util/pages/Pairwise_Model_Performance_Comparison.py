@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-from src.visualization.barplots import barplot_v2, aggregated_barplot
+from src.visualization.barplots import individual_pairwise_model_performance, aggregated_pairwise_model_performance
 from src.app.util.constants import PairwiseModelPerformanceComparisonPage
 from src.commons.commons import load_config_file, pretty_string, read_datasets_from_dict, all_capitals, snake_case, remove_null_values_from_array
 from src.commons.statistical_tests import wilcoxon_test, normality_test, paired_ttest
@@ -154,10 +154,10 @@ def run_functionality(data, df_for_stats_test, selected_aggregated, selected_set
 
     # plot
     if selected_aggregated:
-        fig = aggregated_barplot(data)
+        fig = aggregated_pairwise_model_performance(data)
         st.plotly_chart(fig, theme="streamlit", use_container_width=False, scrolling=True)
     else:
-        all_figures = barplot_v2(data)
+        all_figures = individual_pairwise_model_performance(data)
         for fig in all_figures:
             st.plotly_chart(fig, theme="streamlit", use_container_width=False, scrolling=True)
 

@@ -180,24 +180,26 @@ class UnivariatePage(ConstantsAPP):
 
         self.header = """Univariate feature analysis"""
         self.sub_header = """
-            **Description**: The following figure provides a comprehensive and interactive visualization of 
+            **Description**: It provides a comprehensive and interactive visualization of 
             single-variable distributions derived from MRI sequences or ground truth segmentations. This univariate 
             analysis is essential for those users aiming to explore and understand the distribution of individual 
             features in their datasets. The dashboard is equipped with interactive controls that allow users to 
             dynamically adjust the visualization parameters.
+            """
 
+        self.description_boxplot = """
+            The inclusion of a boxplot offers a robust summary of the feature's distribution, highlighting key 
+            statistics such as the median, quartiles, and potential outliers. The boxplot complements the histogram and 
+            probability distribution, providing additional insights into the data's spread and central tendency.
+            """
+
+        self.description_distribution = """
             - **Histogram**: This visual representation helps in understanding the frequency distribution of the data points 
                         across different value ranges.
             - **Probability distribution**: Users can also view probability distributions, offering a smooth and continuous 
                         representation of the data, which is particularly useful for identifying underlying patterns 
                         and trends.
-            """
-
-        self.description = """
-            The inclusion of a boxplot offers a robust summary of the feature's distribution, highlighting key 
-            statistics such as the median, quartiles, and potential outliers. The boxplot complements the histogram and 
-            probability distribution, providing additional insights into the data's spread and central tendency.
-            """
+        """
 
         self.mapping_buttons_columns = {
             "Lesion size (All labels)": "lesion_size",

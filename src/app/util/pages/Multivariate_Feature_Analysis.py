@@ -3,7 +3,7 @@ import streamlit as st
 from src.app.util.constants import MultivariatePage
 from src.commons.commons import load_config_file, run_itk_snap
 from src.commons.commons import read_datasets_from_dict
-from src.visualization.scatter_plots import scatter_plot_features
+from src.visualization.scatter_plots import multivariate_features, multivariate_features_highlighter
 from streamlit_plotly_events import plotly_events
 
 const = MultivariatePage()
@@ -56,8 +56,6 @@ def setup_sidebar(data_paths, allowed_features):
                 index=0
             )
 
-        st.write("[Contact us - MIA group](%s)" % const.mia_url)
-
         return selected_sets, select_x_axis, select_y_axis, select_color_axis
 
 
@@ -83,13 +81,19 @@ def main(sets, x_axis, y_axis, color_axis):
     # Scatter plot visualization
     st.markdown("**Click on a point to visualize it in ITK-SNAP app.**")
     concat.reset_index(drop=True, inplace=True)
-    fig = scatter_plot_features(data=concat,
+
+    with st.sidebar.expander(label="Highlight subject"):
+        highlight_subject = st.selectbox(label='Enter patient ID to highlight', options=[None] + list(concat.ID.unique()),
+                                         index=0)
+
+    fig = multivariate_features_highlighter(data=concat,
                                 x_axis=features.get(x_axis),
                                 y_axis=features.get(y_axis),
                                 y_label=y_axis,
                                 x_label=x_axis,
                                 color=features.get(color_axis, "Dataset"),
-                                legend_title=color_axis
+                                legend_title=color_axis,
+                                highlight_point=highlight_subject
                                 )
     selected_points = plotly_events(fig, click_event=True, override_height=None)
 

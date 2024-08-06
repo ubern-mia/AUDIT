@@ -4,7 +4,7 @@ import streamlit as st
 from src.app.util.constants import LongitudinalAnalysis
 from src.commons.commons import load_config_file, run_itk_snap
 from src.commons.commons import read_datasets_from_dict
-from src.visualization.scatter_plots import scatter_plot_features
+from src.visualization.scatter_plots import multivariate_features
 from streamlit_plotly_events import plotly_events
 from src.commons.commons import all_capitals
 from src.commons.commons import pretty_string

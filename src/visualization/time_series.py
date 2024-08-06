@@ -1,7 +1,9 @@
 import plotly.graph_objects as go
 from plotly.colors import qualitative
 from src.commons.commons import pretty_string
+from src.visualization.constants import Dashboard
 
+constants = Dashboard()
 
 def plot_longitudinal(data, temporal_axis='timepoint', lines=['lesion_size', 'lesion_size_pred']):
     fig = go.Figure()
@@ -35,7 +37,7 @@ def plot_longitudinal(data, temporal_axis='timepoint', lines=['lesion_size', 'le
             font=dict(color=colors[len(lines)], size=16)
         )
 
-    fig.update_layout(title="", template='simple_white', height=600, width=1000,
+    fig.update_layout(title="", template=constants.template, height=600, width=1000,
                       xaxis_title=pretty_string(temporal_axis), yaxis_title="Lesion size",
                       legend=dict(
                           orientation="h",
@@ -85,7 +87,7 @@ def plot_longitudinal2(data, temporal_axis='timepoint', lines=['lesion_size', 'l
 
 
 
-    fig.update_layout(template='simple_white', height=600, width=1000,
+    fig.update_layout(template=constants.template, height=600, width=1000,
                       xaxis_title=pretty_string(temporal_axis), yaxis_title="Lesion size",
                       title="",
                       legend=dict(

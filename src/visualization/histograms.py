@@ -33,19 +33,17 @@ def plot_histogram(data, x_axis, color_var, n_bins, y_label=None, x_label=None):
     fig = px.histogram(data,
                        x=x_axis,
                        color=color_var,
-                       # marginal="violin", # can be `box`, `violin`
                        hover_data=data.columns,
                        nbins=n_bins,
                        barmode="stack")
 
-    fig.update_layout(template='simple_white',
+    fig.update_layout(template=constants.template,
                       height=500,
                       width=900,
                       showlegend=True,
                       xaxis_title=x_label,
                       yaxis_title=y_label,
-                      legend_title="Dataset",
-                      # barmode='stack'
+                      legend_title="Dataset"
                       )
     fig.update_traces(opacity=0.6)
 
@@ -86,7 +84,7 @@ def custom_histogram(data, x_axis, color_var, n_bins, bins_size=None, y_label=No
         ))
 
     # Update layout for stacked histogram
-    fig.update_layout(template='simple_white',
+    fig.update_layout(template=constants.template,
                       height=400,
                       width=900,
                       showlegend=True,
@@ -99,7 +97,7 @@ def custom_histogram(data, x_axis, color_var, n_bins, bins_size=None, y_label=No
                           yanchor="top",
                           xanchor="right",
                       )
-                      )
+    )
 
     if bins_size:
         fig.update_traces(opacity=0.6, xbins_size=bins_size)
@@ -107,9 +105,8 @@ def custom_histogram(data, x_axis, color_var, n_bins, bins_size=None, y_label=No
         fig.update_traces(opacity=0.6, xbins=dict(
             start=data[x_axis].min(),
             end=data[x_axis].max(),
-            size=bin_size
+            size=bin_size)
         )
-                          )
 
     # fig.update_traces(marker_line_width=1, marker_line_color="Black")
 
@@ -162,7 +159,7 @@ def custom_distplot(data, x_axis, color_var, y_label=None, x_label=None, histnor
 
     # Update layout
     fig.update_layout(
-        template='simple_white',
+        template=constants.template,
         height=400,
         width=900,
         showlegend=True,
@@ -173,6 +170,16 @@ def custom_distplot(data, x_axis, color_var, y_label=None, x_label=None, histnor
         legend=dict(
             yanchor="top",
             xanchor="right",
+        ),
+        xaxis=dict(
+            color='black',
+            title_font=dict(color='black', size=16),
+            tickfont=dict(color='black', size=14)
+        ),
+        yaxis=dict(
+            color='black',
+            title_font=dict(color='black', size=16),
+            tickfont=dict(color='black', size=14)
         )
     )
 
