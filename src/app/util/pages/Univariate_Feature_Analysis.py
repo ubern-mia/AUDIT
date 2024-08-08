@@ -3,7 +3,7 @@ from streamlit_plotly_events import plotly_events
 
 from src.app.util.constants import UnivariatePage
 from src.commons.commons import load_config_file, read_datasets_from_dict, run_itk_snap
-from src.visualization.boxplot import boxplot, boxplot_highlighter
+from src.visualization.boxplot import boxplot_highlighter
 from src.visualization.histograms import custom_histogram, custom_distplot
 
 const = UnivariatePage()
@@ -80,7 +80,8 @@ def setup_histogram_options(plot_type):
                                          max_value=200,
                                          value=100,
                                          step=1,
-                                         placeholder="Type a number...")
+                                         placeholder="Type a number...",
+                                         help="The actual number of bins will be the closest value to your selection based on distribution.")
             elif option == "Bins size":
                 bins_size = st.number_input("Select bins size",
                                             min_value=1,
@@ -152,12 +153,6 @@ def main_plotting_logic(data, plot_type, select_x_axis, n_bins, bins_size):
         select_x_axis (str): Selected X-axis variable.
         n_bins (int): Number of bins for histogram.
         bins_size (int): Bin size for histogram.
-        filtering_method (str): Method of filtering data.
-        remove_low (float): Lower bound for removing outliers.
-        remove_up (float): Upper bound for removing outliers.
-        clip_low (float): Lower bound for clipping outliers.
-        clip_up (float): Upper bound for clipping outliers.
-        num_std_devs (int): Number of standard deviations for filtering.
     """
 
     # Plot visualization
@@ -165,12 +160,12 @@ def main_plotting_logic(data, plot_type, select_x_axis, n_bins, bins_size):
         fig = custom_distplot(data, x_axis=allowed_features.get(select_x_axis), color_var="set", histnorm='probability')
     else:
         if n_bins:
-            fig = custom_histogram(data, x_axis=allowed_features[select_x_axis], color_var="set", n_bins=n_bins)
+            fig = custom_histogram(data, x_axis=allowed_features.get(select_x_axis), color_var="set", n_bins=n_bins)
         elif bins_size:
             fig = custom_histogram(data, x_axis=allowed_features.get(select_x_axis), color_var="set",
                                    n_bins=None, bins_size=bins_size)
         else:
-            st.write(":red[Please, select the number of bins or bins size]")
+            st.write(":red[Please, select the number of bins or bins size]",)
 
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
     st.markdown(const.description)
@@ -185,25 +180,28 @@ def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels, pl
         select_x_axis (str): Selected X-axis variable.
     """
     st.markdown("**Click on a point to visualize it in ITK-SNAP app.**")
-    data.reset_index(drop=True, inplace=True)
+
     boxplot_fig = boxplot_highlighter(data, x_axis=allowed_features.get(select_x_axis), color_var="set",
                                       plot_type=plot_type, highlight_point=highlight_subject)
-
     selected_points = plotly_events(boxplot_fig, click_event=True, override_height=None)
+
+    selected_case, st.session_state.selected_case = None, None
 
     # Handle selected point
     info_placeholder = st.empty()
-    selected_case, st.session_state.selected_case = None, None
-    if selected_points:
+    if selected_points and len(selected_points) == 1:  # last condition to avoid that clicking inside the boxplot randomly opens a patient
         point = selected_points[0]
         filtered_set_data = data[data.set == point['y']]
-        selected_case = filtered_set_data.iloc[point['pointIndex']]["ID"]
+        if point["curveNumber"] < len(data.set.unique()):
+            selected_case = filtered_set_data.iloc[point['pointIndex']]["ID"]
+        else:  # to open the case highlighted when clicking on it
+            selected_case = highlight_subject
         info_placeholder.write(f'Open ITK-SNAP for visualizing the case: {selected_case}')
 
     # Visualize case in ITK-SNAP
     if selected_case != st.session_state.selected_case:
         st.session_state.selected_case = selected_case
-        if selected_case and selected_case != "Select a case":
+        if selected_case and selected_case != "Select a case" and len(selected_points) == 1:  # last condition to avoid that clicking inside the boxplot randomly opens a patient
             dataset = data[data.ID == selected_case]['set'].unique()[0].lower()
 
             verification_check = run_itk_snap(path=datasets_root_path, dataset=dataset, case=selected_case,
@@ -231,6 +229,7 @@ def univariate():
                                          index=0)
     # Run interactive boxplot logic
     st.subheader("Boxplot")
+    df.reset_index(drop=True, inplace=True)
     st.markdown(const.description_boxplot)
     plot_type = st.selectbox(label="Type of plot to visualize", options=["Box", "Violin"], index=0)
     main_interactive_boxplot(datasets_root_path, df, select_x_axis, config.get("labels"), plot_type, highlight_subject)

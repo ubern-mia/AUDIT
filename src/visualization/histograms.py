@@ -80,7 +80,8 @@ def custom_histogram(data, x_axis, color_var, n_bins, bins_size=None, y_label=No
         fig.add_trace(go.Histogram(
             x=filtered_data[x_axis],
             name=color_value,
-            marker=dict(color=color_map[color_value], line=dict(width=.8, color="black"))
+            marker=dict(color=color_map[color_value], line=dict(width=.8, color="black")),
+            autobinx=False
         ))
 
     # Update layout for stacked histogram

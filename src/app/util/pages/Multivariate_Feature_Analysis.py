@@ -87,22 +87,25 @@ def main(sets, x_axis, y_axis, color_axis):
                                          index=0)
 
     fig = multivariate_features_highlighter(data=concat,
-                                x_axis=features.get(x_axis),
-                                y_axis=features.get(y_axis),
-                                y_label=y_axis,
-                                x_label=x_axis,
-                                color=features.get(color_axis, "Dataset"),
-                                legend_title=color_axis,
-                                highlight_point=highlight_subject
-                                )
+                                            x_axis=features.get(x_axis),
+                                            y_axis=features.get(y_axis),
+                                            y_label=y_axis,
+                                            x_label=x_axis,
+                                            color=features.get(color_axis, "Dataset"),
+                                            legend_title=color_axis,
+                                            highlight_point=highlight_subject
+                                            )
     selected_points = plotly_events(fig, click_event=True, override_height=None)
 
     # retrieving selected ID
     selected_case, st.session_state.selected_case = None, None
     if selected_points:
-        point = selected_points[0]
-        filtered_set_data = concat[concat.set == concat.set.unique()[point['curveNumber']]]
-        selected_case = filtered_set_data.iloc[point['pointIndex']]["ID"]
+        try:
+            point = selected_points[0]
+            filtered_set_data = concat[concat.set == concat.set.unique()[point['curveNumber']]]
+            selected_case = filtered_set_data.iloc[point['pointIndex']]["ID"]
+        except IndexError:
+            selected_case = highlight_subject
 
     # Visualize case in ITK-SNAP
     if selected_case != st.session_state.selected_case:
