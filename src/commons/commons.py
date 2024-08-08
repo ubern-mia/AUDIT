@@ -82,11 +82,8 @@ def read_datasets_from_dict(name_path_dict, col_name="set"):
 
 def run_itk_snap(path, dataset, case, labels=None):
     verification_check = True
-    t1 = f"{path}{dataset}/{dataset}_images/{case}/{case}_t1.nii.gz"
-    t1c = f"{path}{dataset}/{dataset}_images/{case}/{case}_t1ce.nii.gz"
-    t2 = f"{path}{dataset}/{dataset}_images/{case}/{case}_t2.nii.gz"
-    flair = f"{path}{dataset}/{dataset}_images/{case}/{case}_flair.nii.gz"
-    seg = f"{path}{dataset}/{dataset}_images/{case}/{case}_seg.nii.gz"
+    names = ["t1", "t1ce", "t2", "flair", "seg"]
+    t1, t1ce, t2, flair, seg = [f"{path}{dataset}/{dataset}_images/{case}/{case}_{n}.nii.gz" for n in names]
 
     if labels:
         labels_path = f"/Users/caumente/Projects/robustness/itk_labels.txt"
@@ -94,7 +91,7 @@ def run_itk_snap(path, dataset, case, labels=None):
         command = [
                       "open", "-n", "-a", "ITK-SNAP", "--args",
                       "-l", labels_path,
-                      "-g", t1c,
+                      "-g", t1ce,
                       "-s", seg,
                       "-o"
                   ] + [t1, t2, flair]
@@ -102,13 +99,13 @@ def run_itk_snap(path, dataset, case, labels=None):
         command = [
                       "open", "-n", "-a", "ITK-SNAP", "--args",
                       # "-l", t1,
-                      "-g", t1c,
+                      "-g", t1ce,
                       "-s", seg,
                       "-o"
                   ] + [t1, t2, flair]
 
     # Checking if both path exist
-    if os.path.exists(t1c) and os.path.exists(seg):
+    if os.path.exists(t1ce) and os.path.exists(seg):
         subprocess.run(command)
     # elif os.path.exists(t1c) and not os.path.exists(seg_path):
     #     subprocess.run(["open", "-n", "-a", "ITK-SNAP", "--args", "-g", img_path])

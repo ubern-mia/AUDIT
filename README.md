@@ -1,4 +1,4 @@
-![alt text](https://github.com/caumente/AUDIT/blob/main/src/app/util/images/audit_logo.png)
+![alt text](https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT.png)
 
 <a href="https://github.com/caumente/AUDIT" title="Go to GitHub repo"><img src="https://img.shields.io/static/v1?label=caumente&message=rascore&color=e78ac3&logo=github" alt="caumente - rascore"></a>
 <a href="https://github.com/caumente/AUDIT"><img src="https://img.shields.io/github/stars/caumente/AUDIT?style=social" alt="stars - rascore"></a>
