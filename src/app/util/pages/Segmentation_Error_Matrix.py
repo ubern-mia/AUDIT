@@ -12,7 +12,7 @@ from src.app.util.constants import SegmentationErrorMatrixPage
 from src.commons.sequences import read_segmentation, read_prediction
 from src.metrics.confusion_matrix import mistakes_per_class_optim
 from src.metrics.confusion_matrix import normalize_matrix_per_row
-from src.visualization.confusion_matrices import plt_confusion_matrix
+from src.visualization.confusion_matrices import plt_confusion_matrix_plotly
 from src.visualization.sequences import plot_seq
 
 const = SegmentationErrorMatrixPage()
@@ -87,8 +87,8 @@ def visualize_confusion_matrix(cm, classes, normalized):
         classes (list): List of class labels.
         normalized (bool): Whether the confusion matrix is normalized.
     """
-    fig = plt_confusion_matrix(cm, classes, normalized)
-    st.pyplot(fig=fig, clear_figure=False, use_container_width=True)
+    fig = plt_confusion_matrix_plotly(cm, classes, normalized)
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 
 def compute_and_display_cm(seg, pred, labels, classes, normalized):
@@ -146,6 +146,7 @@ def main(selected_dataset, selected_model, selected_id, models, patients_in_path
         labels (list): List of label values.
         classes (list): List of class names.
     """
+
     averaged = st.checkbox("Averaged per number of patients", value=True, help="It averages the errors per number of patients within the corresponding dataset, if enabled.")
     normalized = st.checkbox("Normalized per ground truth label", value=True, help="It normalizes the errors per class, if enabled.")
     if selected_id != "All":
@@ -178,7 +179,7 @@ def main(selected_dataset, selected_model, selected_id, models, patients_in_path
 def matrix():
     st.subheader(const.header)
     st.markdown(const.sub_header)
+    st.markdown(const.description)
 
     selected_dataset, selected_model, selected_id, models, patients_in_path = setup_sidebar(config, datasets)
     main(selected_dataset, selected_model, selected_id, models, patients_in_path, labels, classes)
-    st.markdown(const.description)
