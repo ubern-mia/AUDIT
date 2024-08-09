@@ -45,7 +45,7 @@ def setup_sidebar(data, aggregated):
         with st.sidebar.expander("Models", expanded=True):
             selected_model = st.selectbox(
                 label="Select model to visualize:",
-                options=[all_capitals(pretty_string(m)) for m in data.model.unique()],
+                options=[all_capitals(pretty_string(m)) for m in data[data.set.isin(selected_set)].model.unique()],
             )
 
         # Select features
@@ -220,7 +220,3 @@ def performance():
                    x_axis=select_x_axis, y_axis=select_y_axis, aggregated=aggregated)
 
     st.markdown(const.description)
-
-    with st.sidebar:
-        st.write(const.contact)
-

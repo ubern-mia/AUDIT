@@ -84,11 +84,11 @@ def multivariate_features_highlighter(data, x_axis, y_axis, y_label=None, x_labe
             customdata=point[['ID', x_axis, y_axis]].values.tolist(),
             mode='markers',
             showlegend=False,
-            marker=dict(size=12, color='#C70039', symbol='circle', line=dict(width=1, color='DarkSlateGrey')),
+            marker=dict(size=12, color='#e31231', symbol='circle', line=dict(width=1, color='DarkSlateGrey')),
             hoverlabel=dict(
                 bordercolor='#444',
                 font=dict(color='white'),
-                bgcolor='#C70039'
+                bgcolor='#e31231'
             )
         ))
 
@@ -137,31 +137,64 @@ def multivariate_metric_feature(
                       xaxis_title=x_label,
                       yaxis_title=y_label,
                       legend_title=color,
-                      legend=dict(yanchor="top", xanchor="right")
+                      #legend=dict(yanchor="top", xanchor="right")
                       )
 
     fig.update_traces(marker=dict(size=12, line=dict(width=1, color='DarkSlateGrey')),
                       selector=dict(mode='markers'),
                       hovertemplate='ID: %{customdata[0]}<br>'
-                                    f'{pretty_string(x_axis)}: ' + '%{customdata[1]:,.2f}<br>'
-                                    f'{pretty_string(y_axis)}: ' + '%{customdata[2]:,.3f}<br>'
+                                    f'{x_label}: ' + '%{customdata[1]:,.2f}<br>'
+                                    f'{y_label}: ' + '%{customdata[2]:,.3f}<br>'
                                     'Model: %{customdata[3]}'
                       )
 
     # fig.for_each_yaxis(lambda y: pretty_string(y_label))
 
-    # highligting specific patients
+    # Highlight specific patients
     if highlighted_patients is not None:
         highlighted_data = data[data["ID"].isin(highlighted_patients)]
-        fig.add_traces(px.scatter(highlighted_data, x=x_axis, y=y_axis, facet_col=facet_col,
-                       custom_data=["ID", x_axis, y_axis, highlighted_data["model"].apply(pretty_string).apply(all_capitals)]
-                       ).update_traces(marker=dict(size=12, line=dict(width=2, color='Black'), color="red"),
-                                       selector=dict(mode='markers'),
-                                       hovertemplate='ID: %{customdata[0]}<br> '
-                                                     '{pretty_string(x_axis)}: %{customdata[1]:,.2f}<br>'
-                                                     '{pretty_string(y_axis)}: %{customdata[2]:,.3f}<br>'
-                                                     'Model: %{customdata[3]}',
-                                       hoverlabel=dict(bgcolor = ['#ff99c8'])).data
+
+        # Prepare custom data for hover template
+        customdata = [
+            "ID",
+            x_axis,
+            y_axis,
+            highlighted_data["model"].apply(pretty_string).apply(all_capitals)
+        ]
+
+        # Define marker properties
+        marker_props = dict(
+            size=12,
+            line=dict(width=2, color='#444'),
+            color="#e31231"
         )
+
+        # Define hover template
+        hover_template = ('ID: %{customdata[0]}<br>'
+                          f'{x_label}:' + '%{customdata[1]:,.2f}<br>'
+                          f'{y_label}:' + '%{customdata[2]:,.3f}<br>'
+                          'Model: %{customdata[3]}'
+        )
+
+        # Define hover label properties
+        hover_label_props = dict(bgcolor=['#e31231'], bordercolor='#444', font=dict(color='white'))
+
+        # Create and add scatter plot traces
+        scatter_plot = px.scatter(
+            highlighted_data,
+            x=x_axis,
+            y=y_axis,
+            facet_col=facet_col,
+            custom_data=customdata
+        ).update_traces(
+            marker=marker_props,
+            selector=dict(mode='markers'),
+            hovertemplate=hover_template,
+            hoverlabel=hover_label_props
+        )
+
+        fig.add_traces(scatter_plot.data)
+
+
 
     return fig
