@@ -214,9 +214,12 @@ def performance():
     merged_data = merge_features_and_metrics(features=features_paths, metrics=metrics_paths, aggregate=aggregated)
 
     # Perform page logic
-    selected_set, selected_model, select_x_axis, select_y_axis, selected_regions = setup_sidebar(data=merged_data,
-                                                                                                 aggregated=aggregated)
-    visualize_data(data=merged_data, set=selected_set, model=selected_model, regions=selected_regions,
-                   x_axis=select_x_axis, y_axis=select_y_axis, aggregated=aggregated)
+    selected_sets, selected_model, select_x_axis, select_y_axis, selected_regions = setup_sidebar(data=merged_data,
+                                                                                                  aggregated=aggregated)
+    if len(selected_sets) == 0:
+        st.error('Please, select a dataset from the left sidebar', icon="🚨")
+    else:
+        visualize_data(data=merged_data, set=selected_sets, model=selected_model, regions=selected_regions,
+                       x_axis=select_x_axis, y_axis=select_y_axis, aggregated=aggregated)
 
-    st.markdown(const.description)
+        st.markdown(const.description)

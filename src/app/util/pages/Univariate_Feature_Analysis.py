@@ -220,24 +220,27 @@ def univariate():
 
     # Set up sidebar and plot options
     selected_sets, select_x_axis = setup_datasets_sidebar(data_paths)
-    filtering_method, remove_low, remove_up, clip_low, clip_up, num_std_devs = setup_filtering_options(df, select_x_axis)
+    if len(selected_sets) == 0:
+        st.error('Please, select a dataset from the left sidebar', icon="🚨")
+    else:
+        filtering_method, remove_low, remove_up, clip_low, clip_up, num_std_devs = setup_filtering_options(df, select_x_axis)
 
-    # filtering data
-    df = filter_datasets(df, filtering_method, selected_sets, select_x_axis, remove_low, remove_up, clip_low, clip_up, num_std_devs)
-    with st.sidebar.expander(label="Highlight subject"):
-        highlight_subject = st.selectbox(label='Enter patient ID to highlight', options=[None] + list(df.ID.unique()),
-                                         index=0)
-    # Run interactive boxplot logic
-    st.subheader("Boxplot")
-    df.reset_index(drop=True, inplace=True)
-    st.markdown(const.description_boxplot)
-    plot_type = st.selectbox(label="Type of plot to visualize", options=["Box", "Violin"], index=0)
-    main_interactive_boxplot(datasets_root_path, df, select_x_axis, config.get("labels"), plot_type, highlight_subject)
+        # filtering data
+        df = filter_datasets(df, filtering_method, selected_sets, select_x_axis, remove_low, remove_up, clip_low, clip_up, num_std_devs)
+        with st.sidebar.expander(label="Highlight subject"):
+            highlight_subject = st.selectbox(label='Enter patient ID to highlight', options=[None] + list(df.ID.unique()),
+                                             index=0)
+        # Run interactive boxplot logic
+        st.subheader("Boxplot")
+        df.reset_index(drop=True, inplace=True)
+        st.markdown(const.description_boxplot)
+        plot_type = st.selectbox(label="Type of plot to visualize", options=["Box", "Violin"], index=0)
+        main_interactive_boxplot(datasets_root_path, df, select_x_axis, config.get("labels"), plot_type, highlight_subject)
 
-    # Run main plotting logic
-    st.subheader("Continuous distribution")
-    st.markdown(const.description_distribution)
-    plot_type = st.selectbox(label="Type of plot to visualize", options=["Histogram", "Probability"], index=1)
-    n_bins, bins_size = setup_histogram_options(plot_type)
-    main_plotting_logic(df, plot_type, select_x_axis, n_bins, bins_size)
+        # Run main plotting logic
+        st.subheader("Continuous distribution")
+        st.markdown(const.description_distribution)
+        plot_type = st.selectbox(label="Type of plot to visualize", options=["Histogram", "Probability"], index=1)
+        n_bins, bins_size = setup_histogram_options(plot_type)
+        main_plotting_logic(df, plot_type, select_x_axis, n_bins, bins_size)
 

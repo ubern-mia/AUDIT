@@ -256,7 +256,3 @@ def pairwise_comparison():
 
         # calling the main functionality
         run_functionality(df, df_for_stats_test, selected_aggregated, selected_set, baseline_model, new_model, selected_metric, num_max_patients, selected_sorted, selected_order)
-
-    with st.sidebar:
-        st.write("[Contact us - MIA group](%s)" % const.mia_url)
-
