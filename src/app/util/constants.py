@@ -29,7 +29,6 @@ class ConstantsAPP:
             'Tumor location (NEC)': 'nec_tumor_location'
         }
 
-
         self.mapping_order_by = {
             "Ascending": True,
             "Descending": False
@@ -173,6 +172,7 @@ class ConstantsAPP:
             'flair_ASM_std': 'texture'
         }
 
+
 class UnivariatePage(ConstantsAPP):
 
     def __init__(self):
@@ -257,9 +257,6 @@ class MultivariatePage(ConstantsAPP):
             more detailed information. This interactivity enhances the analytical capabilities, allowing for a more 
             thorough investigation of the data.
         """
-
-
-
 
         self.mapping_buttons_columns = {
             "Lesion size (All labels)": "lesion_size",
@@ -376,37 +373,36 @@ class PairwiseModelPerformanceComparisonPage(ConstantsAPP):
         **Description**: The following figure illustrates the percentage difference in a selected 
         metric between two models across various regions for each patient. In this bar chart, each bar represents the 
         difference in a selected metric for a specific brain region (Average, NEC, ENH, and EDE), comparing the baseline
-        model with the new model.
-        
-        The length of each bar indicates the magnitude of the improvement or decline in performance, with longer bars 
-        representing larger differences. The green color of the bars indicates the overall gain achieved by the new 
-        model over the baseline model.
+        model with the new model. The length of each bar indicates the magnitude of the improvement or decline in 
+        performance, with longer bars representing larger differences. The green color of the bars indicates the overall
+        gain achieved by the new model over the baseline model.
         
         Additionally, there is a checkbox labeled "Aggregated," which, when checked, aggregates the metric across all 
         patients, providing a summarized view of the model's performance differences.
         """
 
         self.description = """
-            - **Average**: The overall average difference across all regions.
-            - **NEC**: The difference for the necrotic core region.
-            - **ENH**: The difference for the enhancing tumor region.
-            - **EDE**: The difference for the edema region.
+        When comparing the performance of two models, several metrics can be used to quantify the difference: Absolute, 
+        Relative, and Ratio. A detailed explanation can be found below.
+        
+        - **Absolute improvement** measures the direct difference between the performance metrics of two models. 
+        
+        - **Relative improvement** provides a measure of the difference between two metrics relative to the magnitude of the 
+        reference metric (typically the value of baseline model).
+        
+        - **Improvement Ratio** measures how much better one model is compared to another by directly comparing their metric ratio. 
+        
+        For all the formulas are presented, M represents any of the available metrics (Dice score, accuracy, ...).
         """
+
+        self.absolute_formula = r'''\text{Absolute} = M_{\text{New model}} - M_{\text{Baseline model}}'''
+        self.relative_formula = r'''\text{Relative} = \frac{M_{\text{New model}} - M_{\text{Baseline model}}}{M_{\text{Baseline model}}}'''
+        self.ratio_formula = r'''\text{Ratio} = \frac{M_{\text{New model}}}{M_{\text{Baseline model}}}'''
 
         self.colorbar = {
             'decrease': '#ffbf69',
             'increase': '#90be6d'
         }
-
-    # mapping_buttons_metrics = {
-    #     "Dice": "dice",
-    #     # "Hausdorff distance": "haus",
-    #     "Jaccard": "jacc",
-    #     "Accuracy": "accu",
-    #     "Precision": "prec",
-    #     "Specificity": "spec",
-    #     "Sensitivity": "sens"
-    # }
 
         self.mapping_buttons_columns = {
             "Patient ID": "ID",
@@ -417,7 +413,11 @@ class PairwiseModelPerformanceComparisonPage(ConstantsAPP):
             'Tumor location (All labels)': 'whole_tumor_location',
             'Tumor location (ENH)': 'enh_tumor_location',
             'Tumor location (EDE)': 'ede_tumor_location',
-            'Tumor location (NEC)': 'nec_tumor_location'
+            'Tumor location (NEC)': 'nec_tumor_location',
+            'Mean intensity (T1)': 't1_mean_intensity',
+            'Mean intensity (T1c)': 't1c_mean_intensity',
+            'Mean intensity (T2)': 't2_mean_intensity',
+            'Mean intensity (FLAIR)': 'flair_mean_intensity'
         }
 
 
@@ -470,8 +470,6 @@ class LongitudinalAnalysis(ConstantsAPP):
         timepoints. Slopes between consecutive points indicate the absolute difference in variation, annotated with 
         numerical values. Each line is color-coded to differentiate between observed and predicted lesion sizes.
         """
-
-
 
 
 class SubjectsExploration(ConstantsAPP):

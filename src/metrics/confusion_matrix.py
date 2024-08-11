@@ -56,6 +56,7 @@ def mistakes_per_class_optim(ground_truth, predicted, unique_classes):
 
     return errors
 
+
 def normalize_matrix_per_row(matrix):
     row_sums = matrix.sum(axis=1)
     zero_sum_mask = (row_sums == 0)

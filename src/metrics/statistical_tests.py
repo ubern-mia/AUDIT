@@ -167,6 +167,11 @@ def wilcoxon_test(sample1, sample2, alpha=0.05):
     return {'p-value': p_value, 'interpretation': interpretation}
 
 
+"""
+NORMALITY TESTS
+"""
+
+
 def shapiro_wilk_test(sample, alpha=0.05):
     """
     Perform the Shapiro-Wilk test for normality on a sample and interpret the result.
@@ -200,6 +205,7 @@ def shapiro_wilk_test(sample, alpha=0.05):
         'Normally distributed': normality,
         'Null hypothesis interpretation': interpretation
     }
+
 
 def lilliefors_test(sample, alpha=0.05):
     """
@@ -235,6 +241,7 @@ def lilliefors_test(sample, alpha=0.05):
         'Null hypothesis interpretation': interpretation
     }
 
+
 def normality_test(data, alpha=0.05, threshold_observations=50):
     """
     Check the normality of data using Shapiro-Wilk or Lilliefors test based on the sample size.
@@ -259,11 +266,12 @@ def normality_test(data, alpha=0.05, threshold_observations=50):
         result = lilliefors_test(data, alpha)
         test_name = "Lilliefors"
 
-    # Add additional information to result
-    result.update({
-        "Alpha": alpha,
+    # Building output
+    output = {
+        "Test performed": test_name,
         "Sample length": n,
-        "Test performed": test_name
-    })
+        "Alpha": alpha
+    }
+    output.update(result)
 
-    return result
+    return output
