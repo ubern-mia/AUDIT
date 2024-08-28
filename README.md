@@ -55,13 +55,17 @@ Last released version of **AUDIT** is hosted at https://rascore.streamlitapp.com
 
 ### 2. Installation
 
-#### 2.1. Via PIP installer
-
-**Quickstart commands for environment setup with [Anaconda](https://www.anaconda.com/products/individual):**
+**(Recommended) Quickstart commands for environment setup with [Anaconda](https://www.anaconda.com/products/individual):**
 
 ```bash
 conda create -n audit_env python=3.8
 conda activate audit_env
+```
+
+#### 2.1. (Not available yet) Via PIP installer
+
+
+```bash
 pip install audit
 ```
 
@@ -69,8 +73,8 @@ pip install audit
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/brain-mri-analysis.git
-    cd brain-mri-analysis
+    git clone https://github.com/caumente/AUDIT.git
+    cd AUDIT
     ```
 2. Install the required packages:
     ```bash
