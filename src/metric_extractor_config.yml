@@ -1,20 +1,17 @@
-ground_truth_data_path: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_images'
+ground_truth_data_path: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_images'
 model_predictions_paths:
-  mvp_1: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_1'
-  mvp_2: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_2'
-  mvp_2.3: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_23'
-  mvp_2.3_fold0: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_23_fold0'
-#  mvp_test: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_test'
-#  mvp_test_2: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_test_2'
-  mvp_test_CA: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_dynnet_CA'
+  mvp_1: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_1'
+  mvp_2: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_2'
+  mvp_2.3: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_23'
+#  mvp_2.3_fold0: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_23_fold0'
+#  mvp_test: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_test'
+#  mvp_test_2: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_test_2'
+#  mvp_test_CA: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_dynnet_CA'
 labels:
   BKG: 0
   EDE: 1
   NEC: 2
   ENH: 3
-#  TC:
-#    - 2
-#    - 3
 output_path: '/Users/caumente/Projects/robustness/real_datasets_output/metrics'
-filename: 'UCSF'
-calculate_stats : False
+filename: 'fda'
+# calculate_stats : False

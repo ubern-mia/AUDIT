@@ -4,6 +4,7 @@ from radiomics import featureextractor
 import numpy as np
 
 
+# TODO: create a class as the others
 def compute_texture_values(image_array, texture='contrast'):
     """
     Compute the contrast values for each 2D plane in a 3D image array.
@@ -43,6 +44,7 @@ def compute_texture_values(image_array, texture='contrast'):
 
 
 # Function to extract radiomics features using PyRadiomics
+# TODO: Check whether to remove method or keep it and don't use it
 def extract_radiomics_features(image_path):
     """
     Extract radiomics features from a medical image without using a segmentation mask.

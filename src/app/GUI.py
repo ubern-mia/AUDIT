@@ -1,42 +1,6 @@
-
 import warnings
-import os
 warnings.simplefilter(action="ignore", category=FutureWarning)
-
 import streamlit as st
-
-
-def get_dir_name(dir_path):
-
-    if "/" in dir_path:
-        dir_name = dir_path.rsplit("/", 1)[0]
-    else:
-        dir_name = os.getcwd()
-
-    return dir_name
-
-
-def get_dir_path(dir_str=None, dir_path=None):
-
-    if dir_path is None:
-        dir_path = os.getcwd()
-
-    if dir_str is not None:
-        dir_path += f"/{dir_str}"
-
-    return dir_path
-
-def get_file_path(file_name, dir_str=None, dir_path=None, pre_str=True):
-
-    file_path = get_dir_path(dir_str=dir_str, dir_path=dir_path)
-    file_path += "/"
-    if pre_str and dir_str != None:
-        file_path += dir_str
-        file_path += "_"
-    file_path += file_name
-
-    return file_path
-
 
 from src.app.util.pages.Home_Page import home_page
 from src.app.util.pages.Univariate_Feature_Analysis import univariate
@@ -49,8 +13,7 @@ from src.app.util.pages.Longitudinal_Measurements import longitudinal
 from src.app.util.pages.Subjects_Exploration import subjects
 
 
-
-class MultiApp:
+class AUDITApp:
     def __init__(self):
         self.apps = []
 
@@ -75,8 +38,7 @@ class MultiApp:
         app["function"]()
 
 
-app = MultiApp()
-
+app = AUDITApp()
 app.add_app("Home Page", home_page)
 app.add_app("Univariate Analysis", univariate)
 app.add_app("Multivariate Analysis", multivariate)

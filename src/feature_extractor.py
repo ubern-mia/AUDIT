@@ -45,8 +45,12 @@ def extract_features(path_images: str) -> pd.DataFrame:
             tf = TumorFeatures(segmentation=seg, spacing=seg_spacing, mapping_names=dict(zip(numeric_label, label_names)))
             tumor_features = tf.extract_features(sf.center_mass.values())
 
-            # extract statistical information from sequences
+            # extract first order (statistical) information from sequences
             stats_features = {key: StatisticalFeatures(seq[seq > 0]).extract_features() for key, seq in sequences.items() if seq is not None}
+
+            # TODO: revise this functionality, as some values were equals to 1 for all subjects
+            # extract second order (texture) information from sequences
+            #stats_features = {key: StatisticalFeatures(seq[seq > 0]).extract_features() for key, seq in sequences.items() if seq is not None}
 
             # extract radiomics features
             # radiomics = extract_radiomics_features(f"{root_imgs}/{ID}/{ID}_t1.nii.gz")
@@ -113,6 +117,7 @@ if __name__ == '__main__':
             extracted_information['patient_name'] = ""
             extracted_information['timepoint'] = 0
 
+        # TODO: Should it have nan values or they must be 0? When NAN value, they do not appear in plots.
         extracted_information.to_csv(f"{output_path}/extracted_information_{name}.csv", index=False)
 
 

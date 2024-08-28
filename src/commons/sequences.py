@@ -3,7 +3,7 @@ import numpy as np
 import os
 from SimpleITK import GetArrayFromImage, GetImageFromArray, ReadImage, WriteImage
 
-
+# TODO: check whether the following two functions can be unified
 def load_subject_nii(root, patient_id, seq):
     return ReadImage(str(f"{root}/{patient_id}/{patient_id}_{seq}.nii.gz"))
 
@@ -37,6 +37,7 @@ def read_sequences(root, patient_id):
 def read_sequences_dict(root, patient_id):
     sequences = {}
 
+    # TODO: check what if any of the sequences are not within the dataset
     t1_path = f"{root}/{patient_id}/{patient_id}_t1.nii.gz"
     t1c_path = f"{root}/{patient_id}/{patient_id}_t1c.nii.gz"
     t1ce_path = f"{root}/{patient_id}/{patient_id}_t1ce.nii.gz"
@@ -65,6 +66,7 @@ def read_segmentation(root, patient_id):
 
 
 def read_prediction(root, patient_id):
+    # TODO: Remove the if-else condition when the naming convention is standardized
     if os.path.exists(f"{root}/{patient_id}_pred.nii.gz"):
         path_prediction = f"{root}/{patient_id}_pred.nii.gz"
     else:
@@ -83,7 +85,7 @@ def build_nifty_image(segmentation):
     img = GetImageFromArray(segmentation)
     return img
 
-
+# TODO: Optimize this function to be able to use it.
 def replace_labels(root_dir, input_labels=1, output_labels=2):
     for subdir, _, files in os.walk(root_dir):
         for file in files:
@@ -100,3 +102,29 @@ def replace_labels(root_dir, input_labels=1, output_labels=2):
 
             # save image
             WriteImage(build_nifty_image(img), file_path)
+
+
+def turn_planes(image, orientation=None):
+    """
+    Reorients the image planes based on the provided orientation.
+
+    Parameters:
+    ----------
+    orientation : list, optional
+        A list representing the desired plane orientations in order (default is ["axial", "coronal", "sagittal"]).
+
+    Returns:
+    -------
+    np.ndarray
+        The reoriented image array.
+    """
+
+    if not orientation:
+        orientation = ["axial", "coronal", "sagittal"]
+
+    # Get index position for each plane
+    axial = orientation.index("axial")
+    coronal = orientation.index("coronal")
+    sagittal = orientation.index("sagittal")
+
+    return np.transpose(image, (axial, coronal, sagittal))

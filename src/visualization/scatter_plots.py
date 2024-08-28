@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px
 from src.commons.commons import pretty_string
-from src.commons.commons import all_capitals
+from src.commons.commons import capitalizer
 from src.visualization.constants import Dashboard
 import plotly.graph_objects as go
 
@@ -127,7 +127,7 @@ def multivariate_metric_feature(
     color_palette = constants.discrete_color_palette
 
     fig = px.scatter(data, x=x_axis, y=y_axis, color=color_axis, facet_col=facet_col,
-                     custom_data=["ID", x_axis, y_axis, data["model"].apply(pretty_string).apply(all_capitals)],
+                     custom_data=["ID", x_axis, y_axis, data["model"].apply(pretty_string).apply(capitalizer)],
                      color_discrete_sequence=color_palette)
 
     fig.update_layout(template=constants.template,
@@ -159,7 +159,7 @@ def multivariate_metric_feature(
             "ID",
             x_axis,
             y_axis,
-            highlighted_data["model"].apply(pretty_string).apply(all_capitals)
+            highlighted_data["model"].apply(pretty_string).apply(capitalizer)
         ]
 
         # Define marker properties

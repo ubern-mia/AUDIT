@@ -448,7 +448,7 @@ class LongitudinalAnalysis(ConstantsAPP):
     def __init__(self):
         super().__init__()
 
-        self.header = """Longitudinal Analysis analysis"""
+        self.header = """Longitudinal analysis"""
         self.sub_header = """
             **Description**: The following figures allow visualization of longitudinal data depicting the variation in 
             lesion size over time. Both lineplots are designed to provide insights into how well predicted lesion 
@@ -479,25 +479,14 @@ class SubjectsExploration(ConstantsAPP):
 
         self.header = """Subjects Exploration"""
         self.sub_header = """
-            **Description**: The following figures allow visualization of longitudinal data depicting the variation in 
-            lesion size over time. Both lineplots are designed to provide insights into how well predicted lesion 
-            sizes align with actual values over the course of multiple timepoints. Users can interact with the plot by 
-            zooming, panning, and selecting specific data points to obtain more detailed information. This interactivity
-            enhances the analytical capabilities, allowing for a more thorough investigation of the data.
-
-
-        ##### Relative Error in Lesion Size Estimation
-        This plot shows two lines representing actual lesion size and predicted lesion size over different timepoints.
-        Dashed lines between data points indicate the relative error in the lesion size estimation, displayed as a 
-        percentage above each segment. Additionally, annotations highlight the percentage difference between actual 
-        and predicted lesion sizes.
-
+            **Description**: This tab provides a comprehensive exploration of the selected subject, offering detailed 
+            insights across several key dimensions. The features are organized into three primary categories: anatomical
+             features, first order statistical features, and second order texture features. Additionally, it provides 
+             insights into the nature of the subject compared to the rest of the dataset.
             """
         self.description = """
-        ##### Absolute Difference in Lesion Size Variation
-        This plot displays the absolute difference in variation between actual and predicted lesion sizes over different
-        timepoints. Slopes between consecutive points indicate the absolute difference in variation, annotated with 
-        numerical values. Each line is color-coded to differentiate between observed and predicted lesion sizes.
+        ##### 
+        ....
         """
 
 

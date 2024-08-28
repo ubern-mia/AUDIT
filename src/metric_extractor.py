@@ -1,14 +1,13 @@
 import pandas as pd
 from pathlib import Path
-import numpy as np
 from src.commons.sequences import get_spacing
 from src.commons.commons import ls_dirs, load_config_file, fancy_print, fancy_tqdm
 from src.commons.sequences import read_segmentation, read_prediction
 from src.metrics.custom_metrics import calculate_metrics, one_hot_encoding
 from src.commons.sequences import load_subject_nii
-from colorama import Fore, Style
+from colorama import Fore
 
-
+# TODO: check if removing this two lines
 # custom params for pycharm
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)

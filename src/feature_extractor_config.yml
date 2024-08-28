@@ -1,14 +1,14 @@
 feature_extractor_paths:
-  TRAIN: '/Users/caumente/Projects/robustness/real_datasets/training/training_images'
-  UCSF: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_images'
+#  TRAIN: '/Users/caumente/Projects/robustness/real_datasets/training/training_images'
+#  UCSF: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_images'
   FDA: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_images'
-  BRATS: '/Users/caumente/Projects/robustness/real_datasets/brats_2021'
-  UCSF_PO: '/Users/caumente/Projects/robustness/real_datasets/ucsf_postoperative'
+#  BRATS: '/Users/caumente/Projects/robustness/real_datasets/brats_2021'
+#  UCSF_PO: '/Users/caumente/Projects/robustness/real_datasets/ucsf_postoperative'
 longitudinal:
   FDA:
     pattern: "-"
-    patient_name: 0
-    timepoint: 1
+    patient_name: 1
+    timepoint: 2
 labels:
   BKG: 0
   EDE: 1

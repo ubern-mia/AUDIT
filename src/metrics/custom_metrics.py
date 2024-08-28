@@ -14,6 +14,8 @@ SIZE = "size"
 METRICS = [HAUS, DICE, SENS, SPEC, ACCU, JACC, PREC, SIZE]
 
 
+# TODO: check whether it'd be nice to create a common class called Metric and heritage from it to the rest of metrics.
+#  Check how PyMIA was built
 def one_hot_encoding(segmentation, labels, skip_background=True):
     """
     Perform one-hot encoding on a segmentation map.

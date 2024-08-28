@@ -4,7 +4,7 @@ import streamlit as st
 
 from src.visualization.barplots import individual_pairwise_model_performance, aggregated_pairwise_model_performance
 from src.app.util.constants import PairwiseModelPerformanceComparisonPage
-from src.commons.commons import load_config_file, pretty_string, read_datasets_from_dict, all_capitals, snake_case
+from src.commons.commons import load_config_file, pretty_string, read_datasets_from_dict, capitalizer, snake_case
 from src.metrics.statistical_tests import wilcoxon_test, normality_test, paired_ttest
 from src.metrics.commons import calculate_absolute_error
 from src.metrics.commons import calculate_relative_error
@@ -44,7 +44,7 @@ def setup_sidebar(data, aggregated=True):
 
         # Select models
         with st.sidebar.expander("Models", expanded=True):
-            models_available = [all_capitals(pretty_string(m)) for m in data[data.set == selected_set].model.unique()]
+            models_available = [capitalizer(pretty_string(m)) for m in data[data.set == selected_set].model.unique()]
             baseline_model = st.selectbox("Select the model to take as a baseline:", options=models_available, index=0)
             new_model = st.selectbox("Select the new model:", options=models_available, index=1)
             if baseline_model == new_model:

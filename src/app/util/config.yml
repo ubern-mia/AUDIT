@@ -1,12 +1,10 @@
 labels:
   BKG: 0
-  EDE: 1
-  ENH: 2
-  NEC: 3
-#  TC: 2, 3
+  EDE: 4
+  ENH: 1
+  NEC: 2
 datasets_root_path: '/Users/caumente/Projects/robustness/real_datasets/'
 csv_features_path: '/Users/caumente/Projects/robustness/real_datasets_output'
-# TODO: Using TOML file
 features_analysis:
   data_paths:
     TRAINING: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_TRAINING.csv'
@@ -76,6 +74,9 @@ model_performance_comparison:
 
 longitudinal_measurements:
   features:
-    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_FDA.csv'
   metrics:
-    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/FDA.csv'
+
+# TODO: Using TOML file
+#  TC: 2, 3

@@ -1,6 +1,8 @@
 import numpy as np
 
 
+# TODO: A bit isolated. May be ok, but if so, the filename should be changed. Other option could be to include it
+#  within the commons
 def mistakes_per_class(ground_truth, predicted, unique_classes):
 
     # find all unique classes present in the ground truth data and predictions

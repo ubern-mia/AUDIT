@@ -6,7 +6,7 @@ from src.commons.commons import load_config_file, run_itk_snap
 from src.commons.commons import read_datasets_from_dict
 from src.visualization.scatter_plots import multivariate_features
 from streamlit_plotly_events import plotly_events
-from src.commons.commons import all_capitals
+from src.commons.commons import capitalizer
 from src.commons.commons import pretty_string
 from src.commons.commons import snake_case
 from src.visualization.time_series import plot_longitudinal
@@ -79,7 +79,7 @@ def setup_sidebar(data, data_paths):
                 index=0
             )
         with st.sidebar.expander("Models", expanded=True):
-            models_available = [all_capitals(pretty_string(m)) for m in data.model.unique()]
+            models_available = [capitalizer(pretty_string(m)) for m in data.model.unique()]
             selected_model = st.selectbox(
                 label="Select a model:",
                 options=models_available,

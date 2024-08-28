@@ -5,18 +5,11 @@ import pandas as pd
 import yaml
 from colorama import Fore, Style
 from tqdm import tqdm
+import base64
 
 
 def ls_dirs(path: str) -> list:
-    patients_in_path = sorted([f.path.split("/")[-1] for f in os.scandir(path) if f.is_dir()])
-
-    return patients_in_path
-
-
-def load_csv(path: str) -> pd.DataFrame:
-    data = pd.read_csv(path)
-
-    return data
+    return sorted([f.path.split("/")[-1] for f in os.scandir(path) if f.is_dir()])
 
 
 def load_config_file(path: str) -> dict:
@@ -31,7 +24,6 @@ def load_config_file(path: str) -> dict:
     """
     with open(path) as cf:
         config = yaml.load(cf, Loader=yaml.FullLoader)
-    # return config['model'], config['optimizer'], config['loss'], config['training'], config['data']
         return config
 
 
@@ -39,26 +31,26 @@ def add_prefix_dict(dictionary, prefix):
     return {f'{prefix}{k}': v for k, v in dictionary.items()}
 
 
-def pretty_string(s):
-    # Split the string by underscores
-    words = s.split('_')
+def capitalizer(text: str) -> str:
+    return text.upper()
+
+
+def pretty_string(s, splitting_pattern='_'):
+    # Split the string by the corresponding pattern
+    words = s.split(splitting_pattern)
 
     # Capitalize the first letter of each word
     transformed_words = [word.capitalize() for word in words]
 
     # Join the words with a space
-    result = ' '.join(transformed_words)
+    output = ' '.join(transformed_words)
 
-    return result
-
-
-def all_capitals(text):
-    return text.upper()
+    return output
 
 
-def snake_case(s):
+def snake_case(s, splitting_patter=' '):
     # Split the string by spaces
-    words = s.split(' ')
+    words = s.split(splitting_patter)
 
     # Convert each word to lowercase
     transformed_words = [word.lower() for word in words]
@@ -72,7 +64,7 @@ def snake_case(s):
 def read_datasets_from_dict(name_path_dict, col_name="set"):
     out = []
     for name, path in name_path_dict.items():
-        data = load_csv(path)
+        data = pd.read_csv(path)
         data[col_name] = name
         out.append(data)
     out = pd.concat(out)
@@ -86,6 +78,7 @@ def run_itk_snap(path, dataset, case, labels=None):
     t1, t1ce, t2, flair, seg = [f"{path}{dataset}/{dataset}_images/{case}/{case}_{n}.nii.gz" for n in names]
 
     if labels:
+        # TODO: remove dependencies of my path
         labels_path = f"/Users/caumente/Projects/robustness/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
         command = [
@@ -98,7 +91,6 @@ def run_itk_snap(path, dataset, case, labels=None):
     else:
         command = [
                       "open", "-n", "-a", "ITK-SNAP", "--args",
-                      # "-l", t1,
                       "-g", t1ce,
                       "-s", seg,
                       "-o"
@@ -118,12 +110,13 @@ def run_itk_snap(path, dataset, case, labels=None):
 
 
 def generate_itk_labels(labels, output_file):
+    # TODO: check what happens when using regions instead of labels
     # Define colors for each label
     colors = [
-        (0, 0, 0),     # Black for BKG
-        (255, 255, 0), # Yellow for EDE
-        (255, 0, 0),   # Red for ENH
-        (0, 0, 255)    # Blue for NEC
+        (0, 0, 0),      # Black for BKG
+        (255, 255, 0),  # Yellow for EDE
+        (255, 0, 0),    # Red for ENH
+        (0, 0, 255)     # Blue for NEC
     ]
 
     # Create the file content
@@ -183,7 +176,6 @@ def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None)
     return verification_check
 
 
-
 def remove_null_values_from_dataframe(data):
     return data.replace([np.inf, -np.inf], np.nan).dropna()
 
@@ -201,7 +193,6 @@ def remove_null_values_from_array(arr):
     return arr[~np.isnan(arr) & ~np.isinf(arr)]
 
 
-
 def fancy_tqdm(**kwargs):
     bar_format = "{l_bar}%s{bar}%s{r_bar}" % (Fore.LIGHTBLUE_EX, Fore.CYAN)
     return tqdm(bar_format=bar_format, **kwargs)
@@ -211,3 +202,11 @@ def fancy_print(message, color=Fore.WHITE, symbol='•'):
     print(f" {color}{symbol}{message}{Style.RESET_ALL}")
 
 
+def img_to_base64(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+
+# TODO: Some functions to work with CSV files should be included. For instance, if the metric extractor is run several
+#  times for different datasets, it shouldn't be necessary to extract the same metrics again, just the new ones.
+#  Probably, a CSV by model should be created, and then all of them aggregated into a single one as now.

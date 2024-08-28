@@ -157,6 +157,9 @@ Copyright (c) 2022 Mitchell Isaac Parker
 ### Future steps:
 ```bash
 Combine the APP with PyMIA
-Statistical features from raw MRIs
 Code refactoring
+Including a tab to perform the augmentation real life
+Including a tab to load a model and being able to perform inference over a single augmented image to see the impact generated in the model performance
 ```
+
+

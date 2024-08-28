@@ -7,7 +7,7 @@ from src.commons.commons import load_config_file
 from src.commons.commons import pretty_string
 from src.commons.commons import snake_case
 from src.commons.commons import run_comparison_segmentation_itk_snap
-from src.commons.commons import all_capitals
+from src.commons.commons import capitalizer
 from src.app.util.constants import SegmentationErrorMatrixPage
 from src.commons.sequences import read_segmentation, read_prediction
 from src.metrics.confusion_matrix import mistakes_per_class_optim
@@ -40,7 +40,7 @@ def setup_sidebar(config, datasets):
         selected_dataset = st.selectbox("Select the dataset to analyze", datasets, index=0)
         models = config.get(selected_dataset)
 
-        pretty_models = [all_capitals(pretty_string(m)) for m in models if m != "ground_truth"]
+        pretty_models = [capitalizer(pretty_string(m)) for m in models if m != "ground_truth"]
         patients_in_path = sorted([f.path.split("/")[-1] for f in os.scandir(config.get(selected_dataset)["ground_truth"]) if f.is_dir()])
 
         selected_model = st.selectbox("Select the model to analyze", pretty_models, index=0)

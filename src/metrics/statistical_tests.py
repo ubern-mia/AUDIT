@@ -7,7 +7,7 @@ from scipy.stats import shapiro
 from scipy.stats import wilcoxon
 from statsmodels.stats.diagnostic import lilliefors
 
-
+# TODO: check whether all the functions in here are necessary now or in the future
 def kruskal_wallis_test(samples: list, alpha=0.05):
     """
     Compute the Kruskal-Wallis H-test for independent samples.

@@ -3,16 +3,12 @@ import numpy as np
 
 class SpatialFeatures:
     """
-    A class to compute spatial features from given medical images and sequences.
+    A class to compute spatial features from sequences given magnetic resonance images.
 
     Attributes:
     ----------
-    image : np.ndarray
-        A numpy array representing the medical image.
     sequence : np.ndarray
         A numpy array representing the sequence associated with the medical image.
-    segmentation : np.ndarray
-        A numpy array representing the segmentation of the medical image.
     spacing : np.ndarray
         A numpy array representing the spacing of the medical image voxels.
 
@@ -22,8 +18,6 @@ class SpatialFeatures:
         Calculates the center of mass for the brain image.
     get_dimensions():
         Gets the dimensions of the sequence in axial, coronal, and sagittal planes.
-    turn_planes(orientation=["axial", "coronal", "sagittal"]):
-        Reorients the segmentation planes based on the provided orientation.
     """
 
     def __init__(self, sequence, spacing=None):
@@ -81,32 +75,6 @@ class SpatialFeatures:
         }
         return dimensions
 
-    @staticmethod
-    def turn_planes(image, orientation=None):
-        """
-        Reorients the image planes based on the provided orientation.
-
-        Parameters:
-        ----------
-        orientation : list, optional
-            A list representing the desired plane orientations in order (default is ["axial", "coronal", "sagittal"]).
-
-        Returns:
-        -------
-        np.ndarray
-            The reoriented image array.
-        """
-
-        if not orientation:
-            orientation = ["axial", "coronal", "sagittal"]
-
-        # Get index position for each plane
-        axial = orientation.index("axial")
-        coronal = orientation.index("coronal")
-        sagittal = orientation.index("sagittal")
-
-        return np.transpose(image, (axial, coronal, sagittal))
-
     def extract_features(self) -> dict:
         """
         Extracts all tumor-related features.
@@ -117,7 +85,7 @@ class SpatialFeatures:
             A dictionary containing all tumor features.
         """
 
-        # calculate the center of mass of the whole tumor and each label
+        # Calculate the center of mass of the whole tumor and each label
         self.dimensions = self.get_dimensions()
 
         self.center_mass = self.calculate_brain_center_mass()

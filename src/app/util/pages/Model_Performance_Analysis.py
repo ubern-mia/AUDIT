@@ -4,7 +4,7 @@ import sys
 
 from src.commons.commons import load_config_file
 from src.commons.commons import read_datasets_from_dict
-from src.commons.commons import all_capitals
+from src.commons.commons import capitalizer
 from src.visualization.scatter_plots import multivariate_metric_feature
 from src.commons.commons import snake_case
 from src.commons.commons import pretty_string
@@ -45,7 +45,7 @@ def setup_sidebar(data, aggregated):
         with st.sidebar.expander("Models", expanded=True):
             selected_model = st.selectbox(
                 label="Select model to visualize:",
-                options=[all_capitals(pretty_string(m)) for m in data[data.set.isin(selected_set)].model.unique()],
+                options=[capitalizer(pretty_string(m)) for m in data[data.set.isin(selected_set)].model.unique()],
             )
 
         # Select features

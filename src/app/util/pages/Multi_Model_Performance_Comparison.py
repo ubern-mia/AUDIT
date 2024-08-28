@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 from streamlit_plotly_events import plotly_events
 from src.app.util.constants import MultiModelPerformanceComparisonsPage
-from src.commons.commons import load_config_file, pretty_string, read_datasets_from_dict, all_capitals, snake_case, run_itk_snap
+from src.commons.commons import load_config_file, pretty_string, read_datasets_from_dict, capitalizer, snake_case, run_itk_snap
 from src.visualization.boxplot import models_performance_boxplot
 
 const = MultiModelPerformanceComparisonsPage()
@@ -31,7 +31,7 @@ def setup_sidebar(data):
             )
         # select model
         with st.sidebar.expander("Models", expanded=True):
-            models_available = [all_capitals(pretty_string(m)) for m in list(data.model.unique())]
+            models_available = [capitalizer(pretty_string(m)) for m in list(data.model.unique())]
             selected_models = st.multiselect(
                 label="Select the models to compare:",
                 options=models_available,
@@ -64,7 +64,7 @@ def main(data, selected_set, selected_models, selected_regions, selected_metrics
     # filters
     data = data[data['set'] == selected_set]
     data = data[data['model'].isin([snake_case(m) for m in selected_models])]
-    data["model"] = data["model"].apply(pretty_string).apply(all_capitals)
+    data["model"] = data["model"].apply(pretty_string).apply(capitalizer)
     data = data[data['region'].isin(selected_regions)]
 
     # reshape the dataset
