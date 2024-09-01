@@ -282,7 +282,7 @@ def pairwise_comparison():
         st.latex(const.ratio_formula)
 
     # Load configuration files
-    config = load_config_file("./src/app/util/config.yml").get("model_performance_comparison")
+    config = load_config_file("./src/app/util/app.yml").get("model_performance_comparison")
     metrics_data_paths = config.get("metrics")
     features_data_paths = config.get("features")
 

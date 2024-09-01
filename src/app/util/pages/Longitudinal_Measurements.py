@@ -15,7 +15,7 @@ from src.visualization.time_series import plot_longitudinal2
 const = LongitudinalAnalysis()
 
 # Load configuration and data
-config = load_config_file("./src/app/util/config.yml")
+config = load_config_file("./src/app/util/app.yml")
 datasets_root_path = config.get("datasets_root_path")
 features_paths = config.get("longitudinal_measurements").get('features')
 metrics_paths = config.get("longitudinal_measurements").get('metrics')

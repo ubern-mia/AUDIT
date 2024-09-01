@@ -93,7 +93,7 @@ def store_subject_information(ID, spatial_features, tumor_features, stats_featur
 if __name__ == '__main__':
 
     # config variables
-    config = load_config_file("./feature_extractor_config.yml")
+    config = load_config_file("configs/feature_extractor.yml")
     feature_extractor_paths = config['feature_extractor_paths']
     label_names, numeric_label = list(config["labels"].keys()), list(config["labels"].values())
     output_path = config['output_path']

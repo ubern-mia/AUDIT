@@ -9,7 +9,7 @@ from src.visualization.histograms import custom_histogram, custom_distplot
 const = UnivariatePage()
 
 # Load configuration and data
-config = load_config_file("./src/app/util/config.yml")
+config = load_config_file("./src/app/util/app.yml")
 datasets_root_path = config.get("datasets_root_path")
 data_paths = config.get("distributions_analysis").get('data_paths')
 allowed_features = UnivariatePage().mapping_buttons_columns

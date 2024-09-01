@@ -39,7 +39,7 @@ def process_metric(data, models):
 if __name__ == '__main__':
 
     # config variables
-    config = load_config_file("metric_extractor_config.yml")
+    config = load_config_file("configs/metric_extractor.yml")
     label_names, numeric_label = list(config["labels"].keys()), list(config["labels"].values())
     output_path = config['output_path']
     Path(output_path).mkdir(parents=True, exist_ok=True)

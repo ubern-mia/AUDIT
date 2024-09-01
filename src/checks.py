@@ -34,4 +34,20 @@ def rename_files(root_dir):
             #     print(f"Renamed: {old_file_path} -> {new_file_path}")
 
 
-rename_files("/Users/caumente/Projects/robustness/real_datasets/ucsf_postoperative/")
+# rename_files("/Users/caumente/Projects/robustness/real_datasets/ucsf_postoperative/")
+
+
+from src.commons.sequences import load_nii, count_labels, load_nii_as_array
+
+brats = load_nii_as_array("/home/carlos/Documentos/proyectos/AUDIT/datasets/brats2020/brats2020_images/BraTS20_Training_001/BraTS20_Training_001_seg.nii.gz")
+print(count_labels(brats))
+
+nw = load_nii_as_array("/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_images/p13NCJKUCID_154XMTVDHB_820IGUSHT1/p13NCJKUCID_154XMTVDHB_820IGUSHT1_seg.nii.gz")
+print(count_labels(nw))
+
+
+from src.commons.sequences import iterative_labels_replacement
+
+iterative_labels_replacement(root_dir="/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_images",
+                             original_labels=[0, 1, 2, 3], new_labels=[0, 4, 2, 1], ext="_seg")
+

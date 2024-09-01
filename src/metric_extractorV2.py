@@ -18,7 +18,7 @@ pd.set_option('display.width', 1000)
 if __name__ == '__main__':
 
     # config variables
-    config = load_config_file("metric_extractor_config.yml")
+    config = load_config_file("configs/metric_extractor.yml")
     labels, processed_labels = config['labels'], {}
     for key, value in labels.items():
         if isinstance(value, list):
