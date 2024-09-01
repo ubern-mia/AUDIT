@@ -85,23 +85,67 @@ def build_nifty_image(segmentation):
     img = GetImageFromArray(segmentation)
     return img
 
-# TODO: Optimize this function to be able to use it.
-def replace_labels(root_dir, input_labels=1, output_labels=2):
+
+def label_replacement(segmentation: np.array, original_labels: list, new_labels: list) -> np.array:
+    """
+    Maps the values in a segmentation array from original labels to desired new labels.
+
+    Args:
+        segmentation: The segmentation array containing the original label values.
+        original_labels: A list of original labels present in the segmentation array.
+        new_labels: A list of new labels that will replace the original labels.
+
+    Returns:
+        post_seg: A new segmentation array where the original labels have been mapped to the new labels.
+
+    """
+
+    # Create a mapping dictionary from original labels to new labels
+    mapping = {orig: new for orig, new in zip(original_labels, new_labels)}
+
+    # Vectorized approach: Create a copy of the segmentation array
+    post_seg = np.copy(segmentation)
+
+    # Apply the mapping to the entire 3D array
+    for orig, new in mapping.items():
+        post_seg[segmentation == orig] = new
+
+    return post_seg
+
+
+def iterative_labels_replacement(root_dir: str, original_labels: list, new_labels: list, ext="_seg"):
+    """
+    Iteratively replaces labels in segmentation files within a directory and its subdirectories.
+
+    This function walks through all files in a specified root directory and its subdirectories,
+    identifies files containing a specified extension (e.g., "_seg" or "_pred"), loads each file as a 3D image array,
+    replaces the labels based on provided mappings, and saves the modified image back to its original location.
+
+    Args:
+        root_dir: The root directory containing the segmentation files.
+        original_labels: A list of original labels present in the segmentation arrays.
+        new_labels: A list of new labels that will replace the original labels.
+        ext: The file extension pattern to identify segmentation files. Defaults to "_seg".
+    """
+
     for subdir, _, files in os.walk(root_dir):
         for file in files:
+            # Skip files that do not match the extension criteria
+            if ext not in file:
+                continue
+
             file_path = str(os.path.join(subdir, file))
 
-            # load image
-            img = load_nii(file_path)
+            # Load the segmentation file as a 3D array
+            seg = load_nii_as_array(file_path)
 
-            # replace labels
-            if input_labels is not None and output_labels is not None:
-                img[img == input_labels] = -1
-                img[img == output_labels] = input_labels
-                img[img == -1] = output_labels
+            # Perform label replacement
+            post_seg = label_replacement(seg, original_labels, new_labels)
 
-            # save image
-            WriteImage(build_nifty_image(img), file_path)
+            # Save the modified segmentation array back to file
+            WriteImage(build_nifty_image(post_seg), file_path)
+
+            print(f"Processed file {file}")
 
 
 def turn_planes(image, orientation=None):
@@ -128,3 +172,21 @@ def turn_planes(image, orientation=None):
     sagittal = orientation.index("sagittal")
 
     return np.transpose(image, (axial, coronal, sagittal))
+
+
+def count_labels(segmentation, mapping_names=None):
+    """
+    Counts the number of pixels for each unique value in the segmentation.
+
+    Returns:
+    -------
+    dict
+        A dictionary with the counts of each unique value in the segmentation.
+    """
+    unique, counts = np.unique(segmentation, return_counts=True)
+    pixels_dict = dict(zip(unique, counts))
+
+    if mapping_names:
+        pixels_dict = {mapping_names.get(k, k).lower(): v for k, v in pixels_dict.items()}
+
+    return pixels_dict

@@ -1,0 +1,82 @@
+labels:
+  BKG: 0
+  EDE: 4
+  ENH: 1
+  NEC: 2
+datasets_root_path: '/Users/caumente/Projects/robustness/real_datasets/'
+csv_features_path: '/Users/caumente/Projects/robustness/real_datasets_output'
+features_analysis:
+  data_paths:
+    TRAINING: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_TRAINING.csv'
+    NW: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_NW.csv'
+    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_FDA.csv'
+    BRATS: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_BRATS.csv'
+
+distributions_analysis:
+  data_paths:
+    TRAINING: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_TRAINING.csv'
+    NW: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_NW.csv'
+    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_FDA.csv'
+    BRATS: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_BRATS.csv'
+
+segmentation_error_analysis:
+  NW:
+    ground_truth: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_images'
+    mvp_1: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/nw_mvp_1'
+    mvp_2: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/nw_mvp_2'
+    mvp_2.3: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/nw_mvp_23'
+  UCSF:
+    ground_truth: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_images'
+    mvp_1: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_1'
+    mvp_2: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_2'
+    mvp_2.3: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_23'
+    mvp_2.3_fold0: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/ucsf_mvp_23_fold0'
+    mvp_test_ca: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/mvp_test_ca'
+    bw21_baseline: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/bw21_baseline'
+    bw21_flips: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/bw21_flips'
+    bw21_ca: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/bw21_contrast_adjustment'
+    nnunet_baseline: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/nnunet_baseline'
+    nnunet_flips: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/nnunet_flips'
+    nnunet_ca: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_seg/nnunet_contrast_adjustment'
+  FDA:
+    ground_truth: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_images'
+    mvp_1: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_1'
+    mvp_2: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_2'
+    mvp_2.3: '/Users/caumente/Projects/robustness/real_datasets/fda/fda_seg/fda_mvp_23'
+    bw21_baseline: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/bw21_baseline'
+    bw21_flips: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/bw21_flips'
+    bw21_ca: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/bw21_contrast_adjustment'
+    nnunet_baseline: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/nnunet_baseline'
+    nnunet_flips: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/nnunet_flips'
+    nnunet_ca: '/Users/caumente/Projects/robustness/real_datasets/nw/nw_seg/nnunet_contrast_adjustment'
+
+model_performance_analysis:
+  features:
+    NW: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_NW.csv'
+    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_FDA.csv'
+  metrics:
+    NW: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/NW.csv'
+    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/FDA.csv'
+
+model_performance_comparison:
+  metrics:
+    NW: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/NW.csv'
+    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/FDA.csv'
+  features:
+    NW: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_NW.csv'
+    UCSF: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_UCSF.csv'
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_FDA.csv'
+
+longitudinal_measurements:
+  features:
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/features/extracted_information_FDA.csv'
+  metrics:
+    FDA: '/Users/caumente/Projects/robustness/real_datasets_output/metrics/FDA.csv'
+
+# TODO: Using TOML file
+#  TC: 2, 3

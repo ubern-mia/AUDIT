@@ -1,0 +1,21 @@
+feature_extractor_paths:
+#  TRAIN: '/Users/caumente/Projects/robustness/real_datasets/training/training_images'
+#  UCSF: '/Users/caumente/Projects/robustness/real_datasets/ucsf/ucsf_images'
+#  BRATS: '/Users/caumente/Projects/robustness/real_datasets/brats_2021'
+longitudinal:
+  FDA:
+    pattern: "-"
+    patient_name: 1
+    timepoint: 2
+labels:
+  BKG: 0
+  EDE: 1
+  NEC: 2
+  ENH: 3
+#labels:
+#  BKG: 0
+#  EDE: 2
+#  ENH: 4
+#  NEC: 1
+planes_orientation: ['axial', 'coronal', 'sagittal']
+output_path: '/Users/caumente/Projects/robustness/real_datasets_output/features'

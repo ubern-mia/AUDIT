@@ -1,0 +1,12 @@
+ground_truth_data_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_images'
+model_predictions_paths:
+  mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_seg/ucsf_mvp_1'
+  mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_seg/ucsf_mvp_2'
+  mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_seg/ucsf_mvp_23'
+labels:
+  BKG: 0
+  EDE: 1
+  NEC: 2
+  ENH: 3
+output_path: '/home/carlos/Documentos/proyectos/AUDIT/outputs/metrics'
+filename: 'ucsf'
