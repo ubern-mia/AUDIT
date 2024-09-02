@@ -1,5 +1,5 @@
 
-![alt text](https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT_big.jpeg)
+[//]: # (![alt text]&#40;https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT_big.jpeg&#41;)
 ![alt text](https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT_medium.jpeg)
 
 
