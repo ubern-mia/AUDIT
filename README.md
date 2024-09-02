@@ -1,4 +1,5 @@
 
+<img src="https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT.png" alt="alt text" width="600" />
 
 ![alt text](https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT.png)
 
@@ -11,9 +12,6 @@
 <a href="#license"><img src="https://img.shields.io/badge/License-Apache_2.0-e78ac3" alt="License"></a>
 <a href="https://github.com/caumente/audit/issues"><img src="https://img.shields.io/github/issues/caumente/audit" alt="issues - AUDIT"></a>
 
-
-| ![alt text](https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT.png) | [![caumente - AUDIT](https://img.shields.io/static/v1?label=caumente&message=AUDIT&color=e78ac3&logo=github)](https://github.com/caumente/AUDIT) [![stars - AUDIT](https://img.shields.io/github/stars/caumente/AUDIT?style=social)](https://github.com/caumente/AUDIT) [![forks - AUDIT](https://img.shields.io/github/forks/caumente/AUDIT?style=social)](https://github.com/caumente/AUDIT) [![GitHub release](https://img.shields.io/github/release/caumente/audit?include_prereleases=&sort=semver&color=e78ac3)](https://github.com/caumente/audit/releases/) [![License](https://img.shields.io/badge/License-Apache_2.0-e78ac3)](#license) [![issues - AUDIT](https://img.shields.io/github/issues/caumente/audit)](https://github.com/caumente/audit/issues) |
-|:---|:---|
 
 ## Summary
 
