@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import sys
 
-from src.commons.commons import load_config_file
-from src.commons.commons import read_datasets_from_dict
-from src.commons.commons import capitalizer
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.file_operations import read_datasets_from_dict
+from src.utils.operations.misc_operations import capitalizer
 from src.visualization.scatter_plots import multivariate_metric_feature
-from src.commons.commons import snake_case
-from src.commons.commons import pretty_string
+from src.utils.operations.misc_operations import snake_case
+from src.utils.operations.misc_operations import pretty_string
 from src.app.util.constants import ModelPerformanceAnalysisPage
 from streamlit_plotly_events import plotly_events
 
@@ -195,7 +195,7 @@ def performance():
     """
 
     # Load configuration file
-    config = load_config_file("./src/app/util/app.yml").get("model_performance_analysis", {})
+    config = load_config_file("./src/configs/app.yml").get("model_performance_analysis", {})
     if not config:
         st.error("Please set the configuration file up with a 'model_performance_analysis' key.")
         sys.exit()

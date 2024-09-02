@@ -1,13 +1,11 @@
 import os
-import numpy as np
 
 import SimpleITK as sitk
 import pandas as pd
 import pymia.evaluation.evaluator as eval_
 import pymia.evaluation.metric as metric
-import pymia.evaluation.writer as writer
 
-from src.commons.commons import ls_dirs, load_config_file
+from src.utils.operations.file_operations import ls_dirs, load_config_file
 
 # custom params for pycharm
 pd.set_option('display.max_columns', None)

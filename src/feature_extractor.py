@@ -1,18 +1,17 @@
 from pathlib import Path
 import pandas as pd
 
-from src.commons.commons import ls_dirs, load_config_file
-from src.commons.sequences import get_spacing
-from src.commons.sequences import load_subject_nii
-from src.commons.sequences import read_segmentation
-from src.commons.sequences import read_sequences_dict
+from src.utils.operations.file_operations import ls_dirs, load_config_file
+from src.utils.sequences import get_spacing
+from src.utils.sequences import load_subject_nii
+from src.utils.sequences import read_segmentation
+from src.utils.sequences import read_sequences_dict
 from src.features.spatial import SpatialFeatures
 from src.features.statistical import StatisticalFeatures
 from src.features.tumor import TumorFeatures
-from src.features.texture import compute_texture_values, extract_radiomics_features
-from src.commons.commons import fancy_tqdm, fancy_print
+from src.utils.operations.misc_operations import fancy_tqdm, fancy_print
 
-from colorama import Fore, Style
+from colorama import Fore
 
 
 def extract_features(path_images: str) -> pd.DataFrame:
@@ -93,7 +92,7 @@ def store_subject_information(ID, spatial_features, tumor_features, stats_featur
 if __name__ == '__main__':
 
     # config variables
-    config = load_config_file("configs/feature_extractor.yml")
+    config = load_config_file("./src/configs/feature_extractor.yml")
     feature_extractor_paths = config['feature_extractor_paths']
     label_names, numeric_label = list(config["labels"].keys()), list(config["labels"].values())
     output_path = config['output_path']

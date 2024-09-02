@@ -3,13 +3,13 @@ import streamlit as st
 import numpy as np
 from stqdm import stqdm
 
-from src.commons.commons import load_config_file
-from src.commons.commons import pretty_string
-from src.commons.commons import snake_case
-from src.commons.commons import run_comparison_segmentation_itk_snap
-from src.commons.commons import capitalizer
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.misc_operations import pretty_string
+from src.utils.operations.misc_operations import snake_case
+from src.utils.operations.itk_operations import run_comparison_segmentation_itk_snap
+from src.utils.operations.misc_operations import capitalizer
 from src.app.util.constants import SegmentationErrorMatrixPage
-from src.commons.sequences import read_segmentation, read_prediction
+from src.utils.sequences import read_segmentation, read_prediction
 from src.metrics.confusion_matrix import mistakes_per_class_optim
 from src.metrics.confusion_matrix import normalize_matrix_per_row
 from src.visualization.confusion_matrices import plt_confusion_matrix_plotly
@@ -17,8 +17,8 @@ from src.visualization.sequences import plot_seq
 
 const = SegmentationErrorMatrixPage()
 
-config = load_config_file("./src/app/util/app.yml").get("segmentation_error_analysis", {})
-labels_dict = load_config_file("./src/app/util/app.yml").get('labels')
+config = load_config_file("./src/configs/app.yml").get("segmentation_error_analysis", {})
+labels_dict = load_config_file("./src/configs/app.yml").get('labels')
 classes = list(labels_dict.keys())
 labels = list(labels_dict.values())
 datasets = list(config.keys())

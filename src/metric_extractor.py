@@ -1,10 +1,11 @@
 import pandas as pd
 from pathlib import Path
-from src.commons.sequences import get_spacing
-from src.commons.commons import ls_dirs, load_config_file, fancy_print, fancy_tqdm
-from src.commons.sequences import read_segmentation, read_prediction
+from src.utils.sequences import get_spacing
+from src.utils.operations.file_operations import ls_dirs, load_config_file
+from src.utils.operations.misc_operations import fancy_print, fancy_tqdm
+from src.utils.sequences import read_segmentation, read_prediction
 from src.metrics.custom_metrics import calculate_metrics, one_hot_encoding
-from src.commons.sequences import load_subject_nii
+from src.utils.sequences import load_subject_nii
 from colorama import Fore
 
 # TODO: check if removing this two lines
@@ -39,7 +40,7 @@ def process_metric(data, models):
 if __name__ == '__main__':
 
     # config variables
-    config = load_config_file("configs/metric_extractor.yml")
+    config = load_config_file("./src/configs/metric_extractor.yml")
     label_names, numeric_label = list(config["labels"].keys()), list(config["labels"].values())
     output_path = config['output_path']
     Path(output_path).mkdir(parents=True, exist_ok=True)

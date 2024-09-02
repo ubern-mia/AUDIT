@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px
-from src.commons.commons import pretty_string
-from src.commons.commons import capitalizer
+from src.utils.operations.misc_operations import pretty_string
+from src.utils.operations.misc_operations import capitalizer
 from src.visualization.constants import Dashboard
 import plotly.graph_objects as go
 

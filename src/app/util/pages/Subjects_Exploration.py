@@ -1,17 +1,14 @@
 import streamlit as st
-from streamlit_plotly_events import plotly_events
-import numpy as np
 import pandas as pd
 from src.app.util.constants import SubjectsExploration
-from src.commons.commons import load_config_file, read_datasets_from_dict, run_itk_snap
-from src.commons.commons import pretty_string
-from src.visualization.boxplot import boxplot
-from src.visualization.histograms import custom_histogram, custom_distplot
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.file_operations import read_datasets_from_dict
+from src.utils.operations.misc_operations import pretty_string
 
 const = SubjectsExploration()
 
 # Load configuration and data
-config = load_config_file("./src/app/util/app.yml")
+config = load_config_file("./src/configs/app.yml")
 datasets_root_path = config.get("datasets_root_path")
 data_paths = config.get("distributions_analysis").get('data_paths')
 

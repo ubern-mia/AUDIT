@@ -2,20 +2,18 @@ import pandas as pd
 import streamlit as st
 
 from src.app.util.constants import LongitudinalAnalysis
-from src.commons.commons import load_config_file, run_itk_snap
-from src.commons.commons import read_datasets_from_dict
-from src.visualization.scatter_plots import multivariate_features
-from streamlit_plotly_events import plotly_events
-from src.commons.commons import capitalizer
-from src.commons.commons import pretty_string
-from src.commons.commons import snake_case
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.file_operations import read_datasets_from_dict
+from src.utils.operations.misc_operations import capitalizer
+from src.utils.operations.misc_operations import pretty_string
+from src.utils.operations.misc_operations import snake_case
 from src.visualization.time_series import plot_longitudinal
 from src.visualization.time_series import plot_longitudinal2
 
 const = LongitudinalAnalysis()
 
 # Load configuration and data
-config = load_config_file("./src/app/util/app.yml")
+config = load_config_file("./src/configs/app.yml")
 datasets_root_path = config.get("datasets_root_path")
 features_paths = config.get("longitudinal_measurements").get('features')
 metrics_paths = config.get("longitudinal_measurements").get('metrics')

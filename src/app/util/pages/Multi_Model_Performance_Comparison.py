@@ -2,7 +2,9 @@ import pandas as pd
 import streamlit as st
 from streamlit_plotly_events import plotly_events
 from src.app.util.constants import MultiModelPerformanceComparisonsPage
-from src.commons.commons import load_config_file, pretty_string, read_datasets_from_dict, capitalizer, snake_case, run_itk_snap
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.misc_operations import pretty_string, capitalizer, snake_case
+from src.utils.operations.file_operations import read_datasets_from_dict
 from src.visualization.boxplot import models_performance_boxplot
 
 const = MultiModelPerformanceComparisonsPage()
@@ -10,7 +12,7 @@ mapping_buttons_metrics = const.mapping_buttons_metrics
 mapping_buttons_columns = const.mapping_buttons_columns
 
 # load config files
-config = load_config_file("./src/app/util/app.yml")
+config = load_config_file("./src/configs/app.yml")
 metrics_data_paths = config.get("model_performance_comparison").get("metrics")
 features_data_paths = config.get("model_performance_comparison").get("features")
 metrics_available = const.mapping_buttons_metrics.keys()

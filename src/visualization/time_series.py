@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 from plotly.colors import qualitative
-from src.commons.commons import pretty_string
+from src.utils.operations.misc_operations import pretty_string
 from src.visualization.constants import Dashboard
 
 constants = Dashboard()

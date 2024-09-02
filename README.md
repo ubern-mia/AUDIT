@@ -46,30 +46,24 @@ Last released version of **AUDIT** is hosted at https://rascore.streamlitapp.com
 
 
 ## Getting Started
-### 1. Prerequisites
-- Python 3.7+
-- [Streamlit](https://streamlit.io/) for creating interactive web apps
-- [Plotly](https://plotly.com/python/) for data visualization
-- [Pandas](https://pandas.pydata.org/) for data manipulation
 
+### 1. Installation
 
-### 2. Installation
-
-**(Recommended) Quickstart commands for environment setup with [Anaconda](https://www.anaconda.com/products/individual):**
+**(Recommended) Create an isolated Anaconda environment:**
 
 ```bash
-conda create -n audit_env python=3.8
+conda create -n audit_env python=3.10
 conda activate audit_env
 ```
 
-#### 2.1. (Not available yet) Via PIP installer
+#### 1.1. (Not available yet) Via PIP installer
 
 
 ```bash
 pip install audit
 ```
 
-#### 2.2. Via AUDIT repository
+#### 1.2. Via AUDIT repository
 
 1. Clone the repository:
     ```bash
@@ -80,90 +74,157 @@ pip install audit
     ```bash
     pip install -r requirements.txt
     ```
+   
+3. Export path
+    ```bash
+    export PYTHONPATH=$PYTHONPATH:/home/user/AUDIT/src
+    ```
 
-### 3. Configuration
-Edit the `config.yml` file in `./src/app/` directory to set up the paths for data loading and other configurations:
+### 2. Configuration
+
+Edit the config files in `./src/configs/` directory to set up the paths for data loading and other configurations:
+
+#### 2.1. Feature extractor config
+
 ```yaml
-model_performance_analysis:
+feature_extractor_paths:
+  DATASET_1: '/home/user/AUDIT/datasets/d1/d1_images'
+  DATASET_2: '/home/user/AUDIT/datasets/d2/d2_images'
+  DATASET_N: '/home/user/AUDIT/datasets/dN/dN_images'
+labels:
+  BKG: 0
+  EDE: 2
+  ENH: 4
+  NEC: 1
+longitudinal:
+  DATASET_1:
+    pattern: "-"
+    patient_name: 1
+    timepoint: 2
+output_path: '/home/user/AUDIT/outputs/features'
+
+```
+
+#### 2.2. Metric extractor config
+
+```yaml
+ground_truth_data_path: '/home/user/AUDIT/datasets/dN/dN_images'
+model_predictions_paths:
+  MODEL_1: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_1'
+  MODEL_2: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_2'
+  MODEL_M: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_N'
+labels:
+  BKG: 0
+  EDE: 2
+  ENH: 4
+  NEC: 1
+output_path: '/home/user/AUDIT/outputs/metrics'
+filename: 'dataset_N'
+```
+
+#### 2.3. APP config
+
+```yaml
+labels:
+  BKG: 0
+  EDE: 4
+  ENH: 1
+  NEC: 2
+datasets_root_path: '/home/user/AUDIT/datasets'
+csv_features_path: '/home/user/AUDIT/outputs'
+features_analysis:
   data_paths:
-    example_model: "path/to/your/data.csv"
-  metrics_paths:
-    example_model: "path/to/your/metrics.csv"
+    DATASET_1: '/home/user/AUDIT/outputs/features/extracted_information_D1.csv'
+    DATASET_2: '/home/user/AUDIT/outputs/features/extracted_information_D2.csv'
+    DATASET_N: '/home/user/AUDIT/outputs/features/extracted_information_DN.csv'
+
+distributions_analysis:
+  data_paths:
+    DATASET_1: '/home/user/AUDIT/outputs/features/extracted_information_D1.csv'
+    DATASET_2: '/home/user/AUDIT/outputs/features/extracted_information_D2.csv'
+    DATASET_N: '/home/user/AUDIT/outputs/features/extracted_information_DN.csv'
+
+segmentation_error_analysis:
+  DATASET_1:
+    ground_truth: '/home/user/AUDIT/datasets/d1/d1_images'
+    MODEL_1: '/home/user/AUDIT/datasets/d1/d1_seg/d1_model_1'
+    MODEL_2: '/home/user/AUDIT/datasets/d1/d1_seg/d1_model_2'
+    MODEL_M: '/home/user/AUDIT/datasets/d1/d1_seg/d1_model_M'
+  DATASET_2:
+    ground_truth: '/home/user/AUDIT/datasets/d2/d2_images'
+    MODEL_1: '/home/user/AUDIT/datasets/d2/d2_seg/d2_model_1'
+    MODEL_2: '/home/user/AUDIT/datasets/d2/d2_seg/d2_model_2'
+    MODEL_M: '/home/user/AUDIT/datasets/d2/d2_seg/d2_model_M'
+  DATASET_N:
+    ground_truth: '/home/user/AUDIT/datasets/dN/dN_images'
+    MODEL_1: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_1'
+    MODEL_2: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_2'
+    MODEL_M: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_M'
+
+model_performance_analysis:
+  features:
+    DATASET_1: '/home/user/AUDIT/outputs/features/extracted_information_D1.csv'
+    DATASET_2: '/home/user/AUDIT/outputs/features/extracted_information_D2.csv'
+    DATASET_N: '/home/user/AUDIT/outputs/features/extracted_information_DN.csv'
+  metrics:
+    DATASET_1: '/home/user/AUDIT/outputs/metrics/extracted_information_D1.csv'
+    DATASET_2: '/home/user/AUDIT/outputs/metrics/extracted_information_D2.csv'
+    DATASET_N: '/home/user/AUDIT/outputs/metrics/extracted_information_DN.csv'
+    
+model_performance_comparison:
+  metrics:
+    DATASET_1: '/home/user/AUDIT/outputs/metrics/extracted_information_D1.csv'
+    DATASET_2: '/home/user/AUDIT/outputs/metrics/extracted_information_D2.csv'
+    DATASET_N: '/home/user/AUDIT/outputs/metrics/extracted_information_DN.csv'
+  features:
+    DATASET_1: '/home/user/AUDIT/outputs/features/extracted_information_D1.csv'
+    DATASET_2: '/home/user/AUDIT/outputs/features/extracted_information_D2.csv'
+    DATASET_N: '/home/user/AUDIT/outputs/features/extracted_information_DN.csv'
+
+longitudinal_measurements:
+  features:
+    DATASET_1: '/home/user/AUDIT/outputs/features/extracted_information_D1.csv'
+  metrics:
+    DATASET_1: '/home/user/AUDIT/outputs/metrics/extracted_information_D1.csv'
+
+```
+
+### 3. Run the *Feature extractor* and *Metric extractor* scripts:
+
+```bash
+python src/feature_extractor.py
+```
+
+```bash
+python src/metric_extractor.py
 ```
 
 ### 4. Run the APP
+
 ```bash
-cd /Users/usr/audit
-export PYTHONPATH=$PYTHONPATH:/Users/usr/audir/src
 streamlit run src/app/GUI.py
 ```
-
-
-### 5. Directory Structure
-
-```bash
-.src/
-├ app/
-  ├─ images/   
-  ├─ pages/                                         # Directory for individual pages
-    ├── Multivariate_features_analysis.py           # Multivariate features analysis page 
-    ├── ...                                         # Other page files
-    ├── Multimodel_performance_comparison.py        # Multi-model performance comparison page 
-  ├─ Home_Page.py                                   # Main application file
-  ├─ constants.py                                   # APP constants
-  ├─ config.yaml                                    # APP config file
-├ commons/
-├ features/
-├ metrics/
-├ visualization/
-├ README.md                                         # This readme file
-├ feature_extractor.py                              # Feature extractor
-├ feature_extractor_connfig.yaml                    # Feature extractor config file
-├ metric_extractor.py                               # Metric extractor
-├ metric_extractor_config.yaml                      # Metric extractor config file
-```
-
 
 
 ## Authors
 
 Please feel free to contact us with any issues, comments, or questions.
 
-#### Mitchell Parker [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40Mitch_P)](https://twitter.com/Mitch_P)
+#### Carlos Aumente 
 
 - Email: <mip34@drexel.edu> or <mitchell.parker@fccc.edu>
-- GitHub: https://github.com/mitch-parker
+- GitHub: https://github.com/caumente
 
-#### Roland Dunbrack [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40RolandDunbrack)](https://twitter.com/RolandDunbrack)
+#### ..... 
 
 - Email: <roland.dunbrack@fccc.edu>
 - GitHub: https://github.com/DunbrackLab
 
-## Funding
-
-- NIH NIGMS F30 GM142263 (to M.P.)
-- NIH NIGMS R35 GM122517 (to R.D.)
 
 ## License
 Apache License 2.0
 
 
-Copyright (c) 2022 Mitchell Isaac Parker
 
-
-
-
-
-
-
-
-
-### Future steps:
-```bash
-Combine the APP with PyMIA
-Code refactoring
-Including a tab to perform the augmentation real life
-Including a tab to load a model and being able to perform inference over a single augmented image to see the impact generated in the model performance
-```
 
 

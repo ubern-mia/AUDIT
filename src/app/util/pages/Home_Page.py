@@ -23,8 +23,8 @@ import streamlit as st
 def home_page():
 
     # Load images
-    audit_logo = Image.open("/Users/caumente/Projects/AUDIT/src/app/util/images/AUDIT.png")
-    audit_schema = Image.open("/Users/caumente/Projects/AUDIT/src/app/util/images/audit_schema.png")
+    audit_logo = Image.open("./src/app/util/images/AUDIT.png")
+    audit_schema = Image.open("./src/app/util/images/audit_schema.png")
 
     # Title and description
     left_col, right_col = st.columns([2, 1])

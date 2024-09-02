@@ -4,7 +4,9 @@ import streamlit as st
 
 from src.visualization.barplots import individual_pairwise_model_performance, aggregated_pairwise_model_performance
 from src.app.util.constants import PairwiseModelPerformanceComparisonPage
-from src.commons.commons import load_config_file, pretty_string, read_datasets_from_dict, capitalizer, snake_case
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.misc_operations import pretty_string, capitalizer, snake_case
+from src.utils.operations.file_operations import read_datasets_from_dict
 from src.metrics.statistical_tests import wilcoxon_test, normality_test, paired_ttest
 from src.metrics.commons import calculate_absolute_error
 from src.metrics.commons import calculate_relative_error
@@ -282,7 +284,7 @@ def pairwise_comparison():
         st.latex(const.ratio_formula)
 
     # Load configuration files
-    config = load_config_file("./src/app/util/app.yml").get("model_performance_comparison")
+    config = load_config_file("./src/configs/app.yml").get("model_performance_comparison")
     metrics_data_paths = config.get("metrics")
     features_data_paths = config.get("features")
 

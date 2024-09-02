@@ -1,15 +1,16 @@
 import streamlit as st
 
 from src.app.util.constants import MultivariatePage
-from src.commons.commons import load_config_file, run_itk_snap
-from src.commons.commons import read_datasets_from_dict
-from src.visualization.scatter_plots import multivariate_features, multivariate_features_highlighter
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.itk_operations import run_itk_snap
+from src.utils.operations.file_operations import read_datasets_from_dict
+from src.visualization.scatter_plots import multivariate_features_highlighter
 from streamlit_plotly_events import plotly_events
 
 const = MultivariatePage()
 
 # Load configuration and data
-config = load_config_file("./src/app/util/app.yml")
+config = load_config_file("./src/configs/app.yml")
 datasets_root_path = config.get("datasets_root_path")
 data_paths = config.get("features_analysis").get('data_paths')
 features = const.mapping_buttons_columns
