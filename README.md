@@ -1,6 +1,6 @@
 
 ![alt text](https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT_big.jpeg)
-<img src="https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT_big.png" alt="alt text" width="600" />
+<img src="https://github.com/caumente/AUDIT/blob/main/src/app/util/images/AUDIT_big.jpeg" alt="alt text" width="600" />
 
 
 <a href="https://github.com/caumente/AUDIT" title="Go to GitHub repo"><img src="https://img.shields.io/static/v1?label=caumente&message=AUDIT&color=e78ac3&logo=github" alt="caumente - AUDIT"></a>
