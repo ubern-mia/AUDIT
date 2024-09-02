@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: If you use this software, please cite the paper using these metadata.
+authors:
+  - family-names: Aumente-Maestro
+    given-names: Carlos
+    orcid: ......
+title: "AUDIT"
+repository-code: "https://github.com/caumente/AUDIT"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Aumente-Maestro"
+    given-names: "Carlos"
+    orcid: https://orcid.org/0000-0002-3710-3308
+  - family-names: "Müller"
+    given-names: "Michael"
+    orcid: ......
+  - family-names: "Remeseiro"
+    given-names: "Beatriz"
+    orcid: https://orcid.org/0000-0001-9265-253X
+  - family-names: "Díez"
+    given-names: "Jorge"
+    orcid: https://orcid.org/0000-0002-1314-2441
+  - family-names: "Reyes"
+    given-names: "Mauricio"
+    orcid: .......
+  doi: "......."
+  issn: "......."
+  journal: "......."
+  pages: "......"
+  title: "AUDIT: ......."
+  url: "https://www.sciencedirect.com/......"
+  year: 2024
