@@ -35,7 +35,7 @@ def main(features: dict, metrics: dict) -> pd.DataFrame:
     """
     # Reading feature data
     features_df = read_datasets_from_dict(features)
-    features_df = features_df[["ID", "set", "patient_name", "timepoint"] + [c for c in features_df.columns if "size" in c]]
+    features_df = features_df[["ID", "set", "longitudinal_id", "time_point"] + [c for c in features_df.columns if "size" in c]]
 
     # Reading metrics data
     metrics_df = read_datasets_from_dict(metrics)
@@ -88,7 +88,7 @@ def setup_sidebar(data, data_paths):
         data = data[(data['set'] == selected_set) & (data['model'] == snake_case(selected_model))]
 
         # Filter unique patients
-        patients = sorted(data.patient_name.unique())
+        patients = sorted(data.longitudinal_id.unique())
         with st.sidebar.expander("Patient", expanded=True):
             patient_selected = st.selectbox(
                 label="Select a patient to visualize:",
@@ -98,7 +98,7 @@ def setup_sidebar(data, data_paths):
 
         st.write("[Contact us - MIA group](%s)" % const.mia_url)
 
-        return data[data.patient_name == patient_selected].reset_index(drop=True)
+        return data[data.longitudinal_id == patient_selected].reset_index(drop=True)
 
 
 # Main function for visualization and ITK-SNAP interaction

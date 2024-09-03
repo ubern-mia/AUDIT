@@ -23,7 +23,7 @@ if __name__ == "__main__":
     Path(output_path).mkdir(parents=True, exist_ok=True)
 
     # load paths to test data
-    path_test_dataset = config["ground_truth_data_path"]
+    path_test_dataset = config["data_path"]
     patients_list = ls_dirs(path_test_dataset)
 
     """

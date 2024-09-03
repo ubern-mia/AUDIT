@@ -5,7 +5,7 @@ from src.visualization.constants import Dashboard
 
 constants = Dashboard()
 
-def plot_longitudinal(data, temporal_axis='timepoint', lines=['lesion_size', 'lesion_size_pred']):
+def plot_longitudinal(data, temporal_axis='time_point', lines=['lesion_size', 'lesion_size_pred']):
     fig = go.Figure()
 
     colors = qualitative.Pastel
@@ -53,7 +53,7 @@ def plot_longitudinal(data, temporal_axis='timepoint', lines=['lesion_size', 'le
     return fig
 
 
-def plot_longitudinal2(data, temporal_axis='timepoint', lines=['lesion_size', 'lesion_size_pred']):
+def plot_longitudinal2(data, temporal_axis='time_point', lines=['lesion_size', 'lesion_size_pred']):
     fig = go.Figure()
 
     colors = qualitative.Pastel
@@ -105,7 +105,7 @@ def plot_longitudinal2(data, temporal_axis='timepoint', lines=['lesion_size', 'l
 
 
 #
-# def plot_longitudinal3(data, temporal_axis='timepoint', lines=['lesion_size', 'lesion_size_pred']):
+# def plot_longitudinal3(data, temporal_axis='time_point', lines=['lesion_size', 'lesion_size_pred']):
 #     fig = go.Figure()
 #
 #     colors = qualitative.Pastel
@@ -135,7 +135,7 @@ def plot_longitudinal2(data, temporal_axis='timepoint', lines=['lesion_size', 'l
 #                 font=dict(color=colors[n])
 #             )
 #
-#     fig.update_layout(template='simple_white', height=600, width=1000, xaxis_title="Timepoint", yaxis_title="Lesion size")
+#     fig.update_layout(template='simple_white', height=600, width=1000, xaxis_title="Time point", yaxis_title="Lesion size")
 #     fig.update_xaxes(tickmode='linear', dtick=1, tickformat=',d')
 #
 #     return fig
@@ -143,7 +143,7 @@ def plot_longitudinal2(data, temporal_axis='timepoint', lines=['lesion_size', 'l
 #
 #
 #
-# def plot_longitudinal4(data, temporal_axis='timepoint', lines=['lesion_size', 'lesion_size_pred']):
+# def plot_longitudinal4(data, temporal_axis='time_point', lines=['lesion_size', 'lesion_size_pred']):
 #     fig = go.Figure()
 #
 #     colors = qualitative.Pastel
@@ -170,7 +170,7 @@ def plot_longitudinal2(data, temporal_axis='timepoint', lines=['lesion_size', 'l
 #             )
 #
 #
-#     fig.update_layout(template='simple_white', height=600, width=1000, xaxis_title="Timepoint", yaxis_title="Lesion size")
+#     fig.update_layout(template='simple_white', height=600, width=1000, xaxis_title="Time point", yaxis_title="Lesion size")
 #     fig.update_xaxes(tickmode='linear', dtick=1, tickformat=',d')
 #
 #     return fig

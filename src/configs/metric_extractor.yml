@@ -1,12 +1,21 @@
-ground_truth_data_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_images'
+# Path to the raw dataset
+data_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_images'
+
+# Paths to model predictions
 model_predictions_paths:
   mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_1'
   mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_2'
   mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_23'
+
+# Mapping of labels to their numeric values
 labels:
   BKG: 0
   EDE: 1
   NEC: 2
   ENH: 3
+
+# Path where output metrics will be saved
 output_path: '/home/carlos/Documentos/proyectos/AUDIT/outputs/metrics'
-filename: 'extracted_information_NW'
+
+# Filename for the extracted information
+filename: 'NW'

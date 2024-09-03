@@ -452,13 +452,13 @@ class LongitudinalAnalysis(ConstantsAPP):
         self.sub_header = """
             **Description**: The following figures allow visualization of longitudinal data depicting the variation in 
             lesion size over time. Both lineplots are designed to provide insights into how well predicted lesion 
-            sizes align with actual values over the course of multiple timepoints. Users can interact with the plot by 
+            sizes align with actual values over the course of multiple time points. Users can interact with the plot by 
             zooming, panning, and selecting specific data points to obtain more detailed information. This interactivity
             enhances the analytical capabilities, allowing for a more thorough investigation of the data.
 
 
         ##### Relative Error in Lesion Size Estimation
-        This plot shows two lines representing actual lesion size and predicted lesion size over different timepoints.
+        This plot shows two lines representing actual lesion size and predicted lesion size over different time points.
         Dashed lines between data points indicate the relative error in the lesion size estimation, displayed as a 
         percentage above each segment. Additionally, annotations highlight the percentage difference between actual 
         and predicted lesion sizes.
@@ -467,7 +467,7 @@ class LongitudinalAnalysis(ConstantsAPP):
         self.description = """
         ##### Absolute Difference in Lesion Size Variation
         This plot displays the absolute difference in variation between actual and predicted lesion sizes over different
-        timepoints. Slopes between consecutive points indicate the absolute difference in variation, annotated with 
+        time points. Slopes between consecutive points indicate the absolute difference in variation, annotated with 
         numerical values. Each line is color-coded to differentiate between observed and predicted lesion sizes.
         """
 

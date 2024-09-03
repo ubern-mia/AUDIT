@@ -26,7 +26,7 @@ following features:
 - **Visualization**: Visualize model performance, including false positives and negatives, using interactive plots.
 - **Model robustness**: Assess the robustness of the model by evaluating its performance across different datasets and conditions.
 - **Bias detection**: Identify potential biases in model predictions and performance.
-- **Longitudinal analysis**: Track your model performance over different timepoints.
+- **Longitudinal analysis**: Track your model performance over different time points.
 
 Details of our work are provided in [*our paper*](https://aacrjournals.org/cancerres/article/doi/10.1158/0008-5472.CAN-22-0804/696349/Delineating-The-RAS-Conformational-LandscapeThe), **Delineating The RAS Conformational Landscape**. We hope that researchers will use *Rascore* to gain novel insights into RAS biology and drug discovery. 
 
@@ -102,8 +102,8 @@ labels:
 longitudinal:
   DATASET_1:
     pattern: "-"
-    patient_name: 1
-    timepoint: 2
+    longitudinal_id: 1
+    time_point: 2
 output_path: '/home/user/AUDIT/outputs/features'
 
 ```
@@ -111,7 +111,7 @@ output_path: '/home/user/AUDIT/outputs/features'
 #### 2.2. Metric extractor config
 
 ```yaml
-ground_truth_data_path: '/home/user/AUDIT/datasets/dN/dN_images'
+data_path: '/home/user/AUDIT/datasets/dN/dN_images'
 model_predictions_paths:
   MODEL_1: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_1'
   MODEL_2: '/home/user/AUDIT/datasets/dN/dN_seg/dN_model_2'

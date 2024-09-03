@@ -50,7 +50,7 @@ def home_page():
         - **Feature extraction**: Extract relevant features from the images and their segmentations for analysis.
         - **Model robustness**: Assess the robustness of the model by evaluating its performance across experiments and conditions.
         - **Bias detection**: Identify potential biases either in model predictions and performance or on your data.
-        - **Longitudinal analysis**: Track the model performance over different timepoints.
+        - **Longitudinal analysis**: Track the model performance over different time points.
     """)
 
     st.markdown("""
