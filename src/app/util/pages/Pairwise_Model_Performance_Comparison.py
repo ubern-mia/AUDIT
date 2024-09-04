@@ -1,16 +1,21 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import streamlit as st
 
-from src.visualization.barplots import individual_pairwise_model_performance, aggregated_pairwise_model_performance
 from src.app.util.constants import PairwiseModelPerformanceComparisonPage
-from src.utils.operations.file_operations import load_config_file
-from src.utils.operations.misc_operations import pretty_string, capitalizer, snake_case
-from src.utils.operations.file_operations import read_datasets_from_dict
-from src.metrics.statistical_tests import wilcoxon_test, normality_test, paired_ttest
 from src.metrics.commons import calculate_absolute_error
-from src.metrics.commons import calculate_relative_error
 from src.metrics.commons import calculate_ratio_improvement
+from src.metrics.commons import calculate_relative_error
+from src.metrics.statistical_tests import normality_test
+from src.metrics.statistical_tests import paired_ttest
+from src.metrics.statistical_tests import wilcoxon_test
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.file_operations import read_datasets_from_dict
+from src.utils.operations.misc_operations import capitalizer
+from src.utils.operations.misc_operations import pretty_string
+from src.utils.operations.misc_operations import snake_case
+from src.visualization.barplots import aggregated_pairwise_model_performance
+from src.visualization.barplots import individual_pairwise_model_performance
 from src.visualization.histograms import plot_histogram
 
 const = PairwiseModelPerformanceComparisonPage()
@@ -50,7 +55,7 @@ def setup_sidebar(data, aggregated=True):
             baseline_model = st.selectbox("Select the model to take as a baseline:", options=models_available, index=0)
             new_model = st.selectbox("Select the new model:", options=models_available, index=1)
             if baseline_model == new_model:
-                st.error('Models selected must be different to make a performance comparison', icon="🚨")
+                st.error("Models selected must be different to make a performance comparison", icon="🚨")
 
         # Select metric
         with st.sidebar.expander("Metrics", expanded=True):
@@ -61,7 +66,13 @@ def setup_sidebar(data, aggregated=True):
         if not aggregated:
             with st.sidebar.expander("Customization", expanded=True):
                 num_max_patients = st.number_input("Maximum patients to visualize", min_value=1, value=5, step=1)
-                mapping_buttons_columns_perf = {**mapping_buttons_columns.copy(), **{f"Performance ({baseline_model})": f"Performance ({baseline_model})", f"Performance ({new_model})": f"Performance ({new_model})"}}
+                mapping_buttons_columns_perf = {
+                    **mapping_buttons_columns.copy(),
+                    **{
+                        f"Performance ({baseline_model})": f"Performance ({baseline_model})",
+                        f"Performance ({new_model})": f"Performance ({new_model})",
+                    },
+                }
                 selected_sorted = st.selectbox("Sorted by:", options=mapping_buttons_columns_perf)
                 selected_order = st.radio("Order by:", options=mapping_order_by.keys())
 
@@ -70,20 +81,26 @@ def setup_sidebar(data, aggregated=True):
 
 def average_performance_calculation(raw_metrics, selected_metric, baseline_model, new_model):
     # Adding model performance
-    mean_performance = raw_metrics.groupby(["ID", "set", "model"])[
-        mapping_buttons_metrics[selected_metric]].mean().reset_index()
+    mean_performance = (
+        raw_metrics.groupby(["ID", "set", "model"])[mapping_buttons_metrics[selected_metric]].mean().reset_index()
+    )
     mean_performance.rename(columns={mapping_buttons_metrics[selected_metric]: "performance"}, inplace=True)
     mean_performance = mean_performance[
-        mean_performance.model.isin([snake_case(baseline_model), snake_case(new_model)])]
+        mean_performance.model.isin([snake_case(baseline_model), snake_case(new_model)])
+    ]
 
     # Pivoting the DataFrame
-    mean_performance_wide = mean_performance.pivot_table(index=['ID', 'set'], columns='model',
-                                                         values='performance').reset_index()
+    mean_performance_wide = mean_performance.pivot_table(
+        index=["ID", "set"], columns="model", values="performance"
+    ).reset_index()
     # renaming columns
-    mean_performance_wide.rename(columns={
-        snake_case(baseline_model): f"Performance ({baseline_model})",
-        snake_case(new_model): f"Performance ({new_model})"},
-        inplace=True)
+    mean_performance_wide.rename(
+        columns={
+            snake_case(baseline_model): f"Performance ({baseline_model})",
+            snake_case(new_model): f"Performance ({new_model})",
+        },
+        inplace=True,
+    )
 
     return mean_performance_wide
 
@@ -101,7 +118,7 @@ def process_metrics(data, baseline_model="baseline", new_model="model_1", aggreg
     Returns:
     - out: DataFrame containing the processed metrics with relative differences.
     """
-    index_cols = ['ID', 'region', 'set']
+    index_cols = ["ID", "region", "set"]
     group_by_cols = ["ID", "region", "model", "set"]
     out_cols = ["ID", "region", "metric", "set", "relative", "absolute", "ratio"]
 
@@ -115,17 +132,17 @@ def process_metrics(data, baseline_model="baseline", new_model="model_1", aggreg
 
     for metric in metrics_cols:
         df_ = data[group_by_cols + [metric]]
-        pivot_df = df_.pivot_table(index=index_cols, columns='model', values=metric).reset_index()
+        pivot_df = df_.pivot_table(index=index_cols, columns="model", values=metric).reset_index()
         pivot_df["relative"] = calculate_relative_error(pivot_df, snake_case(baseline_model), snake_case(new_model))
         pivot_df["absolute"] = calculate_absolute_error(pivot_df, snake_case(baseline_model), snake_case(new_model))
         pivot_df["ratio"] = calculate_ratio_improvement(pivot_df, snake_case(baseline_model), snake_case(new_model))
 
         if aggregate:
-            totals = pivot_df.drop(columns="region").groupby('set').mean().reset_index()
+            totals = pivot_df.drop(columns="region").groupby("set").mean().reset_index()
             totals["region"] = "Average"
             pivot_df = pd.concat([pivot_df, totals])
 
-        pivot_df['metric'] = metric
+        pivot_df["metric"] = metric
         post_processed_metrics.append(pivot_df)
 
     out = pd.concat(post_processed_metrics)
@@ -136,16 +153,35 @@ def process_metrics(data, baseline_model="baseline", new_model="model_1", aggreg
     return out
 
 
-def run_functionality(data, selected_aggregated, selected_set, baseline_model, new_model, selected_metric, num_max_patients, selected_sorted, selected_order, improvement_type):
+def run_functionality(
+    data,
+    selected_aggregated,
+    selected_set,
+    baseline_model,
+    new_model,
+    selected_metric,
+    num_max_patients,
+    selected_sorted,
+    selected_order,
+    improvement_type,
+):
     # filters
-    data = data[data['metric'] == mapping_buttons_metrics[selected_metric]]
-    data = data[data['set'] == selected_set]
-    data["gain"] = np.where(data[improvement_type] < 0, const.colorbar.get('decrease'), const.colorbar.get('increase'))
+    data = data[data["metric"] == mapping_buttons_metrics[selected_metric]]
+    data = data[data["set"] == selected_set]
+    data["gain"] = np.where(data[improvement_type] < 0, const.colorbar.get("decrease"), const.colorbar.get("increase"))
 
     if not selected_aggregated:
         # Order the data
-        mapping_buttons_columns_perf = {**mapping_buttons_columns.copy(), **{f"Performance ({baseline_model})": f"Performance ({baseline_model})", f"Performance ({new_model})": f"Performance ({new_model})"}}
-        data = data.sort_values(by=mapping_buttons_columns_perf[selected_sorted], ascending=mapping_order_by[selected_order])
+        mapping_buttons_columns_perf = {
+            **mapping_buttons_columns.copy(),
+            **{
+                f"Performance ({baseline_model})": f"Performance ({baseline_model})",
+                f"Performance ({new_model})": f"Performance ({new_model})",
+            },
+        }
+        data = data.sort_values(
+            by=mapping_buttons_columns_perf[selected_sorted], ascending=mapping_order_by[selected_order]
+        )
 
         # Filter based on the number of patients
         if num_max_patients:
@@ -153,17 +189,20 @@ def run_functionality(data, selected_aggregated, selected_set, baseline_model, n
 
         # Clip metric
         with st.sidebar:
-            metric_clip = st.checkbox("Clip the metric",
-                                      help="It restricts the range of the metrics by capping values below and "
-                                           "above a threshold to the lower and upper bound selected, if "
-                                           "enabled.")
+            metric_clip = st.checkbox(
+                "Clip the metric",
+                help="It restricts the range of the metrics by capping values below and "
+                "above a threshold to the lower and upper bound selected, if "
+                "enabled.",
+            )
             if metric_clip:
-                clip_low, clip_up = st.slider(label="Clip the metric",
-                                              min_value=data[improvement_type].min(),
-                                              max_value=data[improvement_type].max(),
-                                              value=(data[improvement_type].min(), data[improvement_type].max()),
-                                              label_visibility="collapsed"
-                                              )
+                clip_low, clip_up = st.slider(
+                    label="Clip the metric",
+                    min_value=data[improvement_type].min(),
+                    max_value=data[improvement_type].max(),
+                    value=(data[improvement_type].min(), data[improvement_type].max()),
+                    label_visibility="collapsed",
+                )
         if metric_clip:
             data[improvement_type] = data[improvement_type].clip(clip_low, clip_up)
 
@@ -180,8 +219,9 @@ def run_functionality(data, selected_aggregated, selected_set, baseline_model, n
     def perform_normality_test(df_for_stats_test, selected_set, selected_metric, baseline_model, new_model):
         col1, col2 = st.columns(2)
         df_wide = df_for_stats_test[df_for_stats_test.set == selected_set][
-            ["ID", "model", mapping_buttons_metrics[selected_metric]]]
-        df_wide = df_wide.pivot(index='ID', columns='model', values=mapping_buttons_metrics[selected_metric])
+            ["ID", "model", mapping_buttons_metrics[selected_metric]]
+        ]
+        df_wide = df_wide.pivot(index="ID", columns="model", values=mapping_buttons_metrics[selected_metric])
 
         sample_baseline_model = df_wide[snake_case(baseline_model)]
         sample_new_model = df_wide[snake_case(new_model)]
@@ -191,17 +231,30 @@ def run_functionality(data, selected_aggregated, selected_set, baseline_model, n
             normality_test_baseline_model = normality_test(sample_baseline_model)
             st.table(
                 pd.DataFrame(normality_test_baseline_model.items(), columns=["Metric", "Baseline model"]).set_index(
-                    "Metric"))
-            fig = plot_histogram(data=df_wide[[snake_case(baseline_model)]],
-                                 x_axis=snake_case(baseline_model), color_var=None, n_bins=None, x_label=baseline_model)
+                    "Metric"
+                )
+            )
+            fig = plot_histogram(
+                data=df_wide[[snake_case(baseline_model)]],
+                x_axis=snake_case(baseline_model),
+                color_var=None,
+                n_bins=None,
+                x_label=baseline_model,
+            )
             st.plotly_chart(fig, theme="streamlit", use_container_width=True, scrolling=True)
         with col2:
             # checking normality new model
             normality_test_new_model = normality_test(sample_new_model)
             st.table(
-                pd.DataFrame(normality_test_new_model.items(), columns=["Metric", "New model"]).set_index("Metric"))
-            fig = plot_histogram(data=df_wide[[snake_case(new_model)]],
-                                 x_axis=snake_case(new_model), color_var=None, n_bins=None, x_label=new_model)
+                pd.DataFrame(normality_test_new_model.items(), columns=["Metric", "New model"]).set_index("Metric")
+            )
+            fig = plot_histogram(
+                data=df_wide[[snake_case(new_model)]],
+                x_axis=snake_case(new_model),
+                color_var=None,
+                n_bins=None,
+                x_label=new_model,
+            )
             st.plotly_chart(fig, theme="streamlit", use_container_width=True, scrolling=True)
 
         return normality_test_baseline_model, normality_test_new_model
@@ -210,8 +263,9 @@ def run_functionality(data, selected_aggregated, selected_set, baseline_model, n
 def perform_normality_test(df_for_stats_test, selected_set, selected_metric, baseline_model, new_model):
     col1, col2 = st.columns(2)
     df_wide = df_for_stats_test[df_for_stats_test.set == selected_set][
-        ["ID", "model", mapping_buttons_metrics[selected_metric]]]
-    df_wide = df_wide.pivot(index='ID', columns='model', values=mapping_buttons_metrics[selected_metric])
+        ["ID", "model", mapping_buttons_metrics[selected_metric]]
+    ]
+    df_wide = df_wide.pivot(index="ID", columns="model", values=mapping_buttons_metrics[selected_metric])
 
     sample_baseline_model = df_wide[snake_case(baseline_model)]
     sample_new_model = df_wide[snake_case(new_model)]
@@ -221,23 +275,36 @@ def perform_normality_test(df_for_stats_test, selected_set, selected_metric, bas
         normality_test_baseline_model = normality_test(sample_baseline_model)
         st.table(
             pd.DataFrame(normality_test_baseline_model.items(), columns=["Metric", "Baseline model"]).set_index(
-                "Metric"))
-        fig = plot_histogram(data=df_wide[[snake_case(baseline_model)]],
-                             x_axis=snake_case(baseline_model), color_var=None, n_bins=10, x_label=baseline_model)
+                "Metric"
+            )
+        )
+        fig = plot_histogram(
+            data=df_wide[[snake_case(baseline_model)]],
+            x_axis=snake_case(baseline_model),
+            color_var=None,
+            n_bins=10,
+            x_label=baseline_model,
+        )
         st.plotly_chart(fig, theme="streamlit", use_container_width=True, scrolling=True)
     with col2:
         # checking normality new model
         normality_test_new_model = normality_test(sample_new_model)
-        st.table(
-            pd.DataFrame(normality_test_new_model.items(), columns=["Metric", "New model"]).set_index("Metric"))
-        fig = plot_histogram(data=df_wide[[snake_case(new_model)]],
-                             x_axis=snake_case(new_model), color_var=None, n_bins=10, x_label=new_model)
+        st.table(pd.DataFrame(normality_test_new_model.items(), columns=["Metric", "New model"]).set_index("Metric"))
+        fig = plot_histogram(
+            data=df_wide[[snake_case(new_model)]],
+            x_axis=snake_case(new_model),
+            color_var=None,
+            n_bins=10,
+            x_label=new_model,
+        )
         st.plotly_chart(fig, theme="streamlit", use_container_width=True, scrolling=True)
 
     return sample_baseline_model, sample_new_model, normality_test_baseline_model, normality_test_new_model
 
 
-def perform_statistical_test(normality_test_baseline_model, normality_test_new_model, sample_baseline_model, sample_new_model):
+def perform_statistical_test(
+    normality_test_baseline_model, normality_test_new_model, sample_baseline_model, sample_new_model
+):
     """
     Perform statistical test to evaluate differences in model performance.
 
@@ -250,15 +317,16 @@ def perform_statistical_test(normality_test_baseline_model, normality_test_new_m
     """
 
     if normality_test_baseline_model["Normally distributed"] and normality_test_new_model["Normally distributed"]:
-        st.markdown("""Both the baseline model sample and the new model sample follow a normal distribution. 
-        Therefore, the **Paired Student t-test** will be performed. This is a parametric test that compares two 
+        st.markdown("""
+        Both the baseline model sample and the new model sample follow a normal distribution.
+        Therefore, the **Paired Student t-test** will be performed. This is a parametric test that compares two
         **paired samples** normally distributed.""")
 
         statistical_diff = paired_ttest(sample1=sample_baseline_model, sample2=sample_new_model)
     else:
         st.markdown("""
-        Either the baseline model sample or the new model sample does not follow a normal distribution. 
-        Therefore, the **Wilcoxon signed-rank test** will be used. This is a non-parametric test that compares two 
+        Either the baseline model sample or the new model sample does not follow a normal distribution.
+        Therefore, the **Wilcoxon signed-rank test** will be used. This is a non-parametric test that compares two
         **paired samples** when normality cannot be assumed.
         """)
 
@@ -267,8 +335,10 @@ def perform_statistical_test(normality_test_baseline_model, normality_test_new_m
     # Convert the result to a DataFrame for better table display
     # result_df = pd.DataFrame(wt.items(), columns=["Metric", "Value"])
     # # st.table(result_df.set_index("Metric"))
-    st.markdown(f":red[**Results:**] The p-value obtained from the test was {statistical_diff.get('p-value'): .4e}. "
-                f"{statistical_diff.get('interpretation')}")
+    st.markdown(
+        f":red[**Results:**] The p-value obtained from the test was {statistical_diff.get('p-value'): .4e}. "
+        f"{statistical_diff.get('interpretation')}"
+    )
 
 
 def pairwise_comparison():
@@ -290,48 +360,67 @@ def pairwise_comparison():
 
     # Load datasets
     raw_metrics = read_datasets_from_dict(metrics_data_paths)
-    raw_features = read_datasets_from_dict(features_data_paths)[['set'] + list(mapping_buttons_columns.values())]
-    df_for_stats_test = raw_metrics.drop(columns='region').groupby(["ID", "model", "set"]).mean().reset_index()
+    raw_features = read_datasets_from_dict(features_data_paths)[["set"] + list(mapping_buttons_columns.values())]
+    df_for_stats_test = raw_metrics.drop(columns="region").groupby(["ID", "model", "set"]).mean().reset_index()
 
     # type of improvement
-    improvement_type = st.selectbox(label="Type of comparison",
-                                    options=["relative", "absolute", "ratio"],
-                                    format_func=pretty_string,
-                                    index=0)
+    improvement_type = st.selectbox(
+        label="Type of comparison", options=["relative", "absolute", "ratio"], format_func=pretty_string, index=0
+    )
 
     # Aggregation option
     selected_aggregated = st.checkbox("Aggregated.", value=True, help="It aggregates all the patients, if enabled.")
 
     # Setup sidebar
-    selected_set, baseline_model, new_model, selected_metric, num_max_patients, selected_sorted, selected_order = setup_sidebar(raw_metrics, selected_aggregated)
+    (
+        selected_set,
+        baseline_model,
+        new_model,
+        selected_metric,
+        num_max_patients,
+        selected_sorted,
+        selected_order,
+    ) = setup_sidebar(raw_metrics, selected_aggregated)
 
     # Process metrics if models are different
     if baseline_model != new_model:
-        df = process_metrics(data=raw_metrics,
-                             baseline_model=baseline_model,
-                             new_model=new_model,
-                             aggregate=selected_aggregated
-                             )
+        df = process_metrics(
+            data=raw_metrics, baseline_model=baseline_model, new_model=new_model, aggregate=selected_aggregated
+        )
 
         # Merge with features and average performance if not aggregated
         if not selected_aggregated:
-            df = df.merge(raw_features, on=['ID', 'set'])
+            df = df.merge(raw_features, on=["ID", "set"])
 
             mean_performance = average_performance_calculation(raw_metrics, selected_metric, baseline_model, new_model)
-            df = df.merge(mean_performance, on=['ID', 'set'])
+            df = df.merge(mean_performance, on=["ID", "set"])
 
         # calling the main functionality
-        run_functionality(df, selected_aggregated, selected_set, baseline_model, new_model, selected_metric, num_max_patients, selected_sorted, selected_order, improvement_type)
+        run_functionality(
+            df,
+            selected_aggregated,
+            selected_set,
+            baseline_model,
+            new_model,
+            selected_metric,
+            num_max_patients,
+            selected_sorted,
+            selected_order,
+            improvement_type,
+        )
 
         # Perform statistical test
         if selected_aggregated:
-            statistical_test = st.checkbox(label="Perform statistical test",
-                                           help="It performs statistical tests to evaluate whether exist statistical "
-                                                "differences between the model performance, if enabled."
-                                           )
+            statistical_test = st.checkbox(
+                label="Perform statistical test",
+                help="It performs statistical tests to evaluate whether exist statistical "
+                "differences between the model performance, if enabled.",
+            )
             if statistical_test:
                 st.markdown("""**Performing normality test:**""")
-                sample_bm, sample_nm, nt_baseline_model, nt_new_model = perform_normality_test(df_for_stats_test, selected_set, selected_metric, baseline_model, new_model)
+                sample_bm, sample_nm, nt_baseline_model, nt_new_model = perform_normality_test(
+                    df_for_stats_test, selected_set, selected_metric, baseline_model, new_model
+                )
 
                 st.markdown("""**Performing statistical test:**""")
                 perform_statistical_test(nt_baseline_model, nt_new_model, sample_bm, sample_nm)

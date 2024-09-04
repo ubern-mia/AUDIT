@@ -2,6 +2,7 @@ import os
 import subprocess
 
 
+# TODO: this functionality only works if all the sequences are present
 def run_itk_snap(path, dataset, case, labels=None):
     verification_check = True
     names = ["t1", "t1ce", "t2", "flair", "seg"]
@@ -9,22 +10,15 @@ def run_itk_snap(path, dataset, case, labels=None):
 
     if labels:
         # TODO: remove dependencies of my path
-        labels_path = f"/Users/caumente/Projects/robustness/itk_labels.txt"
+        labels_path = "/Users/caumente/Projects/robustness/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
-        command = [
-                      "open", "-n", "-a", "ITK-SNAP", "--args",
-                      "-l", labels_path,
-                      "-g", t1ce,
-                      "-s", seg,
-                      "-o"
-                  ] + [t1, t2, flair]
+        command = ["open", "-n", "-a", "ITK-SNAP", "--args", "-l", labels_path, "-g", t1ce, "-s", seg, "-o"] + [
+            t1,
+            t2,
+            flair,
+        ]
     else:
-        command = [
-                      "open", "-n", "-a", "ITK-SNAP", "--args",
-                      "-g", t1ce,
-                      "-s", seg,
-                      "-o"
-                  ] + [t1, t2, flair]
+        command = ["open", "-n", "-a", "ITK-SNAP", "--args", "-g", t1ce, "-s", seg, "-o"] + [t1, t2, flair]
 
     # Checking if both path exist
     if os.path.exists(t1ce) and os.path.exists(seg):
@@ -43,30 +37,30 @@ def generate_itk_labels(labels, output_file):
     # TODO: check what happens when using regions instead of labels
     # Define colors for each label
     colors = [
-        (0, 0, 0),      # Black for BKG
+        (0, 0, 0),  # Black for BKG
         (255, 255, 0),  # Yellow for EDE
-        (255, 0, 0),    # Red for ENH
-        (0, 0, 255)     # Blue for NEC
+        (255, 0, 0),  # Red for ENH
+        (0, 0, 255),  # Blue for NEC
     ]
 
     # Create the file content
     lines = [
         "# ITK-SNAP Label Description File",
-        "# Columns = Index, Red, Green, Blue, Visibility, Opacity, Label Name"
+        "# Columns = Index, Red, Green, Blue, Visibility, Opacity, Label Name",
     ]
 
     for name, index in labels.items():
         color = colors[index]
         if index == 0:
-            line = f"{index:<2} {color[0]:<3} {color[1]:<3} {color[2]:<3}    0 0 0    \"{name}\""
+            line = f'{index:<2} {color[0]:<3} {color[1]:<3} {color[2]:<3}    0 0 0    "{name}"'
         else:
-            line = f"{index:<2} {color[0]:<3} {color[1]:<3} {color[2]:<3}    1 1 1    \"{name}\""
+            line = f'{index:<2} {color[0]:<3} {color[1]:<3} {color[2]:<3}    1 1 1    "{name}"'
         lines.append(line)
 
     # Write the label file
-    with open(output_file, 'w') as f:
+    with open(output_file, "w") as f:
         for line in lines:
-            f.write(line + '\n')
+            f.write(line + "\n")
 
 
 def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None):
@@ -79,23 +73,44 @@ def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None)
     seg_ai = f"{path_pred}/{case}/{case}_pred.nii.gz"
 
     if labels:
-        labels_path = f"/Users/caumente/Projects/robustness/itk_labels.txt"
+        labels_path = "/Users/caumente/Projects/robustness/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
         command = [
-                      "open", "-n", "-a", "ITK-SNAP", "--args",
-                      "-g", t1c,
-                      "-s", seg,
-                      "-o", t1, t2, flair, seg_ai,
-                      "-l", labels_path
-                  ]
+            "open",
+            "-n",
+            "-a",
+            "ITK-SNAP",
+            "--args",
+            "-g",
+            t1c,
+            "-s",
+            seg,
+            "-o",
+            t1,
+            t2,
+            flair,
+            seg_ai,
+            "-l",
+            labels_path,
+        ]
     else:
         command = [
-                      "open", "-n", "-a", "ITK-SNAP", "--args",
-                      "-g", t1c,
-                      "-s", seg,
-                      "-o", t1, t2, flair, seg_ai
-                      # "-l", labels_path
-                  ] + [seg_ai]
+            "open",
+            "-n",
+            "-a",
+            "ITK-SNAP",
+            "--args",
+            "-g",
+            t1c,
+            "-s",
+            seg,
+            "-o",
+            t1,
+            t2,
+            flair,
+            seg_ai
+            # "-l", labels_path
+        ] + [seg_ai]
 
     # Checking if both path exist
     if os.path.exists(t1c) and os.path.exists(seg):
@@ -104,4 +119,3 @@ def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None)
         verification_check = False
 
     return verification_check
-

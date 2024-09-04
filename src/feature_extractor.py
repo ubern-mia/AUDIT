@@ -6,8 +6,10 @@ from colorama import Fore
 from src.features.spatial import SpatialFeatures
 from src.features.statistical import StatisticalFeatures
 from src.features.tumor import TumorFeatures
-from src.utils.operations.file_operations import ls_dirs, load_config_file
-from src.utils.operations.misc_operations import fancy_tqdm, fancy_print
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.file_operations import ls_dirs
+from src.utils.operations.misc_operations import fancy_print
+from src.utils.operations.misc_operations import fancy_tqdm
 from src.utils.sequences import get_spacing
 from src.utils.sequences import load_subject_nii
 from src.utils.sequences import read_segmentation

@@ -1,5 +1,3 @@
-
-
 def calculate_relative_error(data, init, end):
     """
     Calculate the relative error between two columns in a DataFrame.
@@ -44,4 +42,3 @@ def calculate_ratio_improvement(data, init, end):
     """
 
     return (data[end]) / (data[init])
-

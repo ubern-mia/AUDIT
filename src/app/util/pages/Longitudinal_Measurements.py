@@ -15,10 +15,9 @@ const = LongitudinalAnalysis()
 # Load configuration and data
 config = load_config_file("./src/configs/app.yml")
 datasets_root_path = config.get("datasets_root_path")
-features_paths = config.get("longitudinal_measurements").get('features')
-metrics_paths = config.get("longitudinal_measurements").get('metrics')
+features_paths = config.get("longitudinal_measurements").get("features")
+metrics_paths = config.get("longitudinal_measurements").get("metrics")
 features = const.mapping_buttons_columns
-
 
 
 def main(features: dict, metrics: dict) -> pd.DataFrame:
@@ -35,21 +34,24 @@ def main(features: dict, metrics: dict) -> pd.DataFrame:
     """
     # Reading feature data
     features_df = read_datasets_from_dict(features)
-    features_df = features_df[["ID", "set", "longitudinal_id", "time_point"] + [c for c in features_df.columns if "size" in c]]
+    features_df = features_df[
+        ["ID", "set", "longitudinal_id", "time_point"] + [c for c in features_df.columns if "size" in c]
+    ]
 
     # Reading metrics data
     metrics_df = read_datasets_from_dict(metrics)
     metrics_df = metrics_df[["ID", "model", "set", "size", "region"]]
-    metrics_df = metrics_df.pivot_table(index=['ID', 'model', 'set'], columns='region', values='size').reset_index()
-    metrics_df.columns = [f"lesion_size_{col.lower()}_pred" if col not in ['ID', 'model', 'set'] else col for col in
-                          metrics_df.columns]
+    metrics_df = metrics_df.pivot_table(index=["ID", "model", "set"], columns="region", values="size").reset_index()
+    metrics_df.columns = [
+        f"lesion_size_{col.lower()}_pred" if col not in ["ID", "model", "set"] else col for col in metrics_df.columns
+    ]
 
     # Merging data
-    merged = metrics_df.merge(features_df, on=['ID', 'set'])
+    merged = metrics_df.merge(features_df, on=["ID", "set"])
 
     # Calculating totals
-    pred_lesion_size_columns = [col for col in merged.columns if 'lesion_size' in col and '_pred' in col]
-    merged['lesion_size_pred'] = merged[pred_lesion_size_columns].sum(axis=1)
+    pred_lesion_size_columns = [col for col in merged.columns if "lesion_size" in col and "_pred" in col]
+    merged["lesion_size_pred"] = merged[pred_lesion_size_columns].sum(axis=1)
 
     return merged
 
@@ -71,30 +73,19 @@ def setup_sidebar(data, data_paths):
 
         # Select datasets
         with st.sidebar.expander("Dataset", expanded=True):
-            selected_set = st.selectbox(
-                label="Select datasets to visualize:",
-                options=data_paths.keys(),
-                index=0
-            )
+            selected_set = st.selectbox(label="Select datasets to visualize:", options=data_paths.keys(), index=0)
         with st.sidebar.expander("Models", expanded=True):
             models_available = [capitalizer(pretty_string(m)) for m in data.model.unique()]
-            selected_model = st.selectbox(
-                label="Select a model:",
-                options=models_available,
-                index=0)
+            selected_model = st.selectbox(label="Select a model:", options=models_available, index=0)
 
         # Filter datasets
         # st.table(data)
-        data = data[(data['set'] == selected_set) & (data['model'] == snake_case(selected_model))]
+        data = data[(data["set"] == selected_set) & (data["model"] == snake_case(selected_model))]
 
         # Filter unique patients
         patients = sorted(data.longitudinal_id.unique())
         with st.sidebar.expander("Patient", expanded=True):
-            patient_selected = st.selectbox(
-                label="Select a patient to visualize:",
-                options=patients,
-                index=0
-            )
+            patient_selected = st.selectbox(label="Select a patient to visualize:", options=patients, index=0)
 
         st.write("[Contact us - MIA group](%s)" % const.mia_url)
 
@@ -135,4 +126,3 @@ def longitudinal():
 
     # Main functionality
     plot_visualization(data)
-

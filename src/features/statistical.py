@@ -1,5 +1,5 @@
-from scipy.stats import skew
 import numpy as np
+from scipy.stats import skew
 
 
 class StatisticalFeatures:
@@ -100,5 +100,5 @@ class StatisticalFeatures:
             "median_intensity": self.get_median_intensity(),
             "std_intensity": self.get_std_intensity(),
             "range_intensity": self.get_range_intensity(),
-            "skewness": self.get_skewness()
+            "skewness": self.get_skewness(),
         }

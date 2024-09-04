@@ -1,6 +1,8 @@
-from colorama import Fore, Style
-from tqdm import tqdm
 import base64
+
+from colorama import Fore
+from colorama import Style
+from tqdm import tqdm
 
 
 def add_prefix_dict(dictionary: dict, prefix: str) -> dict:
@@ -14,7 +16,7 @@ def add_prefix_dict(dictionary: dict, prefix: str) -> dict:
     Returns:
         dict: A new dictionary with prefixed keys and the original values.
     """
-    return {f'{prefix}{k}': v for k, v in dictionary.items()}
+    return {f"{prefix}{k}": v for k, v in dictionary.items()}
 
 
 def capitalizer(text: str) -> str:
@@ -30,7 +32,7 @@ def capitalizer(text: str) -> str:
     return text.upper()
 
 
-def pretty_string(s: str, splitting_pattern: str = '_') -> str:
+def pretty_string(s: str, splitting_pattern: str = "_") -> str:
     """
     Converts a given string from a delimited format to a more readable format by capitalizing each word and joining them
      with spaces.
@@ -49,12 +51,12 @@ def pretty_string(s: str, splitting_pattern: str = '_') -> str:
     transformed_words = [word.capitalize() for word in words]
 
     # Join the words with a space
-    output = ' '.join(transformed_words)
+    output = " ".join(transformed_words)
 
     return output
 
 
-def snake_case(s: str, splitting_pattern: str = ' ') -> str:
+def snake_case(s: str, splitting_pattern: str = " ") -> str:
     """
     Converts a given string to snake_case format by splitting based on a specified pattern,  converting all words to
     lowercase, and joining them with underscores.
@@ -73,7 +75,7 @@ def snake_case(s: str, splitting_pattern: str = ' ') -> str:
     transformed_words = [word.lower() for word in words]
 
     # Join the words with underscores
-    result = '_'.join(transformed_words)
+    result = "_".join(transformed_words)
 
     return result
 
@@ -86,7 +88,7 @@ def fancy_tqdm(**kwargs):
     return tqdm(bar_format=bar_format, **kwargs)
 
 
-def fancy_print(message, color=Fore.WHITE, symbol='•'):
+def fancy_print(message, color=Fore.WHITE, symbol="•"):
     """
     Prints a message to the console with a custom symbol and color.
     """

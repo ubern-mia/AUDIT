@@ -3,13 +3,16 @@ from pathlib import Path
 import pandas as pd
 from colorama import Fore
 
-from src.metrics.custom_metrics import calculate_metrics, one_hot_encoding
-from src.utils.operations.file_operations import ls_dirs, load_config_file
-from src.utils.operations.misc_operations import fancy_print, fancy_tqdm
+from src.metrics.custom_metrics import calculate_metrics
+from src.metrics.custom_metrics import one_hot_encoding
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.file_operations import ls_dirs
+from src.utils.operations.misc_operations import fancy_print
+from src.utils.operations.misc_operations import fancy_tqdm
 from src.utils.sequences import get_spacing
 from src.utils.sequences import load_subject_nii
-from src.utils.sequences import read_segmentation, read_prediction
-
+from src.utils.sequences import read_prediction
+from src.utils.sequences import read_segmentation
 
 if __name__ == "__main__":
 

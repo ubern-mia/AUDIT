@@ -1,24 +1,26 @@
 import os
-import streamlit as st
+
 import numpy as np
+import streamlit as st
 from stqdm import stqdm
 
-from src.utils.operations.file_operations import load_config_file
-from src.utils.operations.misc_operations import pretty_string
-from src.utils.operations.misc_operations import snake_case
-from src.utils.operations.itk_operations import run_comparison_segmentation_itk_snap
-from src.utils.operations.misc_operations import capitalizer
 from src.app.util.constants import SegmentationErrorMatrixPage
-from src.utils.sequences import read_segmentation, read_prediction
 from src.metrics.confusion_matrix import mistakes_per_class_optim
 from src.metrics.confusion_matrix import normalize_matrix_per_row
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.itk_operations import run_comparison_segmentation_itk_snap
+from src.utils.operations.misc_operations import capitalizer
+from src.utils.operations.misc_operations import pretty_string
+from src.utils.operations.misc_operations import snake_case
+from src.utils.sequences import read_prediction
+from src.utils.sequences import read_segmentation
 from src.visualization.confusion_matrices import plt_confusion_matrix_plotly
 from src.visualization.sequences import plot_seq
 
 const = SegmentationErrorMatrixPage()
 
 config = load_config_file("./src/configs/app.yml").get("segmentation_error_analysis", {})
-labels_dict = load_config_file("./src/configs/app.yml").get('labels')
+labels_dict = load_config_file("./src/configs/app.yml").get("labels")
 classes = list(labels_dict.keys())
 labels = list(labels_dict.values())
 datasets = list(config.keys())
@@ -41,7 +43,9 @@ def setup_sidebar(config, datasets):
         models = config.get(selected_dataset)
 
         pretty_models = [capitalizer(pretty_string(m)) for m in models if m != "ground_truth"]
-        patients_in_path = sorted([f.path.split("/")[-1] for f in os.scandir(config.get(selected_dataset)["ground_truth"]) if f.is_dir()])
+        patients_in_path = sorted(
+            [f.path.split("/")[-1] for f in os.scandir(config.get(selected_dataset)["ground_truth"]) if f.is_dir()]
+        )
 
         selected_model = st.selectbox("Select the model to analyze", pretty_models, index=0)
         selected_id = st.selectbox("Select the patient ID to visualize", ["All"] + patients_in_path, index=0)
@@ -147,8 +151,14 @@ def main(selected_dataset, selected_model, selected_id, models, patients_in_path
         classes (list): List of class names.
     """
 
-    averaged = st.checkbox("Averaged per number of patients", value=True, help="It averages the errors per number of patients within the corresponding dataset, if enabled.")
-    normalized = st.checkbox("Normalized per ground truth label", value=True, help="It normalizes the errors per class, if enabled.")
+    averaged = st.checkbox(
+        "Averaged per number of patients",
+        value=True,
+        help="It averages the errors per number of patients within the corresponding dataset, if enabled.",
+    )
+    normalized = st.checkbox(
+        "Normalized per ground truth label", value=True, help="It normalizes the errors per class, if enabled."
+    )
     if selected_id != "All":
         seg = read_segmentation(root=config.get(selected_dataset)["ground_truth"], patient_id=selected_id)
         pred = read_prediction(root=models[snake_case(selected_model)], patient_id=selected_id)
@@ -159,13 +169,17 @@ def main(selected_dataset, selected_model, selected_id, models, patients_in_path
             st.session_state.visualize_itk = False
         visualize_itk = st.checkbox("Visualize it in ITK-SNAP", value=st.session_state.visualize_itk)
         if visualize_itk:
-            verification_check = run_comparison_segmentation_itk_snap(config.get(selected_dataset)["ground_truth"],
-                                                                      models[snake_case(selected_model)],
-                                                                      selected_id, labels_dict)
+            verification_check = run_comparison_segmentation_itk_snap(
+                config.get(selected_dataset)["ground_truth"],
+                models[snake_case(selected_model)],
+                selected_id,
+                labels_dict,
+            )
             st.session_state.visualize_itk = False
             # st.experimental_rerun()
             # st.markdown(f"\nSelected slice {slice} from patient {selected_id}")
-            # t1, t1c, t2, flair = read_sequences(root=config.get(selected_dataset)["ground_truth"], patient_id=selected_id)
+            # t1, t1c, t2, flair = read_sequences(root=config.get(selected_dataset)["ground_truth"],
+            #                                     patient_id=selected_id)
             # visualize_patient_slices(t1, t2, flair, t1c, seg, pred, slice)
     else:
         accumulated = compute_accumulated_cm(patients_in_path, selected_dataset, models, selected_model, labels)

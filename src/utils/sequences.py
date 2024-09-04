@@ -1,7 +1,12 @@
-import SimpleITK
-import numpy as np
 import os
-from SimpleITK import GetArrayFromImage, GetImageFromArray, ReadImage, WriteImage
+
+import numpy as np
+import SimpleITK
+from SimpleITK import GetArrayFromImage
+from SimpleITK import GetImageFromArray
+from SimpleITK import ReadImage
+from SimpleITK import WriteImage
+
 
 # TODO: check whether the following two functions can be unified
 def load_subject_nii(root, patient_id, seq):
@@ -45,15 +50,15 @@ def read_sequences_dict(root, patient_id):
     flair_path = f"{root}/{patient_id}/{patient_id}_flair.nii.gz"
 
     if os.path.exists(t1_path):
-        sequences['t1'] = load_nii_as_array(t1_path)
+        sequences["t1"] = load_nii_as_array(t1_path)
     if os.path.exists(t1c_path):
-        sequences['t1c'] = load_nii_as_array(t1c_path)
+        sequences["t1c"] = load_nii_as_array(t1c_path)
     if os.path.exists(t1ce_path):
-        sequences['t1c'] = load_nii_as_array(t1ce_path)
+        sequences["t1c"] = load_nii_as_array(t1ce_path)
     if os.path.exists(t2_path):
-        sequences['t2'] = load_nii_as_array(t2_path)
+        sequences["t2"] = load_nii_as_array(t2_path)
     if os.path.exists(flair_path):
-        sequences['flair'] = load_nii_as_array(flair_path)
+        sequences["flair"] = load_nii_as_array(flair_path)
 
     return sequences
 

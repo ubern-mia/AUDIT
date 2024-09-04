@@ -1,10 +1,13 @@
 import pandas as pd
 import streamlit as st
-from streamlit_plotly_events import plotly_events
+# from streamlit_plotly_events import plotly_events
+
 from src.app.util.constants import MultiModelPerformanceComparisonsPage
 from src.utils.operations.file_operations import load_config_file
-from src.utils.operations.misc_operations import pretty_string, capitalizer, snake_case
 from src.utils.operations.file_operations import read_datasets_from_dict
+from src.utils.operations.misc_operations import capitalizer
+from src.utils.operations.misc_operations import pretty_string
+from src.utils.operations.misc_operations import snake_case
 from src.visualization.boxplot import models_performance_boxplot
 
 const = MultiModelPerformanceComparisonsPage()
@@ -26,34 +29,24 @@ def setup_sidebar(data):
         # select dataset
         with st.sidebar.expander("Datasets", expanded=True):
             sets_available = list(data.set.unique())
-            selected_set = st.selectbox(
-                label="Select dataset to analyze:",
-                options=sets_available,
-                index=0
-            )
+            selected_set = st.selectbox(label="Select dataset to analyze:", options=sets_available, index=0)
         # select model
         with st.sidebar.expander("Models", expanded=True):
             models_available = [capitalizer(pretty_string(m)) for m in list(data.model.unique())]
             selected_models = st.multiselect(
-                label="Select the models to compare:",
-                options=models_available,
-                default=models_available
+                label="Select the models to compare:", options=models_available, default=models_available
             )
         # select region
         with st.sidebar.expander("Regions", expanded=True):
             regions_available = list(data.region.unique())
             selected_regions = st.multiselect(
-                label="Select the region to visualize:",
-                options=regions_available,
-                default=regions_available
+                label="Select the region to visualize:", options=regions_available, default=regions_available
             )
         # select metrics
         with st.sidebar.expander("Metrics", expanded=True):
             # metrics_available = list(data_melted.metric.unique())
             selected_metrics = st.multiselect(
-                label="Select the metrics to compare:",
-                options=metrics_available,
-                default=metrics_available
+                label="Select the metrics to compare:", options=metrics_available, default=metrics_available
             )
             selected_metrics = [mapping_buttons_metrics[m] for m in selected_metrics]
         # contact
@@ -64,24 +57,29 @@ def setup_sidebar(data):
 
 def main(data, selected_set, selected_models, selected_regions, selected_metrics):
     # filters
-    data = data[data['set'] == selected_set]
-    data = data[data['model'].isin([snake_case(m) for m in selected_models])]
+    data = data[data["set"] == selected_set]
+    data = data[data["model"].isin([snake_case(m) for m in selected_models])]
     data["model"] = data["model"].apply(pretty_string).apply(capitalizer)
-    data = data[data['region'].isin(selected_regions)]
+    data = data[data["region"].isin(selected_regions)]
 
     # reshape the dataset
-    data_melted = pd.melt(data, id_vars=['model', 'region'],  var_name='metric', value_name='score',
-                          value_vars=[mapping_buttons_metrics[m] for m in metrics_available])
-    data_melted = data_melted[data_melted['metric'].isin(selected_metrics)]
+    data_melted = pd.melt(
+        data,
+        id_vars=["model", "region"],
+        var_name="metric",
+        value_name="score",
+        value_vars=[mapping_buttons_metrics[m] for m in metrics_available],
+    )
+    data_melted = data_melted[data_melted["metric"].isin(selected_metrics)]
 
     # whether aggregating the results or not
     selected_aggregated = st.checkbox("Aggregated.", value=True, help="It aggregates all the regions, if enabled.")
 
     # general results
     if not selected_aggregated:
-        aggregated = data.drop(columns=['ID', 'set']).groupby(['region', 'model']).agg(['mean', 'std'])
+        aggregated = data.drop(columns=["ID", "set"]).groupby(["region", "model"]).agg(["mean", "std"])
     else:
-        aggregated = data.drop(columns=['ID', 'set', 'region']).groupby(['model']).agg(['mean', 'std'])
+        aggregated = data.drop(columns=["ID", "set", "region"]).groupby(["model"]).agg(["mean", "std"])
     formatted = pd.DataFrame(index=aggregated.index)
 
     # st.table(aggregated.groupby("model").mean().reset_index())
@@ -93,8 +91,8 @@ def main(data, selected_set, selected_models, selected_regions, selected_metrics
     st.markdown(const.description)
     # st.table(data_melted)
     fig = models_performance_boxplot(data_melted, aggregated=selected_aggregated)
-    # st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-    selected_points = plotly_events(fig, click_event=True, override_height=None)
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+    # selected_points = plotly_events(fig, click_event=True, override_height=None)
 
     # # Handle selected point
     # info_placeholder = st.empty()
@@ -130,4 +128,3 @@ def multi_model():
     # calling main function
     selected_set, selected_models, selected_regions, selected_metrics = setup_sidebar(raw_metrics)
     main(raw_metrics, selected_set, selected_models, selected_regions, selected_metrics)
-

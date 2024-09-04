@@ -1,15 +1,16 @@
-import streamlit as st
-import pandas as pd
 import sys
 
+import pandas as pd
+import streamlit as st
+from streamlit_plotly_events import plotly_events
+
+from src.app.util.constants import ModelPerformanceAnalysisPage
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.misc_operations import capitalizer
-from src.visualization.scatter_plots import multivariate_metric_feature
-from src.utils.operations.misc_operations import snake_case
 from src.utils.operations.misc_operations import pretty_string
-from src.app.util.constants import ModelPerformanceAnalysisPage
-from streamlit_plotly_events import plotly_events
+from src.utils.operations.misc_operations import snake_case
+from src.visualization.scatter_plots import multivariate_metric_feature
 
 const = ModelPerformanceAnalysisPage()
 
@@ -36,9 +37,7 @@ def setup_sidebar(data, aggregated):
         with st.sidebar.expander("Datasets", expanded=True):
             sets_available = list(data.set.unique())
             selected_set = st.multiselect(
-                label="Select dataset to analyze:",
-                options=sets_available,
-                default=sets_available
+                label="Select dataset to analyze:", options=sets_available, default=sets_available
             )
 
         # Select model
@@ -50,15 +49,9 @@ def setup_sidebar(data, aggregated):
 
         # Select features
         with st.sidebar.expander("Features", expanded=True):
-            select_y_axis = st.selectbox(
-                label="Metric:",
-                options=const.mapping_buttons_metrics.keys(),
-            )
+            select_y_axis = st.selectbox(label="Metric:", options=const.mapping_buttons_metrics.keys(),)
 
-            select_x_axis = st.selectbox(
-                label="Feature:",
-                options=list(const.mapping_buttons_columns.keys()),
-            )
+            select_x_axis = st.selectbox(label="Feature:", options=list(const.mapping_buttons_columns.keys()),)
 
         # Select regions if not aggregated
         selected_regions = None
@@ -66,9 +59,7 @@ def setup_sidebar(data, aggregated):
             with st.sidebar.expander("Regions", expanded=True):
                 available_regions = list(data.region.unique())
                 selected_regions = st.multiselect(
-                    label="Select the regions to visualize:",
-                    options=available_regions,
-                    default=available_regions
+                    label="Select the regions to visualize:", options=available_regions, default=available_regions
                 )
 
     return selected_set, selected_model, select_x_axis, select_y_axis, selected_regions
@@ -92,14 +83,15 @@ def merge_features_and_metrics(features: dict, metrics: dict, aggregate=True) ->
 
     # Aggregating metrics
     if aggregate:
-        metrics_df = metrics_df.drop(columns=['region']).groupby(['ID', 'model', 'set']).agg(
-            lambda x: x.mean(skipna=True))
+        metrics_df = (
+            metrics_df.drop(columns=["region"]).groupby(["ID", "model", "set"]).agg(lambda x: x.mean(skipna=True))
+        )
     else:
-        metrics_df = metrics_df.groupby(['ID', 'model', 'set', 'region']).agg(lambda x: x.mean(skipna=True))
+        metrics_df = metrics_df.groupby(["ID", "model", "set", "region"]).agg(lambda x: x.mean(skipna=True))
     metrics_df.reset_index(inplace=True)
 
     # Merging data
-    merged = metrics_df.merge(features_df, on=['ID', 'set'])
+    merged = metrics_df.merge(features_df, on=["ID", "set"])
 
     return merged
 
@@ -137,7 +129,7 @@ def visualize_data(data, set, model, regions, x_axis, y_axis, aggregated):
         y_label=y_axis,
         color="Dataset",
         facet_col="region" if not aggregated else None,
-        highlighted_patients=st.session_state.highlighted_patients
+        highlighted_patients=st.session_state.highlighted_patients,
     )
     if not aggregated:
         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
@@ -163,10 +155,10 @@ def process_selected_points(selected_points, data, aggregated):
     """
     if selected_points and aggregated:
         point = selected_points[0]
-        if point['curveNumber'] < len(data.set.unique()):
-            point_subset = list(data.set.unique())[point['curveNumber']]
+        if point["curveNumber"] < len(data.set.unique()):
+            point_subset = list(data.set.unique())[point["curveNumber"]]
             filtered_set_data = data[data.set == point_subset]
-            selected_case = filtered_set_data.iloc[point['pointIndex']]["ID"]
+            selected_case = filtered_set_data.iloc[point["pointIndex"]]["ID"]
 
             # Add or remove the selected case
             if selected_case not in st.session_state.highlighted_patients:
@@ -177,7 +169,9 @@ def process_selected_points(selected_points, data, aggregated):
             st.session_state.highlighted_patients.remove(selected_case)
     if selected_points and not aggregated:
         st.markdown(
-            ":red[Please, return to the aggregated view to highlight more cases and/or discard them or click on the 'Reset highlighted cases' button below.]")
+            ":red[Please, return to the aggregated view to highlight more cases and/or discard them or click on the "
+            "'Reset highlighted cases' button below.]"
+        )
 
 
 def reset_highlighted_cases():
@@ -201,8 +195,8 @@ def performance():
         sys.exit()
 
     # Load metric and feature paths
-    features_paths = config.get('features', {})
-    metrics_paths = config.get('metrics', {})
+    features_paths = config.get("features", {})
+    metrics_paths = config.get("metrics", {})
 
     # Define page
     st.subheader(const.header)
@@ -214,12 +208,20 @@ def performance():
     merged_data = merge_features_and_metrics(features=features_paths, metrics=metrics_paths, aggregate=aggregated)
 
     # Perform page logic
-    selected_sets, selected_model, select_x_axis, select_y_axis, selected_regions = setup_sidebar(data=merged_data,
-                                                                                                  aggregated=aggregated)
+    selected_sets, selected_model, select_x_axis, select_y_axis, selected_regions = setup_sidebar(
+        data=merged_data, aggregated=aggregated
+    )
     if len(selected_sets) == 0:
-        st.error('Please, select a dataset from the left sidebar', icon="🚨")
+        st.error("Please, select a dataset from the left sidebar", icon="🚨")
     else:
-        visualize_data(data=merged_data, set=selected_sets, model=selected_model, regions=selected_regions,
-                       x_axis=select_x_axis, y_axis=select_y_axis, aggregated=aggregated)
+        visualize_data(
+            data=merged_data,
+            set=selected_sets,
+            model=selected_model,
+            regions=selected_regions,
+            x_axis=select_x_axis,
+            y_axis=select_y_axis,
+            aggregated=aggregated,
+        )
 
         st.markdown(const.description)

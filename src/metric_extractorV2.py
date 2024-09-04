@@ -1,33 +1,33 @@
 import os
 
-import SimpleITK as sitk
 import pandas as pd
 import pymia.evaluation.evaluator as eval_
 import pymia.evaluation.metric as metric
+import SimpleITK as sitk
 
-from src.utils.operations.file_operations import ls_dirs, load_config_file
+from src.utils.operations.file_operations import load_config_file
+from src.utils.operations.file_operations import ls_dirs
 
 # custom params for pycharm
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 1000)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 1000)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # config variables
-    config = load_config_file("configs/metric_extractor.yml")
-    labels, processed_labels = config['labels'], {}
+    config = load_config_file("src/configs/metric_extractor.yml")
+    labels, processed_labels = config["labels"], {}
     for key, value in labels.items():
         if isinstance(value, list):
             value = tuple(value)
         processed_labels[value] = key
 
-    output_path = config['output_path']
+    output_path = config["output_path"]
 
     # load paths to the datasets
-    path_ground_truth = config['ground_truth_data_path']
-    path_predictions = list(config['model_predictions_paths'].values())
+    path_ground_truth = config["data_path"]
+    path_predictions = list(config["model_predictions_paths"].values())
     patients = ls_dirs(path_ground_truth)
 
     for path in [path_ground_truth] + path_predictions:
@@ -42,7 +42,7 @@ if __name__ == '__main__':
         metric.Specificity(metric="spec"),
         metric.Accuracy(metric="accu"),
         metric.JaccardCoefficient(metric="jacc"),
-        metric.Precision(metric="prec")
+        metric.Precision(metric="prec"),
     ]
 
     """
@@ -62,8 +62,8 @@ if __name__ == '__main__':
             # if n > 1:
             #     break
             print(f"\t Evaluating patient {ID}")
-            gt_path = os.path.join(path_ground_truth, ID, f'{ID}_seg.nii.gz')
-            pred_path = os.path.join(path_predictions, ID, f'{ID}_pred.nii.gz')
+            gt_path = os.path.join(path_ground_truth, ID, f"{ID}_seg.nii.gz")
+            pred_path = os.path.join(path_predictions, ID, f"{ID}_pred.nii.gz")
 
             try:
                 if not os.path.exists(gt_path):
@@ -76,16 +76,16 @@ if __name__ == '__main__':
                 prediction = sitk.ReadImage(pred_path)
                 evaluator.evaluate(prediction, ground_truth, ID)
             except Exception as e:
-                print(f'{ID} -> {e}')
+                print(f"{ID} -> {e}")
 
         # accumulate the results for each of the models
         for result in evaluator.results:
             result_dict = {
-                'ID': result.id_,
-                'region': result.label,
-                'metric': result.metric,
-                'value': result.value,
-                'model': model_name
+                "ID": result.id_,
+                "region": result.label,
+                "metric": result.metric,
+                "value": result.value,
+                "model": model_name,
             }
             raw_metrics.append(result_dict)
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     all_metrics_df = pd.DataFrame(raw_metrics)
 
     # Pivot the DataFrame to have metrics as columns and save results
-    all_metrics_pivot = all_metrics_df.pivot_table(index=['ID', 'region', 'model'], columns='metric', values='value')
+    all_metrics_pivot = all_metrics_df.pivot_table(index=["ID", "region", "model"], columns="metric", values="value")
     all_metrics_pivot.reset_index(inplace=True)
-    all_metrics_pivot.sort_values(by=['model', 'ID', 'region'], inplace=True)
+    all_metrics_pivot.sort_values(by=["model", "ID", "region"], inplace=True)
     all_metrics_pivot.to_csv(f"{output_path}/{config['filename']}.csv", index=False)

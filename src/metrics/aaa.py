@@ -6,22 +6,23 @@ import pymia.evaluation.metric as metric
 import pymia.evaluation.writer as writer
 import SimpleITK as sitk
 
-gt_dir = '/home/melandur/Downloads/fda_data/fda_images'  # ground truth directory
-pred_dir = '/home/melandur/Downloads/fda_data/fda_preds/fda_mvp_23'  # prediction directory
-dst_dir = '/home/melandur/Downloads/metrics/fda/fda_mvp_23'  # destination directory
+gt_dir = "/home/melandur/Downloads/fda_data/fda_images"  # ground truth directory
+pred_dir = "/home/melandur/Downloads/fda_data/fda_preds/fda_mvp_23"  # prediction directory
+dst_dir = "/home/melandur/Downloads/metrics/fda/fda_mvp_23"  # destination directory
 
 metrics = [
     metric.DiceCoefficient("dice"),
     metric.HausdorffDistance(95),
     metric.ReferenceVolume(),
-    metric.PredictionVolume()
+    metric.PredictionVolume(),
 ]
 
-labels = {1: 'ed',
-          2: 'en',
-          3: 'ne',
-          (2, 3): 'tc',
-          }
+labels = {
+    1: "ed",
+    2: "en",
+    3: "ne",
+    (2, 3): "tc",
+}
 
 
 os.makedirs(dst_dir, exist_ok=True)
@@ -30,17 +31,17 @@ for path in [gt_dir, pred_dir, dst_dir]:
     if not os.path.exists(path):
         raise NotADirectoryError(f'"{path}" does not exist')
 
-result_file = os.path.join(dst_dir, 'results.csv')
-result_summary_file = os.path.join(dst_dir, 'results_summary.csv')
+result_file = os.path.join(dst_dir, "results.csv")
+result_summary_file = os.path.join(dst_dir, "results_summary.csv")
 
 evaluator = eval_.SegmentationEvaluator(metrics, labels)
 
 subjects = os.listdir(gt_dir)
 
 for subject in subjects:
-    subject_id = subject.split('.')[0]
-    gt_path = os.path.join(gt_dir, subject, f'{subject}_seg.nii.gz')
-    pred_path = os.path.join(pred_dir, subject, f'{subject}_pred.nii.gz')
+    subject_id = subject.split(".")[0]
+    gt_path = os.path.join(gt_dir, subject, f"{subject}_seg.nii.gz")
+    pred_path = os.path.join(pred_dir, subject, f"{subject}_pred.nii.gz")
 
     try:
         if not os.path.exists(gt_path):
@@ -49,13 +50,13 @@ for subject in subjects:
         if not os.path.exists(pred_path):
             raise FileNotFoundError(f'Prediction file "{pred_path}" does not exist')
 
-        print(f'Evaluating -> {subject_id}')
+        print(f"Evaluating -> {subject_id}")
 
         ground_truth = sitk.ReadImage(gt_path)
         prediction = sitk.ReadImage(pred_path)
         evaluator.evaluate(prediction, ground_truth, subject_id)
     except Exception as e:
-         print(f'{subject_id} -> {e}')
+        print(f"{subject_id} -> {e}")
 
 writer.CSVWriter(result_file).write(evaluator.results)
 

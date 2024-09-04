@@ -1,11 +1,13 @@
 from itertools import combinations
 
 import numpy as np
-from scipy.stats import kruskal, ttest_rel
+from scipy.stats import kruskal
 from scipy.stats import mannwhitneyu
 from scipy.stats import shapiro
+from scipy.stats import ttest_rel
 from scipy.stats import wilcoxon
 from statsmodels.stats.diagnostic import lilliefors
+
 
 # TODO: check whether all the functions in here are necessary now or in the future
 def kruskal_wallis_test(samples: list, alpha=0.05):
@@ -20,7 +22,7 @@ def kruskal_wallis_test(samples: list, alpha=0.05):
 
     # all samples must have more than 5 elements
     if all(len(sample) > 5 for sample in samples):
-        statistic, p_value = kruskal(*samples, nan_policy='omit')
+        statistic, p_value = kruskal(*samples, nan_policy="omit")
         if p_value <= alpha:
             return round(p_value, 3), "rejected"
         else:
@@ -40,7 +42,7 @@ def mann_whitney_test(samples, alpha=0.05):
     sample_a, sample_b = samples
     # all samples must have more than 5 elements
     if all(len(sample) > 5 for sample in samples):
-        statistic, p_value = mannwhitneyu(sample_a, sample_b, nan_policy='omit')
+        statistic, p_value = mannwhitneyu(sample_a, sample_b, nan_policy="omit")
         if p_value <= alpha:
             return round(p_value, 3), "rejected"
         else:
@@ -58,13 +60,13 @@ def mann_whitney_test_post_hoc(samples, alpha=0.05):
     distributions.
 
     Parameters:
-    samples (list of array-like): List of samples to be compared.
-    alpha (float): Significance level for determining the rejection of the null hypothesis. Default is 0.05.
+    samples: List of samples to be compared.
+    alpha: Significance level for determining the rejection of the null hypothesis. Default is 0.05.
 
     Returns:
     tuple: A tuple containing:
-        - matrix (numpy.ndarray): Matrix of p-values obtained from pairwise comparisons.
-        - rejected (numpy.ndarray): Matrix indicating whether the null hypothesis is rejected based on the specified alpha.
+        - matrix: Matrix of p-values obtained from pairwise comparisons.
+        - rejected: Matrix indicating whether the null hypothesis is rejected based on the specified alpha.
     """
 
     def combine_matrices(matrix, rejected):
@@ -72,8 +74,8 @@ def mann_whitney_test_post_hoc(samples, alpha=0.05):
         Combine the matrices of p-values and rejection decisions into a final matrix.
 
         Parameters:
-        matrix (numpy.ndarray): Matrix of p-values obtained from pairwise comparisons.
-        rejected (numpy.ndarray): Matrix indicating whether the null hypothesis is rejected based on the specified alpha.
+        matrix: Matrix of p-values obtained from pairwise comparisons.
+        rejected: Matrix indicating whether the null hypothesis is rejected based on the specified alpha.
 
         Returns:
         numpy.ndarray: Combined matrix with lower values for numeric p-values and upper values for rejection decisions.
@@ -100,7 +102,7 @@ def mann_whitney_test_post_hoc(samples, alpha=0.05):
         sample_a, sample_b = samples[i], samples[j]
         # all samples must have more than 5 elements
         if all(len(sample) > 5 for sample in [sample_a, sample_b]):
-            statistic, p_value = mannwhitneyu(sample_a, sample_b, nan_policy='omit')
+            statistic, p_value = mannwhitneyu(sample_a, sample_b, nan_policy="omit")
             matrix[i, j] = matrix[j, i] = round(p_value, 3)
             if p_value <= alpha:
                 rejected[i, j] = rejected[j, i] = "Statistical differences"
@@ -117,26 +119,30 @@ def paired_ttest(sample1, sample2, alpha=0.05):
     Perform paired t-test between two samples and interpret the result.
 
     Parameters:
-    - sample1 (array-like): The first sample.
-    - sample2 (array-like): The second sample.
-    - alpha (float): The significance level for the test (default is 0.05).
+    - sample1: The first sample.
+    - sample2: The second sample.
+    - alpha: The significance level for the test (default is 0.05).
 
     Returns:
     - dict: A dictionary containing the test statistic, p-value, and interpretation.
     """
 
     # Perform paired t-test if both samples are normal
-    t_stat, p_value = ttest_rel(sample1, sample2, nan_policy='omit')
+    t_stat, p_value = ttest_rel(sample1, sample2, nan_policy="omit")
 
     # Interpret the result
     if p_value <= alpha:
-        interpretation = (f"Given the alpha {alpha}, reject the null hypothesis. There is a significant difference "
-                          f"between the samples.")
+        interpretation = (
+            f"Given the alpha {alpha}, reject the null hypothesis. There is a significant difference "
+            f"between the samples."
+        )
     else:
-        interpretation = (f"Given the alpha {alpha}, fail to reject the null hypothesis. There is no significant "
-                          f"difference between the samples.")
+        interpretation = (
+            f"Given the alpha {alpha}, fail to reject the null hypothesis. There is no significant "
+            f"difference between the samples."
+        )
 
-    return {'p-value': p_value, 'interpretation': interpretation}
+    return {"p-value": p_value, "interpretation": interpretation}
 
 
 def wilcoxon_test(sample1, sample2, alpha=0.05):
@@ -153,18 +159,22 @@ def wilcoxon_test(sample1, sample2, alpha=0.05):
     """
 
     # Perform Wilcoxon signed-rank test
-    w_stat, p_value = wilcoxon(sample1, sample2, nan_policy='omit')
+    w_stat, p_value = wilcoxon(sample1, sample2, nan_policy="omit")
 
     # Interpret the result
     if p_value <= alpha:
-        interpretation = (f"Given the alpha {alpha}, reject the null hypothesis. There is a significant difference "
-                          f"between the samples.")
+        interpretation = (
+            f"Given the alpha {alpha}, reject the null hypothesis. There is a significant difference "
+            f"between the samples."
+        )
     else:
-        interpretation = (f"Given the alpha {alpha}, fail to reject the null hypothesis. There is no significant "
-                          f"difference between the samples.")
+        interpretation = (
+            f"Given the alpha {alpha}, fail to reject the null hypothesis. There is no significant "
+            f"difference between the samples."
+        )
 
     # Return the test statistic, p-value, and interpretation
-    return {'p-value': p_value, 'interpretation': interpretation}
+    return {"p-value": p_value, "interpretation": interpretation}
 
 
 """
@@ -177,14 +187,14 @@ def shapiro_wilk_test(sample, alpha=0.05):
     Perform the Shapiro-Wilk test for normality on a sample and interpret the result.
 
     Parameters:
-    sample (array-like): The sample to test for normality.
-    alpha (float): The significance level for the test (default is 0.05).
+    sample: The sample to test for normality.
+    alpha: The significance level for the test (default is 0.05).
 
     Returns:
     dict: A dictionary containing the test statistic, p-value, and interpretation.
     """
     # Perform Shapiro-Wilk test
-    test_statistic, p_value = shapiro(x=sample, nan_policy='omit')
+    test_statistic, p_value = shapiro(x=sample, nan_policy="omit")
 
     # Convert to scientific notation
     stat_sci = f"{test_statistic:.3e}"
@@ -192,18 +202,18 @@ def shapiro_wilk_test(sample, alpha=0.05):
 
     # Interpret the result
     if p_value <= alpha:
-        interpretation = f"Null hypothesis rejected, the sample does not follow a normal distribution."
+        interpretation = "Null hypothesis rejected, the sample does not follow a normal distribution."
         normality = False
     else:
-        interpretation = f"Fail to reject the null hypothesis, the sample follows a normal distribution."
+        interpretation = "Fail to reject the null hypothesis, the sample follows a normal distribution."
         normality = True
 
     # Return the test statistic, p-value, and interpretation
     return {
-        'Statistic': stat_sci,
-        'P-value': p_value_sci,
-        'Normally distributed': normality,
-        'Null hypothesis interpretation': interpretation
+        "Statistic": stat_sci,
+        "P-value": p_value_sci,
+        "Normally distributed": normality,
+        "Null hypothesis interpretation": interpretation,
     }
 
 
@@ -219,7 +229,7 @@ def lilliefors_test(sample, alpha=0.05):
     dict: A dictionary containing the test statistic, p-value, and interpretation.
     """
     # Perform Lilliefors test
-    test_statistic, p_value = lilliefors(sample, dist='norm', pvalmethod='approx')
+    test_statistic, p_value = lilliefors(sample, dist="norm", pvalmethod="approx")
 
     # Convert to scientific notation
     stat_sci = f"{test_statistic:.3e}"
@@ -227,18 +237,18 @@ def lilliefors_test(sample, alpha=0.05):
 
     # Interpret the result
     if p_value <= alpha:
-        interpretation = f"Null hypothesis rejected, the sample does not follow a normal distribution."
+        interpretation = "Null hypothesis rejected, the sample does not follow a normal distribution."
         normality = False
     else:
-        interpretation = f"Fail to reject the null hypothesis, the sample follows a normal distribution."
+        interpretation = "Fail to reject the null hypothesis, the sample follows a normal distribution."
         normality = True
 
     # Return the test statistic, p-value, and interpretation
     return {
-        'Statistic': stat_sci,
-        'P-value': p_value_sci,
-        'Normally distributed': normality,
-        'Null hypothesis interpretation': interpretation
+        "Statistic": stat_sci,
+        "P-value": p_value_sci,
+        "Normally distributed": normality,
+        "Null hypothesis interpretation": interpretation,
     }
 
 
@@ -267,11 +277,7 @@ def normality_test(data, alpha=0.05, threshold_observations=50):
         test_name = "Lilliefors"
 
     # Building output
-    output = {
-        "Test performed": test_name,
-        "Sample length": n,
-        "Alpha": alpha
-    }
+    output = {"Test performed": test_name, "Sample length": n, "Alpha": alpha}
     output.update(result)
 
     return output

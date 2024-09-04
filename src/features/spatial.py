@@ -53,7 +53,12 @@ class SpatialFeatures:
 
         # Calculate the center of mass
         center_of_mass_mean = np.mean(coordinates, axis=0)
-        return dict(zip(["axial_brain_centre_mass", "coronal_brain_centre_mass", "sagittal_brain_centre_mass"], center_of_mass_mean * self.spacing))
+        return dict(
+            zip(
+                ["axial_brain_centre_mass", "coronal_brain_centre_mass", "sagittal_brain_centre_mass"],
+                center_of_mass_mean * self.spacing,
+            )
+        )
 
     def get_dimensions(self):
         """
@@ -68,11 +73,7 @@ class SpatialFeatures:
             - sagittal_dim
         """
         axial, coronal, sagittal = self.sequence.shape
-        dimensions = {
-            'axial_dim': int(axial),
-            'coronal_dim': int(coronal),
-            'sagittal_dim': int(sagittal)
-        }
+        dimensions = {"axial_dim": int(axial), "coronal_dim": int(coronal), "sagittal_dim": int(sagittal)}
         return dimensions
 
     def extract_features(self) -> dict:

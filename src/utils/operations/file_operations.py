@@ -1,7 +1,8 @@
 import os
-import yaml
 import shutil
+
 import pandas as pd
+import yaml
 
 
 def ls_dirs(path: str) -> list:
@@ -111,7 +112,7 @@ def concatenate_csv_files(directory: str, output_file: str):
         directory: The directory containing the CSV files to concatenate.
         output_file: The path where the concatenated CSV file will be saved.
     """
-    csv_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.csv')]
+    csv_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".csv")]
     df_list = [pd.read_csv(csv_file) for csv_file in csv_files]
     concatenated_df = pd.concat(df_list, ignore_index=True)
     concatenated_df.to_csv(output_file, index=False)
@@ -127,7 +128,8 @@ def read_datasets_from_dict(name_path_dict: dict, col_name: str = "set") -> pd.D
         col_name: The name of the column to add that will contain the dataset name. Defaults to "set".
 
     Returns:
-        pd.DataFrame: A concatenated DataFrame containing all the datasets, with an additional column specifying the dataset name.
+        pd.DataFrame: A concatenated DataFrame containing all the datasets, with an additional column specifying
+                      the dataset name.
     """
 
     out = []
@@ -138,4 +140,3 @@ def read_datasets_from_dict(name_path_dict: dict, col_name: str = "set") -> pd.D
     out = pd.concat(out)
 
     return out
-

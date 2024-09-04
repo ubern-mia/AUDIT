@@ -38,12 +38,12 @@ def mistakes_per_class_optim(ground_truth, predicted, unique_classes):
     predicted = np.array(predicted)
 
     # Calculate indices where ground truth and prediction match
-    match_indices = (ground_truth == predicted)
+    match_indices = ground_truth == predicted
 
     # Calculate errors per class
     for i, class_i in enumerate(unique_classes):
         # Find indices where ground truth equals class_i
-        class_indices = (ground_truth == class_i)
+        class_indices = ground_truth == class_i
 
         # Count errors for each unique class predicted when ground truth is class_i
         unique, counts = np.unique(predicted[class_indices & ~match_indices], return_counts=True)
@@ -61,7 +61,7 @@ def mistakes_per_class_optim(ground_truth, predicted, unique_classes):
 
 def normalize_matrix_per_row(matrix):
     row_sums = matrix.sum(axis=1)
-    zero_sum_mask = (row_sums == 0)
+    zero_sum_mask = row_sums == 0
     row_sums[zero_sum_mask] = 1
     normalized_matrix = 100 * matrix / row_sums[:, np.newaxis]
     normalized_matrix[zero_sum_mask] = 0

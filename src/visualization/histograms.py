@@ -1,12 +1,14 @@
+import numpy as np
 import plotly.express as px
+import plotly.figure_factory as ff
 import plotly.graph_objects as go
+from scipy.stats import iqr
+
 from src.utils.operations.misc_operations import pretty_string
 from src.visualization.constants import Dashboard
-from scipy.stats import iqr
-import plotly.figure_factory as ff
-import numpy as np
 
 constants = Dashboard()
+
 
 def optimal_num_bins(data: np.array) -> int:
     """
@@ -25,26 +27,22 @@ def optimal_num_bins(data: np.array) -> int:
 def plot_histogram(data, x_axis, color_var, n_bins, y_label=None, x_label=None):
 
     if y_label is None:
-        y_label = f"Count"
+        y_label = "Count"
 
     if x_label is None:
         x_label = f"{pretty_string(x_axis)}"
 
-    fig = px.histogram(data,
-                       x=x_axis,
-                       color=color_var,
-                       hover_data=data.columns,
-                       nbins=n_bins,
-                       barmode="stack")
+    fig = px.histogram(data, x=x_axis, color=color_var, hover_data=data.columns, nbins=n_bins, barmode="stack")
 
-    fig.update_layout(template=constants.template,
-                      height=500,
-                      width=900,
-                      showlegend=True,
-                      xaxis_title=x_label,
-                      yaxis_title=y_label,
-                      legend_title="Dataset"
-                      )
+    fig.update_layout(
+        template=constants.template,
+        height=500,
+        width=900,
+        showlegend=True,
+        xaxis_title=x_label,
+        yaxis_title=y_label,
+        legend_title="Dataset",
+    )
     fig.update_traces(opacity=0.6)
 
     return fig
@@ -56,7 +54,7 @@ def custom_histogram(data, x_axis, color_var, n_bins, bins_size=None, y_label=No
         n_bins = None
 
     if y_label is None:
-        y_label = f"Count"
+        y_label = "Count"
 
     if x_label is None:
         x_label = f"{pretty_string(x_axis)}"
@@ -77,44 +75,40 @@ def custom_histogram(data, x_axis, color_var, n_bins, bins_size=None, y_label=No
 
     for color_value in data[color_var].unique():
         filtered_data = data[data[color_var] == color_value]
-        fig.add_trace(go.Histogram(
-            x=filtered_data[x_axis],
-            name=color_value,
-            marker=dict(color=color_map[color_value], line=dict(width=.8, color="black")),
-            autobinx=False
-        ))
+        fig.add_trace(
+            go.Histogram(
+                x=filtered_data[x_axis],
+                name=color_value,
+                marker=dict(color=color_map[color_value], line=dict(width=0.8, color="black")),
+                autobinx=False,
+            )
+        )
 
     # Update layout for stacked histogram
-    fig.update_layout(template=constants.template,
-                      height=400,
-                      width=900,
-                      showlegend=True,
-                      margin=dict(t=20, b=0),
-                      xaxis_title=x_label,
-                      yaxis_title=y_label,
-                      legend_title="Dataset",
-                      barmode='stack',
-                      legend=dict(
-                          yanchor="top",
-                          xanchor="right",
-                      )
+    fig.update_layout(
+        template=constants.template,
+        height=400,
+        width=900,
+        showlegend=True,
+        margin=dict(t=20, b=0),
+        xaxis_title=x_label,
+        yaxis_title=y_label,
+        legend_title="Dataset",
+        barmode="stack",
+        legend=dict(yanchor="top", xanchor="right",),
     )
 
     if bins_size:
         fig.update_traces(opacity=0.6, xbins_size=bins_size)
     else:
-        fig.update_traces(opacity=0.6, xbins=dict(
-            start=data[x_axis].min(),
-            end=data[x_axis].max(),
-            size=bin_size)
-        )
+        fig.update_traces(opacity=0.6, xbins=dict(start=data[x_axis].min(), end=data[x_axis].max(), size=bin_size))
 
     # fig.update_traces(marker_line_width=1, marker_line_color="Black")
 
     return fig
 
 
-def custom_distplot(data, x_axis, color_var, y_label=None, x_label=None, histnorm='probability'):
+def custom_distplot(data, x_axis, color_var, y_label=None, x_label=None, histnorm="probability"):
     """
     - probability density': Normalizes the histogram so that the area under the curve sums to 1, converting the counts
                             to probability densities. This is useful for comparing distributions with different sample
@@ -155,8 +149,16 @@ def custom_distplot(data, x_axis, color_var, y_label=None, x_label=None, histnor
     opt_bins = optimal_num_bins(np.concatenate(hist_data))
 
     # Create distplot
-    fig = ff.create_distplot(hist_data, group_labels, bin_size=opt_bins, show_hist=False, show_rug=False, colors=colors,
-                             histnorm=histnorm, curve_type='kde')  # histnorm='probability density'
+    fig = ff.create_distplot(
+        hist_data,
+        group_labels,
+        bin_size=opt_bins,
+        show_hist=False,
+        show_rug=False,
+        colors=colors,
+        histnorm=histnorm,
+        curve_type="kde",
+    )  # histnorm='probability density'
 
     # Update layout
     fig.update_layout(
@@ -168,24 +170,11 @@ def custom_distplot(data, x_axis, color_var, y_label=None, x_label=None, histnor
         xaxis_title=x_label,
         yaxis_title=y_label,
         legend_title="Dataset",
-        legend=dict(
-            yanchor="top",
-            xanchor="right",
-        ),
-        xaxis=dict(
-            color='black',
-            title_font=dict(color='black', size=16),
-            tickfont=dict(color='black', size=14)
-        ),
-        yaxis=dict(
-            color='black',
-            title_font=dict(color='black', size=16),
-            tickfont=dict(color='black', size=14)
-        )
+        legend=dict(yanchor="top", xanchor="right",),
+        xaxis=dict(color="black", title_font=dict(color="black", size=16), tickfont=dict(color="black", size=14)),
+        yaxis=dict(color="black", title_font=dict(color="black", size=16), tickfont=dict(color="black", size=14)),
     )
 
-    fig.update_traces(line={'width': 3})
+    fig.update_traces(line={"width": 3})
 
     return fig
-
-

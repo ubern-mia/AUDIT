@@ -1,11 +1,12 @@
-from skimage.feature import graycomatrix, graycoprops
+import numpy as np
 import SimpleITK as sitk
 from radiomics import featureextractor
-import numpy as np
+from skimage.feature import graycomatrix
+from skimage.feature import graycoprops
 
 
 # TODO: create a class as the others
-def compute_texture_values(image_array, texture='contrast'):
+def compute_texture_values(image_array, texture="contrast"):
     """
     Compute the contrast values for each 2D plane in a 3D image array.
 
@@ -18,7 +19,8 @@ def compute_texture_values(image_array, texture='contrast'):
 
     # Normalize the image to values between 0 and 255
     image_array = (255 * (image_array - np.min(image_array)) / (np.max(image_array) - np.min(image_array))).astype(
-        np.uint8)
+        np.uint8
+    )
 
     # Define distances and angles for GLCM calculation
     distances = [1]
@@ -74,4 +76,3 @@ def extract_radiomics_features(image_path):
 
     # Return extracted features
     return result
-

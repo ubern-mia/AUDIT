@@ -1,7 +1,9 @@
-import numpy as np
-from numpy import logical_and as l_and, logical_not as l_not
-from scipy.spatial.distance import directed_hausdorff
 from collections import Counter
+
+import numpy as np
+from numpy import logical_and as l_and
+from numpy import logical_not as l_not
+from scipy.spatial.distance import directed_hausdorff
 
 HAUS = "haus"
 DICE = "dice"
@@ -71,12 +73,12 @@ def calculate_confusion_matrix_elements(gt, seg):
 
 
 def calculate_metrics(
-        ground_truth: np.ndarray,
-        segmentation: np.ndarray,
-        patient: str,
-        regions: list,
-        skip_background=True,
-        spacing: np.array = np.array([1, 1, 1])
+    ground_truth: np.ndarray,
+    segmentation: np.ndarray,
+    patient: str,
+    regions: list,
+    skip_background=True,
+    spacing: np.array = np.array([1, 1, 1]),
 ) -> list:
     """
      Calculate evaluation metrics (Jaccard index, Accuracy, Hausdorff, DICE score, Sensitivity, Specificity, and
@@ -100,10 +102,7 @@ def calculate_metrics(
     metrics_list = []
     for n, r in enumerate(regions):
 
-        metrics = dict(
-            ID=patient,
-            region=r
-        )
+        metrics = dict(ID=patient, region=r)
 
         # Ground truth and segmentation for i-th region
         gt = ground_truth[n]

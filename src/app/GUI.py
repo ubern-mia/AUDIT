@@ -1,16 +1,18 @@
 import warnings
-warnings.simplefilter(action="ignore", category=FutureWarning)
+
 import streamlit as st
 
 from src.app.util.pages.Home_Page import home_page
-from src.app.util.pages.Univariate_Feature_Analysis import univariate
-from src.app.util.pages.Multivariate_Feature_Analysis import multivariate
-from src.app.util.pages.Segmentation_Error_Matrix import matrix
-from src.app.util.pages.Model_Performance_Analysis import performance
-from src.app.util.pages.Pairwise_Model_Performance_Comparison import pairwise_comparison
-from src.app.util.pages.Multi_Model_Performance_Comparison import multi_model
 from src.app.util.pages.Longitudinal_Measurements import longitudinal
+from src.app.util.pages.Model_Performance_Analysis import performance
+from src.app.util.pages.Multi_Model_Performance_Comparison import multi_model
+from src.app.util.pages.Multivariate_Feature_Analysis import multivariate
+from src.app.util.pages.Pairwise_Model_Performance_Comparison import pairwise_comparison
+from src.app.util.pages.Segmentation_Error_Matrix import matrix
 from src.app.util.pages.Subjects_Exploration import subjects
+from src.app.util.pages.Univariate_Feature_Analysis import univariate
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 class AUDITApp:
@@ -31,9 +33,7 @@ class AUDITApp:
         st.set_page_config(page_title="AUDIT", page_icon=":brain", layout="wide")
 
         st.sidebar.markdown("## Main Menu")
-        app = st.sidebar.selectbox(
-            "Select Page", self.apps, format_func=lambda app: app["title"]
-        )
+        app = st.sidebar.selectbox("Select Page", self.apps, format_func=lambda app: app["title"])
         st.sidebar.markdown("---")
         app["function"]()
 

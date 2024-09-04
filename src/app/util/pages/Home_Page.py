@@ -1,4 +1,3 @@
-
 """
   Copyright 2024 Mitchell Isaac Parker
 
@@ -16,8 +15,8 @@
 
 """
 
-from PIL import Image
 import streamlit as st
+from PIL import Image
 
 
 def home_page():
@@ -29,64 +28,76 @@ def home_page():
     # Title and description
     left_col, right_col = st.columns([2, 1])
     left_col.title("Welcome to AUDIT")
-    left_col.markdown("""
+    left_col.markdown(
+        """
         <h3>A tool for analyzing brain dataset distributions and comparing model performance</h3>
         <p style="margin: 5px 0;"><b>Created by Carlos Aumente Maestro</b></p>
         <p style="margin: 5px 0;"><b>Artificial Intelligence Center, University of Oviedo</b></p>
         <p style="margin: 5px 0;"><b>ARTORG - Center for Biomedical Engineering Research, University of Bern</b></p>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
     right_col.image(audit_logo, output_format="PNG")
 
     # Summary secction
     st.markdown("---")
     st.header("""Summary""")
-    st.write("""AUDIT, Analysis & evalUation Dashboard of artIficial inTelligence, is a tool designed to provide 
-    researcher and developers an interactive way to better analyze and explore brain MRI datasets and models. 
-    Given its functionalities to extract the most relevant features and metrics from your several data sources, it 
+    st.write("""
+    AUDIT, Analysis & evalUation Dashboard of artIficial inTelligence, is a tool designed to provide
+    researcher and developers an interactive way to better analyze and explore brain MRI datasets and models.
+    Given its functionalities to extract the most relevant features and metrics from your several data sources, it
     allows for uncovering biases both intra and inter-dataset as well as within the model predictions. Some of the main
     capabilities of AUDIT are presented below:""")
+
     st.markdown("""
         - **Data management**: Easily work and preprocess MRIs from various sources.
         - **Feature extraction**: Extract relevant features from the images and their segmentations for analysis.
-        - **Model robustness**: Assess the robustness of the model by evaluating its performance across experiments and conditions.
+        - **Model robustness**: Assess the robustness of the model by evaluating its performance across experiments
+                                and conditions.
         - **Bias detection**: Identify potential biases either in model predictions and performance or on your data.
         - **Longitudinal analysis**: Track the model performance over different time points.
     """)
 
     st.markdown("""
-    Details of our work are provided in the -------- paper. We encourage researchers and developers to use AUDIT to gain 
+    Details of our work are provided in the -------- paper. We encourage researchers and developers to use AUDIT to gain
     insights....
     """)
 
     # Usage seccion
     st.image(audit_schema, output_format="PNG")
     st.header("""Usage""")
-    st.markdown("""
+    st.markdown(
+        """
         - **Home Page**: The main landing page of the tool.
-        - **Univariate Analysis**: Exploration of individual variables to understand their distributions and discover outliers in it.
-        - **Multivariate Analysis**: Examination of multiple variables simultaneously to explore relationships and hidden patterns.
-        - **Segmentation Error Matrix**: A pseudo-confusion matrix displaying the errors associated with the segmentation tasks.
+        - **Univariate Analysis**: Exploration of individual variables to understand their distributions and discover
+                                    outliers in it.
+        - **Multivariate Analysis**: Examination of multiple variables simultaneously to explore relationships and
+                                     hidden patterns.
+        - **Segmentation Error Matrix**: A pseudo-confusion matrix displaying the errors associated with the
+                                         segmentation tasks.
         - **Model Performance Analysis**: Evaluation of the effectiveness and accuracy of a single model.
-        - **Pairwise Model Performance Comparison**: Perform pair-wise comparisons between models to find statistical significant differences.
+        - **Pairwise Model Performance Comparison**: Perform pair-wise comparisons between models to find statistical
+                                                     significant differences.
         - **Multi-model Performance Comparison**: Comparative analysis of performance metrics across multiple models.
-        - **Longitudinal Measurements**: Analysis of data collected over time to observe trends and changes on model accuracy.
+        - **Longitudinal Measurements**: Analysis of data collected over time to observe trends and changes on model
+                                         accuracy.
         - **Subjects Exploration**: Detailed examination of individual subjects within the dataset.
-        """)
+        """
+    )
     st.markdown("---")
 
     # Contact information seccion
     left_info_col, right_info_col = st.columns(2)
     left_info_col.markdown(
-        f"""
+        """
         ### Authors
         Please feel free to contact us with any issues, comments, or questions. [Contact Us](UO297103@uniovi.es)
 
-        ##### Carlos Aumente [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40Mitch_P)](https://twitter.com/Mitch_P)
-
+        ##### Carlos Aumente
         - Email: <UO297103@uniovi.es>
         - GitHub: https://github.com/caumente/
 
-        ##### Mauricio Reyes [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40RolandDunbrack)](https://twitter.com/RolandDunbrack)
+        ##### Mauricio Reyes
 
         - Email: <------------>
         """,
@@ -111,8 +122,8 @@ def home_page():
     right_info_col.markdown(
         """
         ### Documentation
-        [Documentation](#) 
-        [GitHub Repository](#) 
+        [Documentation](#)
+        [GitHub Repository](#)
         Under Apache License 2.0
         """
     )
