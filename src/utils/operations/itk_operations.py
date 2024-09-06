@@ -1,5 +1,6 @@
 import os
 import subprocess
+import platform
 
 
 # TODO: this functionality only works if all the sequences are present
@@ -12,13 +13,9 @@ def run_itk_snap(path, dataset, case, labels=None):
         # TODO: remove dependencies of my path
         labels_path = "/Users/caumente/Projects/robustness/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
-        command = ["open", "-n", "-a", "ITK-SNAP", "--args", "-l", labels_path, "-g", t1ce, "-s", seg, "-o"] + [
-            t1,
-            t2,
-            flair,
-        ]
+        command = open_itk_command() + ["-l", labels_path, "-g", t1ce, "-s", seg, "-o"] + [t1, t2, flair]
     else:
-        command = ["open", "-n", "-a", "ITK-SNAP", "--args", "-g", t1ce, "-s", seg, "-o"] + [t1, t2, flair]
+        command = open_itk_command() + ["-g", t1ce, "-s", seg, "-o"] + [t1, t2, flair]
 
     # Checking if both path exist
     if os.path.exists(t1ce) and os.path.exists(seg):
@@ -75,42 +72,9 @@ def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None)
     if labels:
         labels_path = "/Users/caumente/Projects/robustness/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
-        command = [
-            "open",
-            "-n",
-            "-a",
-            "ITK-SNAP",
-            "--args",
-            "-g",
-            t1c,
-            "-s",
-            seg,
-            "-o",
-            t1,
-            t2,
-            flair,
-            seg_ai,
-            "-l",
-            labels_path,
-        ]
+        command = open_itk_command() + ["-g", t1c, "-s", seg, "-o", t1, t2, flair, seg_ai, "-l", labels_path]
     else:
-        command = [
-            "open",
-            "-n",
-            "-a",
-            "ITK-SNAP",
-            "--args",
-            "-g",
-            t1c,
-            "-s",
-            seg,
-            "-o",
-            t1,
-            t2,
-            flair,
-            seg_ai
-            # "-l", labels_path
-        ] + [seg_ai]
+        command = open_itk_command() + ["-g", t1c, "-s", seg, "-o", t1, t2, flair, seg_ai] + [seg_ai]
 
     # Checking if both path exist
     if os.path.exists(t1c) and os.path.exists(seg):
@@ -119,3 +83,20 @@ def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None)
         verification_check = False
 
     return verification_check
+
+
+def check_operative_system():
+    return platform.system()
+
+
+def open_itk_command():
+    op_sys = check_operative_system()
+
+    if op_sys == "Darwin":  # macOS
+        open_itk_command = ["open", "-n", "-a", "ITK-SNAP", "--args"]
+    elif op_sys == "Linux":  # Linux/Ubuntu
+        open_itk_command = ["itksnap"]
+    else:
+        raise OSError("Unsupported Operating System")
+
+    return open_itk_command

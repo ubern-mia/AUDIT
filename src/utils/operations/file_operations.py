@@ -18,6 +18,19 @@ def ls_dirs(path: str) -> list:
     return sorted([f.path.split("/")[-1] for f in os.scandir(path) if f.is_dir()])
 
 
+def ls_files(path: str) -> list:
+    """
+    Lists all files within a given path and returns their names in sorted order.
+
+    Args:
+        path: The directory path where to look for files.
+
+    Returns:
+        list: A sorted list of files names found within the specified path.
+    """
+    return sorted([f.path.split("/")[-1] for f in os.scandir(path) if f.is_file()])
+
+
 def load_config_file(path: str) -> dict:
     """
     Loads a configuration file in YAML format and returns its contents as a dictionary.
@@ -33,7 +46,7 @@ def load_config_file(path: str) -> dict:
         return config
 
 
-def rename_files(root_dir: str, old_ext: str = "_t1ce", new_ext: str = "_t1c"):
+def rename_files(root_dir: str, old_ext: str = "_t1ce", new_ext: str = "_t1c", verbose=False):
     """
     Renames files in a directory and its subdirectories by replacing a specific substring in the filenames.
 
@@ -43,10 +56,9 @@ def rename_files(root_dir: str, old_ext: str = "_t1ce", new_ext: str = "_t1c"):
 
     Args:
         root_dir: The root directory containing the files to be renamed.
-        old_ext: The substring in filenames that needs to be replaced.
-                                 Defaults to "_t1ce".
-        new_ext: The substring that will replace the old extension.
-                                 Defaults to "_t1c".
+        old_ext: The substring in filenames that needs to be replaced. Defaults to "_t1ce".
+        new_ext: The substring that will replace the old extension. Defaults to "_t1c".
+        verbose: Whether print the log
     """
     if old_ext is None:
         old_ext = ""
@@ -65,8 +77,9 @@ def rename_files(root_dir: str, old_ext: str = "_t1ce", new_ext: str = "_t1c"):
                 # Rename the file
                 os.rename(old_file_path, new_file_path)
 
-                # Print a message indicating the rename operation
-                print(f"Renamed: {old_file_path} -> {new_file_path}")
+                if verbose:
+                    # Print a message indicating the rename operation
+                    print(f"Renamed: {old_file_path} -> {new_file_path}")
 
 
 def copy_files_by_extension(src_dir: str, dst_dir: str, ext: str):

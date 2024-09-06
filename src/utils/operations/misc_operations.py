@@ -3,6 +3,7 @@ import base64
 from colorama import Fore
 from colorama import Style
 from tqdm import tqdm
+from loguru import logger
 
 
 def add_prefix_dict(dictionary: dict, prefix: str) -> dict:
@@ -108,3 +109,7 @@ def img_to_base64(image_path: str) -> str:
      """
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
+
+
+def configure_logging(log_filename: str):
+    logger.add(log_filename, retention="90 days", level="INFO")

@@ -3,7 +3,7 @@ labels:
   EDE: 4
   ENH: 1
   NEC: 2
-datasets_root_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/brats2020'
+datasets_root_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/BraTS2020'
 csv_features_path: '/home/carlos/Documentos/proyectos/AUDIT/outputs'
 features_analysis:
   data_paths:
@@ -19,15 +19,15 @@ distributions_analysis:
 
 segmentation_error_analysis:
   NW:
-    ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_images'
-    mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_1'
-    mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_2'
-    mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_23'
+    ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_images'
+    mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_1'
+    mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_2'
+    mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_23'
   UCSF:
-    ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_images'
-    mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_seg/ucsf_mvp_1'
-    mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_seg/ucsf_mvp_2'
-    mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_seg/ucsf_mvp_23'
+    ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/UCSF_images'
+    mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_1'
+    mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_2'
+    mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_23'
 
 model_performance_analysis:
   features:

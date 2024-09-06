@@ -1,4 +1,5 @@
 import numpy as np
+from loguru import logger
 
 
 class SpatialFeatures:
@@ -47,6 +48,13 @@ class SpatialFeatures:
         np.ndarray
             The center of mass coordinates adjusted by the voxel spacing.
         """
+        if self.sequence is None:
+            logger.warning("Sequence '_t1ce' not found. Assigning brain center of mass (nan, nan, nan)")
+            return {
+                "axial_brain_centre_mass": np.nan,
+                "coronal_brain_centre_mass": np.nan,
+                "sagittal_brain_centre_mass": np.nan
+            }
 
         # Get the indices of the non-zero voxels
         coordinates = np.argwhere(self.sequence != 0)
@@ -72,6 +80,10 @@ class SpatialFeatures:
             - coronal_dim
             - sagittal_dim
         """
+        if self.sequence is None:
+            logger.warning(" Sequence '_t1ce' not found. Assigning dimensions (nan, nan, nan)")
+            return {"axial_dim": np.nan, "coronal_dim": np.nan, "sagittal_dim": np.nan}
+
         axial, coronal, sagittal = self.sequence.shape
         dimensions = {"axial_dim": int(axial), "coronal_dim": int(coronal), "sagittal_dim": int(sagittal)}
         return dimensions

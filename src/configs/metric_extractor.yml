@@ -1,11 +1,11 @@
 # Path to the raw dataset
-data_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_images'
+data_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_images'
 
 # Paths to model predictions
 model_predictions_paths:
-  mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_1'
-  mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_2'
-  mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_seg/nw_mvp_23'
+  mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_1'
+  mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_2'
+  mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_23'
 
 # Mapping of labels to their numeric values
 labels:

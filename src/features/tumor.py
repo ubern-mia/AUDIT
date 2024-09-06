@@ -2,6 +2,7 @@ from collections import Counter
 
 import numpy as np
 from scipy.spatial.distance import euclidean
+from loguru import logger
 
 from src.utils.operations.misc_operations import add_prefix_dict
 
@@ -58,6 +59,7 @@ class TumorFeatures:
         self.spacing = spacing
         self.mapping_names = mapping_names
         self.planes = planes if planes is not None else ["axial", "coronal", "sagittal"]
+        self.tumor_centre_mass_per_label = {}
 
     def count_tumor_pixels(self):
         """
@@ -68,6 +70,12 @@ class TumorFeatures:
         dict
             A dictionary with the counts of each unique value in the segmentation.
         """
+        if self.segmentation is None:
+            if self.mapping_names:
+                return {k.lower(): np.nan for k in self.mapping_names.values()}
+            else:
+                return {}
+
         unique, counts = np.unique(self.segmentation, return_counts=True)
         pixels_dict = dict(zip(unique, counts))
 
@@ -85,10 +93,13 @@ class TumorFeatures:
         dict
             A dictionary containing the lesion size.
         """
+        if self.segmentation is None:
+            return {"lesion_size": np.nan}
+
         lesion_size = (self.segmentation > 0).sum() * np.prod(self.spacing)
         return {"lesion_size": lesion_size}
 
-    def calculate_tumor_center_mass(self, label=None):
+    def get_tumor_center_mass(self, label=None):
         """
         Calculates the center of mass for the tumor in the image.
 
@@ -103,7 +114,8 @@ class TumorFeatures:
             The center of mass coordinates adjusted by the voxel spacing.
         """
         if self.segmentation is None:
-            raise ValueError("Image data is required to calculate the center of mass.")
+            logger.warning("An image is required to calculate the tumor center of mass. Assigning (nan, nan, nan)")
+            return np.array([np.nan]) * 3
 
         if label is not None and not np.any(self.segmentation == label):
             return np.array([np.nan] * len(self.segmentation.shape))
@@ -113,6 +125,9 @@ class TumorFeatures:
         return center_of_mass_mean * self.spacing
 
     def get_tumor_slices(self):
+        if self.segmentation is None:
+            return np.nan, np.nan, np.nan
+
         axial_dim, coronal_dim, sagittal_dim = self.segmentation.shape
         axial_tumor_slices, coronal_tumor_slices, sagittal_tumor_slices = [], [], []
 
@@ -136,15 +151,51 @@ class TumorFeatures:
 
         return axial_tumor_slices, coronal_tumor_slices, sagittal_tumor_slices
 
-    @staticmethod
-    def calculate_tumor_distance(brain_centre_mass, tumor_centre_mass_per_label):
+    def calculate_tumor_slices(self):
+        if self.segmentation is None:
+            return {f"{k}_tumor_slice": np.nan for k, v in dict(zip(self.planes, self.get_tumor_slices())).items()}
+
+        return {f"{k}_tumor_slice": len(v) for k, v in dict(zip(self.planes, self.get_tumor_slices())).items()}
+
+    def calculate_tumor_pixel(self):
+        if self.segmentation is None:
+            return {f"lesion_size_{k.lower()}": np.nan for k in self.mapping_names.values()}
+
+        number_pixels = self.count_tumor_pixels()
+        number_pixels.pop("bkg", None)
+        number_pixels = {key: int(value * self.spacing.prod()) for key, value in number_pixels.items()}
+        self.number_pixels = add_prefix_dict(number_pixels, prefix="lesion_size_")
+
+        return self.number_pixels
+
+    def calculate_tumor_distance(self, brain_centre_mass):
         tumor_location = {}
-        for k, v in tumor_centre_mass_per_label.items():
+
+        if np.isnan(brain_centre_mass).any():
+            logger.warning("Tumor location calculation failed. Assigning (nan, nan, nan)")
+            return {f"{k}_tumor_location": np.nan for k in self.tumor_centre_mass_per_label}
+
+        for k, v in self.tumor_centre_mass_per_label.items():
             if not np.isnan(v).any():
                 tumor_location[f"{k}_tumor_location"] = euclidean(brain_centre_mass, v)
             else:
                 tumor_location[f"{k}_tumor_location"] = np.nan
         return tumor_location
+
+    def calculate_tumor_center_mass(self):
+        for idx, name in self.mapping_names.items():
+            if name == "BKG":
+                name = "WHOLE"
+            self.tumor_centre_mass_per_label[name.lower()] = self.get_tumor_center_mass(label=idx)
+
+        # Flatten the dictionary to get the center of mass in each plane
+        center_mass_dict = {
+            f"{plane}_{label}_center_mass": coord
+            for label, coords in self.tumor_centre_mass_per_label.items()
+            for plane, coord in zip(["axial", "coronal", "sagittal"], coords)
+        }
+
+        return center_mass_dict
 
     def extract_features(self, brain_centre_mass) -> dict:
         """
@@ -157,34 +208,16 @@ class TumorFeatures:
         """
 
         # calculate the center of mass of the whole tumor and each label
-        tumor_centre_mass_per_label = {}
-        for idx, name in self.mapping_names.items():
-            if name == "BKG":
-                name = "WHOLE"
-            tumor_centre_mass_per_label[name.lower()] = self.calculate_tumor_center_mass(label=idx)
-
-        # Flatten the dictionary to get the center of mass in each plane
-        self.center_mass_dict = {
-            f"{plane}_{label}_center_mass": coord
-            for label, coords in tumor_centre_mass_per_label.items()
-            for plane, coord in zip(["axial", "coronal", "sagittal"], coords)
-        }
+        self.center_mass_dict = self.calculate_tumor_center_mass()
 
         # calculate tumor location for each label
-        self.tumor_location = TumorFeatures.calculate_tumor_distance(
-            list(brain_centre_mass), tumor_centre_mass_per_label
-        )
+        self.tumor_location = self.calculate_tumor_distance(list(brain_centre_mass))
 
         # calculate the number of tumor slices
-        self.tumor_slices = {
-            f"{k}_tumoral_slice": len(v) for k, v in dict(zip(self.planes, self.get_tumor_slices())).items()
-        }
+        self.tumor_slices = self.calculate_tumor_slices()
 
         # calculate number of tumor pixels
-        number_pixels = self.count_tumor_pixels()
-        number_pixels.pop("bkg", None)
-        number_pixels = {key: int(value * self.spacing.prod()) for key, value in number_pixels.items()}
-        self.number_pixels = add_prefix_dict(number_pixels, prefix="lesion_size_")
+        self.number_pixels = self.calculate_tumor_pixel()
 
         # calculate lesion size
         self.lesion_size = self.calculate_lesion_size()

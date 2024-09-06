@@ -1,4 +1,5 @@
 import os
+from loguru import logger
 
 import numpy as np
 import SimpleITK
@@ -8,35 +9,26 @@ from SimpleITK import ReadImage
 from SimpleITK import WriteImage
 
 
-# TODO: check whether the following two functions can be unified
-def load_subject_nii(root, patient_id, seq):
-    return ReadImage(str(f"{root}/{patient_id}/{patient_id}_{seq}.nii.gz"))
-
-
-def load_nii(path_folder: str) -> SimpleITK.Image:
+def load_nii(path_folder: str, as_array: bool = False) -> SimpleITK.Image:
     """  This function loads a NIfTI."""
-
-    return ReadImage(str(path_folder))
-
-
-def load_nii_as_array(path_folder: str) -> np.ndarray:
-    """  This function loads a NIfTI image as a NumPy array."""
-
-    return GetArrayFromImage(ReadImage(str(path_folder)))
+    if as_array:
+        return GetArrayFromImage(ReadImage(str(path_folder)))
+    else:
+        return ReadImage(str(path_folder))
 
 
-def read_sequences(root, patient_id):
-    t1_path = f"{root}/{patient_id}/{patient_id}_t1.nii.gz"
-    t1c_path = f"{root}/{patient_id}/{patient_id}_t1ce.nii.gz"
-    t2_path = f"{root}/{patient_id}/{patient_id}_t2.nii.gz"
-    flair_path = f"{root}/{patient_id}/{patient_id}_flair.nii.gz"
+def load_nii_by_id(root: str, patient_id: str, seq: str = "_seg", as_array: bool = False):
+    """  This function loads a specific sequence from a NIfTI file by subject ID."""
 
-    t1 = load_nii_as_array(t1_path) if os.path.exists(t1_path) else None
-    t1c = load_nii_as_array(t1c_path) if os.path.exists(t1c_path) else None
-    t2 = load_nii_as_array(t2_path) if os.path.exists(t2_path) else None
-    flair = load_nii_as_array(flair_path) if os.path.exists(flair_path) else None
+    nii_path = f"{root}/{patient_id}/{patient_id}{seq}.nii.gz"
+    if not os.path.exists(nii_path):
+        logger.warning(f" Sequence '{seq}' not found.")
+        return None
 
-    return t1, t1c, t2, flair
+    if as_array:
+        return GetArrayFromImage(ReadImage(nii_path))
+    else:
+        return ReadImage(f"{root}/{patient_id}/{patient_id}{seq}.nii.gz")
 
 
 def read_sequences_dict(root, patient_id):
@@ -44,46 +36,44 @@ def read_sequences_dict(root, patient_id):
 
     # TODO: check what if any of the sequences are not within the dataset
     t1_path = f"{root}/{patient_id}/{patient_id}_t1.nii.gz"
-    t1c_path = f"{root}/{patient_id}/{patient_id}_t1c.nii.gz"
     t1ce_path = f"{root}/{patient_id}/{patient_id}_t1ce.nii.gz"
     t2_path = f"{root}/{patient_id}/{patient_id}_t2.nii.gz"
     flair_path = f"{root}/{patient_id}/{patient_id}_flair.nii.gz"
 
     if os.path.exists(t1_path):
-        sequences["t1"] = load_nii_as_array(t1_path)
-    if os.path.exists(t1c_path):
-        sequences["t1c"] = load_nii_as_array(t1c_path)
+        sequences["t1"] = load_nii(t1_path, as_array=True)
     if os.path.exists(t1ce_path):
-        sequences["t1c"] = load_nii_as_array(t1ce_path)
+        sequences["t1c"] = load_nii(t1ce_path, as_array=True)
     if os.path.exists(t2_path):
-        sequences["t2"] = load_nii_as_array(t2_path)
+        sequences["t2"] = load_nii(t2_path, as_array=True)
     if os.path.exists(flair_path):
-        sequences["flair"] = load_nii_as_array(flair_path)
+        sequences["flair"] = load_nii(flair_path, as_array=True)
 
     return sequences
 
 
-def read_segmentation(root, patient_id):
+def read_sequences_dict_v2(root, patient_id, sequences=["_t1", "_t1ce", "_t2", "_flair"]):
+    out = {}
 
-    seg = load_nii_as_array(f"{root}/{patient_id}/{patient_id}_seg.nii.gz")
+    for seq in sequences:
+        nii_path = f"{root}/{patient_id}/{patient_id}{seq}.nii.gz"
 
-    return seg
+        # load the sequence if it exists
+        if os.path.exists(nii_path):
+            out[seq.replace("_", "")] = load_nii(nii_path, as_array=True)
+        else:
+            out[seq.replace("_", "")] = None
+            logger.warning(f" Sequence '{seq}' not found.")
 
-
-def read_prediction(root, patient_id):
-    # TODO: Remove the if-else condition when the naming convention is standardized
-    if os.path.exists(f"{root}/{patient_id}_pred.nii.gz"):
-        path_prediction = f"{root}/{patient_id}_pred.nii.gz"
-    else:
-        path_prediction = f"{root}/{patient_id}/{patient_id}_pred.nii.gz"
-
-    pred = load_nii_as_array(path_prediction)
-
-    return pred
+    return out
 
 
 def get_spacing(img):
-    return np.array(img.GetSpacing())
+    if img is not None:
+        return np.array(img.GetSpacing())
+    else:
+        logger.warning(f" Sequence empty. Assuming isotropic spacing (1, 1, 1).")
+        return np.array([1, 1, 1])
 
 
 def build_nifty_image(segmentation):
@@ -142,7 +132,7 @@ def iterative_labels_replacement(root_dir: str, original_labels: list, new_label
             file_path = str(os.path.join(subdir, file))
 
             # Load the segmentation file as a 3D array
-            seg = load_nii_as_array(file_path)
+            seg = load_nii(file_path, as_array=True)
 
             # Perform label replacement
             post_seg = label_replacement(seg, original_labels, new_labels)

@@ -1,8 +1,8 @@
 # Paths to all the datasets
 data_paths:
-  NW: '/home/carlos/Documentos/proyectos/AUDIT/datasets/nw/nw_images'
-  UCSF: '/home/carlos/Documentos/proyectos/AUDIT/datasets/ucsf/ucsf_images'
-  BRATS: '/home/carlos/Documentos/proyectos/AUDIT/datasets/brats2020/brats2020_images'
+  NW: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_images'
+  UCSF: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/UCSF_images'
+  BRATS: '/home/carlos/Documentos/proyectos/AUDIT/datasets/BraTS2020/BraTS2020_images'
 
 # Mapping of labels to their numeric values
 labels:
@@ -17,10 +17,10 @@ longitudinal:
     pattern: "-"            # Pattern used for splitting filename
     longitudinal_id: 1      # Index position for the subject ID after splitting the filename
     time_point: 2           # Index position for the time point after splitting the filename
-  NW:
-    pattern: "_"
-    longitudinal_id: 0
-    time_point: 1
+#  NW:
+#    pattern: "_"
+#    longitudinal_id: 0
+#    time_point: 1
 
 # Path where extracted features will be saved
 output_path: '/home/carlos/Documentos/proyectos/AUDIT/outputs/features'

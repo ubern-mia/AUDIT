@@ -12,8 +12,7 @@ from src.utils.operations.itk_operations import run_comparison_segmentation_itk_
 from src.utils.operations.misc_operations import capitalizer
 from src.utils.operations.misc_operations import pretty_string
 from src.utils.operations.misc_operations import snake_case
-from src.utils.sequences import read_prediction
-from src.utils.sequences import read_segmentation
+from src.utils.sequences import load_nii_by_id
 from src.visualization.confusion_matrices import plt_confusion_matrix_plotly
 from src.visualization.sequences import plot_seq
 
@@ -128,8 +127,8 @@ def compute_accumulated_cm(patients_in_path, selected_dataset, models, selected_
     """
     accumulated = None
     for p in stqdm(patients_in_path, desc=f"Calculating confusion matrix for {len(patients_in_path)} patients"):
-        seg = read_segmentation(root=config.get(selected_dataset)["ground_truth"], patient_id=p)
-        pred = read_prediction(root=models[snake_case(selected_model)], patient_id=p)
+        seg = load_nii_by_id(root=config.get(selected_dataset)["ground_truth"], patient_id=p, seq="_seg", as_array=True)
+        pred = load_nii_by_id(root=models[snake_case(selected_model)], patient_id=p, seq="_pred", as_array=True)
         cm = mistakes_per_class_optim(seg, pred, list(labels))
         if accumulated is None:
             accumulated = np.zeros_like(cm)
@@ -160,8 +159,8 @@ def main(selected_dataset, selected_model, selected_id, models, patients_in_path
         "Normalized per ground truth label", value=True, help="It normalizes the errors per class, if enabled."
     )
     if selected_id != "All":
-        seg = read_segmentation(root=config.get(selected_dataset)["ground_truth"], patient_id=selected_id)
-        pred = read_prediction(root=models[snake_case(selected_model)], patient_id=selected_id)
+        seg = load_nii_by_id(root=config.get(selected_dataset)["ground_truth"], patient_id=selected_id, as_array=True)
+        pred = load_nii_by_id(root=models[snake_case(selected_model)], patient_id=selected_id, seq="_pred", as_array=True)
         compute_and_display_cm(seg, pred, labels, classes, normalized)
         st.session_state.selected_id = selected_id
 

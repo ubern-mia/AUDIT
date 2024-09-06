@@ -10,9 +10,7 @@ from src.utils.operations.file_operations import ls_dirs
 from src.utils.operations.misc_operations import fancy_print
 from src.utils.operations.misc_operations import fancy_tqdm
 from src.utils.sequences import get_spacing
-from src.utils.sequences import load_subject_nii
-from src.utils.sequences import read_prediction
-from src.utils.sequences import read_segmentation
+from src.utils.sequences import load_nii_by_id
 
 if __name__ == "__main__":
 
@@ -49,9 +47,9 @@ if __name__ == "__main__":
                     fancy_print(f"Processed {n} patients", Fore.CYAN, "🔹")
 
                 # read ground truth segmentation and prediction
-                gt = read_segmentation(root=path_test_dataset, patient_id=ID)
-                pred = read_prediction(root=path_predictions, patient_id=ID)
-                spacing = get_spacing(load_subject_nii(path_predictions, ID, "pred"))
+                gt = load_nii_by_id(root=path_test_dataset, patient_id=ID, as_array=True)
+                pred = load_nii_by_id(root=path_predictions, patient_id=ID, ext="_pred", as_array=True)
+                spacing = get_spacing(load_nii_by_id(path_predictions, ID, "_pred"))
 
                 # making the segmentations binary (one hot encoding for each region)
                 gt = one_hot_encoding(gt, numeric_label)
