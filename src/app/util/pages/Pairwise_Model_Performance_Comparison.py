@@ -211,53 +211,9 @@ def run_functionality(
         fig = aggregated_pairwise_model_performance(data, improvement_type)
         st.plotly_chart(fig, theme="streamlit", use_container_width=False, scrolling=True)
     else:
-        st.dataframe(data)
         all_figures = individual_pairwise_model_performance(data, baseline_model, new_model, improvement_type)
         for fig in all_figures:
             st.plotly_chart(fig, theme="streamlit", use_container_width=False, scrolling=True)
-
-    def perform_normality_test(df_for_stats_test, selected_set, selected_metric, baseline_model, new_model):
-        col1, col2 = st.columns(2)
-        df_wide = df_for_stats_test[df_for_stats_test.set == selected_set][
-            ["ID", "model", mapping_buttons_metrics[selected_metric]]
-        ]
-        df_wide = df_wide.pivot(index="ID", columns="model", values=mapping_buttons_metrics[selected_metric])
-
-        sample_baseline_model = df_wide[snake_case(baseline_model)]
-        sample_new_model = df_wide[snake_case(new_model)]
-
-        with col1:
-            # checking normality baseline model
-            normality_test_baseline_model = normality_test(sample_baseline_model)
-            st.table(
-                pd.DataFrame(normality_test_baseline_model.items(), columns=["Metric", "Baseline model"]).set_index(
-                    "Metric"
-                )
-            )
-            fig = plot_histogram(
-                data=df_wide[[snake_case(baseline_model)]],
-                x_axis=snake_case(baseline_model),
-                color_var=None,
-                n_bins=None,
-                x_label=baseline_model,
-            )
-            st.plotly_chart(fig, theme="streamlit", use_container_width=True, scrolling=True)
-        with col2:
-            # checking normality new model
-            normality_test_new_model = normality_test(sample_new_model)
-            st.table(
-                pd.DataFrame(normality_test_new_model.items(), columns=["Metric", "New model"]).set_index("Metric")
-            )
-            fig = plot_histogram(
-                data=df_wide[[snake_case(new_model)]],
-                x_axis=snake_case(new_model),
-                color_var=None,
-                n_bins=None,
-                x_label=new_model,
-            )
-            st.plotly_chart(fig, theme="streamlit", use_container_width=True, scrolling=True)
-
-        return normality_test_baseline_model, normality_test_new_model
 
 
 def perform_normality_test(df_for_stats_test, selected_set, selected_metric, baseline_model, new_model):
@@ -354,7 +310,7 @@ def pairwise_comparison():
         st.latex(const.ratio_formula)
 
     # Load configuration files
-    config = load_config_file("./src/configs/app.yml").get("model_performance_comparison")
+    config = load_config_file("./src/configs/app_test.yml")
     metrics_data_paths = config.get("metrics")
     features_data_paths = config.get("features")
 
