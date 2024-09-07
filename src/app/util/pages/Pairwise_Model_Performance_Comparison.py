@@ -310,7 +310,7 @@ def pairwise_comparison():
         st.latex(const.ratio_formula)
 
     # Load configuration files
-    config = load_config_file("./src/configs/app_test.yml")
+    config = load_config_file("./src/configs/app.yml")
     metrics_data_paths = config.get("metrics")
     features_data_paths = config.get("features")
 

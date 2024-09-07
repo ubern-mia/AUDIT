@@ -19,8 +19,8 @@ from src.visualization.sequences import plot_seq
 
 const = SegmentationErrorMatrixPage()
 
-config = load_config_file("./src/configs/app_test.yml")
-labels_dict = load_config_file("./src/configs/app_test.yml").get("labels")
+config = load_config_file("./src/configs/app.yml")
+labels_dict = load_config_file("./src/configs/app.yml").get("labels")
 classes = list(labels_dict.keys())
 labels = list(labels_dict.values())
 datasets = list(config.get("predictions", {}).keys())

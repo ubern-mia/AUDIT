@@ -13,7 +13,7 @@ from src.visualization.time_series import plot_longitudinal2
 const = LongitudinalAnalysis()
 
 # Load configuration and data
-config = load_config_file("./src/configs/app_test.yml")
+config = load_config_file("./src/configs/app.yml")
 features_paths = config.get("features")
 metrics_paths = config.get("metrics")
 features = const.mapping_buttons_columns

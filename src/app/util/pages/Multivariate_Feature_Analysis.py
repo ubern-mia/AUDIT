@@ -10,7 +10,7 @@ from src.visualization.scatter_plots import multivariate_features_highlighter
 const = MultivariatePage()
 
 # Load configuration and data
-config = load_config_file("./src/configs/app_test.yml")
+config = load_config_file("./src/configs/app.yml")
 datasets_root_path = config.get("datasets_path")
 data_paths = config.get("features")
 features = const.mapping_buttons_columns

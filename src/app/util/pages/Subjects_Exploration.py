@@ -9,7 +9,7 @@ from src.utils.operations.misc_operations import pretty_string
 const = SubjectsExploration()
 
 # Load configuration and data
-config = load_config_file("./src/configs/app_test.yml")
+config = load_config_file("./src/configs/app.yml")
 data_paths = config.get("features")
 
 

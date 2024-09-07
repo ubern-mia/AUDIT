@@ -14,7 +14,7 @@ mapping_buttons_metrics = const.mapping_buttons_metrics
 mapping_buttons_columns = const.mapping_buttons_columns
 
 # load config files
-config = load_config_file("./src/configs/app_test.yml")
+config = load_config_file("./src/configs/app.yml")
 metrics_data_paths = config.get("metrics")
 features_data_paths = config.get("features")
 metrics_available = const.mapping_buttons_metrics.keys()
