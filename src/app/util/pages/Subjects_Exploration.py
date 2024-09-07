@@ -10,7 +10,6 @@ const = SubjectsExploration()
 
 # Load configuration and data
 config = load_config_file("./src/configs/app.yml")
-datasets_root_path = config.get("datasets_root_path")
 data_paths = config.get("distributions_analysis").get("data_paths")
 
 

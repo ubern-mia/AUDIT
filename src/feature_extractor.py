@@ -130,7 +130,7 @@ def store_subject_information(
 
 
 def extract_longitudinal_info(config, df):
-    longitudinal = config["longitudinal"].get(dataset_name, None)
+    longitudinal = config.get("longitudinal", {}).get(dataset_name, None)
     if longitudinal:
         pattern = longitudinal.get("pattern")
         longitudinal_id = longitudinal.get("longitudinal_id")

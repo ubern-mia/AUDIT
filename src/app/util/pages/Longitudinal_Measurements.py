@@ -14,7 +14,6 @@ const = LongitudinalAnalysis()
 
 # Load configuration and data
 config = load_config_file("./src/configs/app.yml")
-datasets_root_path = config.get("datasets_root_path")
 features_paths = config.get("longitudinal_measurements").get("features")
 metrics_paths = config.get("longitudinal_measurements").get("metrics")
 features = const.mapping_buttons_columns

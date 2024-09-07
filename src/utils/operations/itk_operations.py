@@ -7,7 +7,7 @@ import platform
 def run_itk_snap(path, dataset, case, labels=None):
     verification_check = True
     names = ["t1", "t1ce", "t2", "flair", "seg"]
-    t1, t1ce, t2, flair, seg = [f"{path}{dataset}/{dataset}_images/{case}/{case}_{n}.nii.gz" for n in names]
+    t1, t1ce, t2, flair, seg = [f"{path}/{dataset}/{dataset}_images/{case}/{case}_{n}.nii.gz" for n in names]
 
     if labels:
         # TODO: remove dependencies of my path
