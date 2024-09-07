@@ -189,7 +189,7 @@ def performance():
     """
 
     # Load configuration file
-    config = load_config_file("./src/configs/app.yml").get("model_performance_analysis", {})
+    config = load_config_file("./src/configs/app_test.yml")
     if not config:
         st.error("Please set the configuration file up with a 'model_performance_analysis' key.")
         sys.exit()
