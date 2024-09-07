@@ -9,8 +9,8 @@ from src.utils.operations.misc_operations import pretty_string
 const = SubjectsExploration()
 
 # Load configuration and data
-config = load_config_file("./src/configs/app.yml")
-data_paths = config.get("distributions_analysis").get("data_paths")
+config = load_config_file("./src/configs/app_test.yml")
+data_paths = config.get("features")
 
 
 # allowed_features = SubjectsExploration().mapping_buttons_columns
@@ -107,7 +107,6 @@ def subjects():
 
     # Load datasets
     df = read_datasets_from_dict(data_paths)
-
     # Set up sidebar options
     selected_set, selected_subject = setup_sidebar(df)
 
@@ -146,6 +145,6 @@ def subjects():
     deviation = 3 if extreme else 1.5
     outliers = iqr_outliers_detector(df, subject_data, deviation=deviation)
     if any(outliers["Is Outlier"]) > 0:
-        st.write(outliers[outliers["Is Outlier"] is True].drop(columns=["Is Outlier"]))
+        st.write(outliers[outliers["Is Outlier"] == True].drop(columns=["Is Outlier"]))
     else:
         st.write("The subject is not an outlier for any of the features")
