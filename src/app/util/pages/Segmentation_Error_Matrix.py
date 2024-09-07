@@ -1,4 +1,5 @@
 import os
+from itertools import count
 
 import numpy as np
 import streamlit as st
@@ -12,17 +13,18 @@ from src.utils.operations.itk_operations import run_comparison_segmentation_itk_
 from src.utils.operations.misc_operations import capitalizer
 from src.utils.operations.misc_operations import pretty_string
 from src.utils.operations.misc_operations import snake_case
-from src.utils.sequences import load_nii_by_id
+from src.utils.sequences import load_nii_by_id, count_labels
 from src.visualization.confusion_matrices import plt_confusion_matrix_plotly
 from src.visualization.sequences import plot_seq
 
 const = SegmentationErrorMatrixPage()
 
-config = load_config_file("./src/configs/app.yml").get("segmentation_error_analysis", {})
-labels_dict = load_config_file("./src/configs/app.yml").get("labels")
+config = load_config_file("./src/configs/app_test.yml")
+labels_dict = load_config_file("./src/configs/app_test.yml").get("labels")
 classes = list(labels_dict.keys())
 labels = list(labels_dict.values())
-datasets = list(config.keys())
+datasets = list(config.get("predictions", {}).keys())
+raw_datasets = config.get("raw_datasets", {})
 
 
 def setup_sidebar(config, datasets):
@@ -39,11 +41,11 @@ def setup_sidebar(config, datasets):
     with st.sidebar:
         st.header("Configuration")
         selected_dataset = st.selectbox("Select the dataset to analyze", datasets, index=0)
-        models = config.get(selected_dataset)
+        models = config.get("predictions", {}).get(selected_dataset)
 
-        pretty_models = [capitalizer(pretty_string(m)) for m in models if m != "ground_truth"]
+        pretty_models = [capitalizer(pretty_string(m)) for m in models]
         patients_in_path = sorted(
-            [f.path.split("/")[-1] for f in os.scandir(config.get(selected_dataset)["ground_truth"]) if f.is_dir()]
+            [f.path.split("/")[-1] for f in os.scandir(raw_datasets.get(selected_dataset)) if f.is_dir()]
         )
 
         selected_model = st.selectbox("Select the model to analyze", pretty_models, index=0)
@@ -127,7 +129,7 @@ def compute_accumulated_cm(patients_in_path, selected_dataset, models, selected_
     """
     accumulated = None
     for p in stqdm(patients_in_path, desc=f"Calculating confusion matrix for {len(patients_in_path)} patients"):
-        seg = load_nii_by_id(root=config.get(selected_dataset)["ground_truth"], patient_id=p, seq="_seg", as_array=True)
+        seg = load_nii_by_id(root=raw_datasets.get(selected_dataset, ""), patient_id=p, seq="_seg", as_array=True)
         pred = load_nii_by_id(root=models[snake_case(selected_model)], patient_id=p, seq="_pred", as_array=True)
         cm = mistakes_per_class_optim(seg, pred, list(labels))
         if accumulated is None:
@@ -159,7 +161,7 @@ def main(selected_dataset, selected_model, selected_id, models, patients_in_path
         "Normalized per ground truth label", value=True, help="It normalizes the errors per class, if enabled."
     )
     if selected_id != "All":
-        seg = load_nii_by_id(root=config.get(selected_dataset)["ground_truth"], patient_id=selected_id, as_array=True)
+        seg = load_nii_by_id(root=raw_datasets.get(selected_dataset, ""), patient_id=selected_id, as_array=True)
         pred = load_nii_by_id(root=models[snake_case(selected_model)], patient_id=selected_id, seq="_pred", as_array=True)
         compute_and_display_cm(seg, pred, labels, classes, normalized)
         st.session_state.selected_id = selected_id
@@ -196,3 +198,16 @@ def matrix():
 
     selected_dataset, selected_model, selected_id, models, patients_in_path = setup_sidebar(config, datasets)
     main(selected_dataset, selected_model, selected_id, models, patients_in_path, labels, classes)
+
+
+# segmentation_error_analysis:
+#   NW:
+#     ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_images'
+#     mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_1'
+#     mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_2'
+#     mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_23'
+#   UCSF:
+#     ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/UCSF_images'
+#     mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_1'
+#     mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_2'
+#     mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_23'
