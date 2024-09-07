@@ -1,6 +1,6 @@
 import os
 import shutil
-
+import re
 import pandas as pd
 import yaml
 
@@ -41,9 +41,24 @@ def load_config_file(path: str) -> dict:
     Returns:
         dict: The contents of the YAML file as a dictionary.
     """
-    with open(path) as cf:
-        config = yaml.load(cf, Loader=yaml.FullLoader)
-        return config
+
+    def replace_variables(config, variables):
+        def replace(match):
+            return variables.get(match.group(1), match.group(0))
+
+        for key, value in config.items():
+            if isinstance(value, str):
+                config[key] = re.sub(r"\$\{(\w+)\}", replace, value)
+            elif isinstance(value, dict):
+                replace_variables(value, variables)
+
+    with open(path, "r") as file:
+        config = yaml.safe_load(file)
+
+    variables = {key: value for key, value in config.items() if not isinstance(value, dict)}
+    replace_variables(config, variables)
+
+    return config
 
 
 def rename_files(root_dir: str, old_ext: str = "_t1ce", new_ext: str = "_t1c", verbose=False):

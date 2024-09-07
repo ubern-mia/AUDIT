@@ -12,9 +12,9 @@ from src.visualization.histograms import custom_histogram
 const = UnivariatePage()
 
 # Load configuration and data
-config = load_config_file("./src/configs/app.yml")
-datasets_root_path = config.get("datasets_root_path")
-data_paths = config.get("distributions_analysis").get("data_paths")
+config = load_config_file("./src/configs/app_test.yml")
+datasets_root_path = config.get("datasets_path")
+data_paths = config.get("features")
 allowed_features = UnivariatePage().mapping_buttons_columns
 
 
