@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-# from streamlit_plotly_events import plotly_events
 
 from src.app.util.constants import MultiModelPerformanceComparisonsPage
 from src.utils.operations.file_operations import load_config_file
@@ -15,9 +14,9 @@ mapping_buttons_metrics = const.mapping_buttons_metrics
 mapping_buttons_columns = const.mapping_buttons_columns
 
 # load config files
-config = load_config_file("./src/configs/app.yml")
-metrics_data_paths = config.get("model_performance_comparison").get("metrics")
-features_data_paths = config.get("model_performance_comparison").get("features")
+config = load_config_file("./src/configs/app_test.yml")
+metrics_data_paths = config.get("metrics")
+features_data_paths = config.get("features")
 metrics_available = const.mapping_buttons_metrics.keys()
 
 
@@ -30,6 +29,7 @@ def setup_sidebar(data):
         with st.sidebar.expander("Datasets", expanded=True):
             sets_available = list(data.set.unique())
             selected_set = st.selectbox(label="Select dataset to analyze:", options=sets_available, index=0)
+
         # select model
         with st.sidebar.expander("Models", expanded=True):
             models_available = [capitalizer(pretty_string(m)) for m in list(data.model.unique())]
@@ -46,7 +46,7 @@ def setup_sidebar(data):
         with st.sidebar.expander("Metrics", expanded=True):
             # metrics_available = list(data_melted.metric.unique())
             selected_metrics = st.multiselect(
-                label="Select the metrics to compare:", options=metrics_available, default=metrics_available
+                label="Select the metrics to compare:", options=metrics_available, default="Dice"
             )
             selected_metrics = [mapping_buttons_metrics[m] for m in selected_metrics]
         # contact
@@ -89,32 +89,8 @@ def main(data, selected_set, selected_models, selected_regions, selected_metrics
 
     # Show the plot
     st.markdown(const.description)
-    # st.table(data_melted)
     fig = models_performance_boxplot(data_melted, aggregated=selected_aggregated)
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-    # selected_points = plotly_events(fig, click_event=True, override_height=None)
-
-    # # Handle selected point
-    # info_placeholder = st.empty()
-    # selected_case, st.session_state.selected_case = None, None
-    # if selected_points:
-    #     point = selected_points[0]
-    #     st.table(data)
-    #     filtered_set_data = data[data.metric == point['x']]
-    #     st.markdown(filtered_set_data)
-    #     selected_case = filtered_set_data.iloc[point['pointIndex']]["ID"]
-    #     info_placeholder.write(f'Open ITK-SNAP for visualizing the case: {selected_case}')
-    #
-    # # Visualize case in ITK-SNAP
-    # if selected_case != st.session_state.selected_case:
-    #     st.session_state.selected_case = selected_case
-    #     if selected_case != "Select a case":
-    #         dataset = data[data.ID == selected_case]['set'].unique()[0].lower()
-    #
-    #         verification_check = run_itk_snap(path=datasets_root_path, dataset=dataset, case=selected_case,
-    #                                           labels=config.get("labels"))
-    #         if not verification_check:
-    #             st.error('Ups, something wrong happened when opening the file in ITK-SNAP', icon="🚨")
 
 
 def multi_model():
