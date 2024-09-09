@@ -108,7 +108,13 @@ def label_replacement(segmentation: np.array, original_labels: list, new_labels:
     return post_seg
 
 
-def iterative_labels_replacement(root_dir: str, original_labels: list, new_labels: list, ext="_seg"):
+def iterative_labels_replacement(
+        root_dir: str,
+        original_labels: list,
+        new_labels: list,
+        ext="_seg",
+        verbose: bool = False
+):
     """
     Iteratively replaces labels in segmentation files within a directory and its subdirectories.
 
@@ -140,7 +146,8 @@ def iterative_labels_replacement(root_dir: str, original_labels: list, new_label
             # Save the modified segmentation array back to file
             WriteImage(build_nifty_image(post_seg), file_path)
 
-            print(f"Processed file {file}")
+            if verbose:
+                print(f"Processed file {file}")
 
 
 def turn_planes(image, orientation=None):

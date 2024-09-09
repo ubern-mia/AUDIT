@@ -5,13 +5,15 @@ import platform
 
 # TODO: this functionality only works if all the sequences are present
 def run_itk_snap(path, dataset, case, labels=None):
+    os.environ["PATH"] += os.pathsep + "/usr/local/itksnap-4.2.0-20240422-Linux-gcc64/bin"
+
     verification_check = True
+    from src.utils.sequences import load_nii
     names = ["t1", "t1ce", "t2", "flair", "seg"]
     t1, t1ce, t2, flair, seg = [f"{path}/{dataset}/{dataset}_images/{case}/{case}_{n}.nii.gz" for n in names]
 
     if labels:
-        # TODO: remove dependencies of my path
-        labels_path = "/Users/caumente/Projects/robustness/itk_labels.txt"
+        labels_path = "./src/configs/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
         command = open_itk_command() + ["-l", labels_path, "-g", t1ce, "-s", seg, "-o"] + [t1, t2, flair]
     else:
@@ -70,7 +72,7 @@ def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None)
     seg_ai = f"{path_pred}/{case}/{case}_pred.nii.gz"
 
     if labels:
-        labels_path = "/Users/caumente/Projects/robustness/itk_labels.txt"
+        labels_path = "./src/configs/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
         command = open_itk_command() + ["-g", t1c, "-s", seg, "-o", t1, t2, flair, seg_ai, "-l", labels_path]
     else:

@@ -1,6 +1,6 @@
 labels:
   BKG: 0
-  EDE: 4
+  EDE: 3
   ENH: 1
   NEC: 2
 
@@ -13,13 +13,13 @@ metrics_path: '/home/carlos/Documentos/proyectos/AUDIT/outputs/metrics'
 raw_datasets:
   NW: "${datasets_path}/NW/NW_images"
   UCSF: "${datasets_path}/UCSF/UCSF_images"
-  BRATS: "${datasets_path}/BraTS2020/BraTS2020_images"
+  BRATS2020: "${datasets_path}/BraTS2020/BraTS2020_images"
 
 # Paths for feature extraction CSV files
 features:
   NW: "${features_path}/extracted_information_NW.csv"
   UCSF: "${features_path}/extracted_information_UCSF.csv"
-  BRATS: "${features_path}/extracted_information_BRATS.csv"
+  BRATS2020: "${features_path}/extracted_information_BRATS.csv"
 
 # Paths for metric extraction CSV files
 metrics:
@@ -30,10 +30,10 @@ metrics:
 # Paths for models predictions
 predictions:
   NW:
-    mvp_1: "${datasets_path}/NW/NW_seg/nw_mvp_1"
-    mvp_2: "${datasets_path}/NW/NW_seg/nw_mvp_2"
-    mvp_2_3: "${datasets_path}/NW/NW_seg/nw_mvp_23"
+    mvp_1: "${datasets_path}/NW/NW_seg/NW_mvp_1"
+    mvp_2: "${datasets_path}/NW/NW_seg/NW_mvp_2"
+    mvp_2_3: "${datasets_path}/NW/NW_seg/NW_mvp_23"
   UCSF:
-    mvp_1: "${datasets_path}/UCSF/UCSF_seg/ucsf_mvp_1"
-    mvp_2: "${datasets_path}/UCSF/UCSF_seg/ucsf_mvp_2"
-#    mvp_2_3: "${datasets_path}/UCSF/UCSF_seg/ucsf_mvp_23"
+    mvp_1: "${datasets_path}/UCSF/UCSF_seg/UCSF_mvp_1"
+    mvp_2: "${datasets_path}/UCSF/UCSF_seg/UCSF_mvp_2"
+#    mvp_2_3: "${datasets_path}/UCSF/UCSF_seg/UCSF_mvp_23"

@@ -61,7 +61,31 @@ def load_config_file(path: str) -> dict:
     return config
 
 
-def rename_files(root_dir: str, old_ext: str = "_t1ce", new_ext: str = "_t1c", verbose=False):
+def rename_directories(path: str, old_name: str, new_name: str, verbose=False):
+    """
+    Renames all directories and subdirectories within a directory,
+    replacing string_1 with string_2 in their names.
+
+    Args:
+        path (str): Path to the directory where renaming will be performed.
+        old_name (str): The string to be replaced in the directory names.
+        new_name (str): The new string that will replace string_1.
+    """
+
+    # Traverse the directory tree, renaming directories from the bottom up
+    for root, dirs, files in os.walk(path, topdown=False):
+        for dir_name in dirs:
+            if old_name in dir_name:
+                new_dir_name = dir_name.replace(old_name, new_name)
+                old_dir_path = os.path.join(root, dir_name)
+                new_dir_path = os.path.join(root, new_dir_name)
+                os.rename(old_dir_path, new_dir_path)
+
+                if verbose:
+                    print(f"Directory renamed: {old_dir_path} -> {new_dir_path}")
+
+
+def rename_files(path: str, old_name: str = "_t1ce", new_name: str = "_t1c", verbose=False):
     """
     Renames files in a directory and its subdirectories by replacing a specific substring in the filenames.
 
@@ -70,24 +94,24 @@ def rename_files(root_dir: str, old_ext: str = "_t1ce", new_ext: str = "_t1c", v
     the old extension with a new one.
 
     Args:
-        root_dir: The root directory containing the files to be renamed.
-        old_ext: The substring in filenames that needs to be replaced. Defaults to "_t1ce".
-        new_ext: The substring that will replace the old extension. Defaults to "_t1c".
+        path: The root directory containing the files to be renamed.
+        old_name: The substring in filenames that needs to be replaced. Defaults to "_t1ce".
+        new_name: The substring that will replace the old extension. Defaults to "_t1c".
         verbose: Whether print the log
     """
-    if old_ext is None:
-        old_ext = ""
+    if old_name is None:
+        old_name = ""
 
-    if new_ext is None:
-        new_ext = ""
+    if new_name is None:
+        new_name = ""
 
-    for subdir, _, files in os.walk(root_dir):
+    for subdir, _, files in os.walk(path):
         for file in files:
             # Check if the file contains the old extension
-            if old_ext in file:
+            if old_name in file:
                 # Construct the old and new file paths
                 old_file_path = os.path.join(subdir, file)
-                new_file_path = os.path.join(subdir, file.replace(old_ext, new_ext))
+                new_file_path = os.path.join(subdir, file.replace(old_name, new_name))
 
                 # Rename the file
                 os.rename(old_file_path, new_file_path)

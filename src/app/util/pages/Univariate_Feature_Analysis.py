@@ -209,8 +209,7 @@ def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels, pl
         if (
             selected_case and selected_case != "Select a case" and len(selected_points) == 1
         ):  # last condition to avoid that clicking inside the boxplot randomly opens a patient
-            dataset = data[data.ID == selected_case]["set"].unique()[0].lower()
-
+            dataset = data[data.ID == selected_case]["set"].unique()[0]
             verification_check = run_itk_snap(
                 path=datasets_root_path, dataset=dataset, case=selected_case, labels=labels
             )

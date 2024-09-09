@@ -198,16 +198,3 @@ def matrix():
 
     selected_dataset, selected_model, selected_id, models, patients_in_path = setup_sidebar(config, datasets)
     main(selected_dataset, selected_model, selected_id, models, patients_in_path, labels, classes)
-
-
-# segmentation_error_analysis:
-#   NW:
-#     ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_images'
-#     mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_1'
-#     mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_2'
-#     mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_23'
-#   UCSF:
-#     ground_truth: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/UCSF_images'
-#     mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_1'
-#     mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_2'
-#     mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/UCSF/ucsf_seg/ucsf_mvp_23'
