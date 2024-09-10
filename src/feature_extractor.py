@@ -15,7 +15,7 @@ from src.utils.operations.misc_operations import fancy_print
 from src.utils.operations.misc_operations import fancy_tqdm
 from src.utils.sequences import get_spacing
 from src.utils.sequences import load_nii_by_id
-from src.utils.sequences import read_sequences_dict, read_sequences_dict_v2
+from src.utils.sequences import read_sequences_dict
 from src.utils.operations.misc_operations import configure_logging
 
 
@@ -48,7 +48,7 @@ def extract_features(path_images: str, config_file: dict) -> pd.DataFrame:
                 fancy_print(f"Processed {n} patients", Fore.CYAN, "🔹")
 
             # read sequences and segmentation
-            sequences = read_sequences_dict_v2(root=path_images, patient_id=subject_id)
+            sequences = read_sequences_dict(root=path_images, patient_id=subject_id)
             seg = load_nii_by_id(root=path_images, patient_id=subject_id, as_array=True)
 
             # calculating spacing

@@ -22,9 +22,9 @@ def run_itk_snap(path, dataset, case, labels=None):
     # Checking if both path exist
     if os.path.exists(t1ce) and os.path.exists(seg):
         subprocess.run(command)
-    # elif os.path.exists(t1c) and not os.path.exists(seg_path):
+    # elif os.path.exists(t1ce) and not os.path.exists(seg_path):
     #     subprocess.run(["open", "-n", "-a", "ITK-SNAP", "--args", "-g", img_path])
-    # elif not os.path.exists(t1c) and os.path.exists(seg_path):
+    # elif not os.path.exists(t1ce) and os.path.exists(seg_path):
     #     subprocess.run(["open", "-n", "-a", "ITK-SNAP", "--args", "-s", seg_path])
     else:
         verification_check = False
@@ -65,7 +65,7 @@ def generate_itk_labels(labels, output_file):
 def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None):
     verification_check = True
     t1 = f"{path_seg}/{case}/{case}_t1.nii.gz"
-    t1c = f"{path_seg}/{case}/{case}_t1ce.nii.gz"
+    t1ce = f"{path_seg}/{case}/{case}_t1ce.nii.gz"
     t2 = f"{path_seg}/{case}/{case}_t2.nii.gz"
     flair = f"{path_seg}/{case}/{case}_flair.nii.gz"
     seg = f"{path_seg}/{case}/{case}_seg.nii.gz"
@@ -74,12 +74,12 @@ def run_comparison_segmentation_itk_snap(path_seg, path_pred, case, labels=None)
     if labels:
         labels_path = "./src/configs/itk_labels.txt"
         generate_itk_labels(labels, labels_path)
-        command = open_itk_command() + ["-g", t1c, "-s", seg, "-o", t1, t2, flair, seg_ai, "-l", labels_path]
+        command = open_itk_command() + ["-g", t1ce, "-s", seg, "-o", t1, t2, flair, seg_ai, "-l", labels_path]
     else:
-        command = open_itk_command() + ["-g", t1c, "-s", seg, "-o", t1, t2, flair, seg_ai] + [seg_ai]
+        command = open_itk_command() + ["-g", t1ce, "-s", seg, "-o", t1, t2, flair, seg_ai] + [seg_ai]
 
     # Checking if both path exist
-    if os.path.exists(t1c) and os.path.exists(seg):
+    if os.path.exists(t1ce) and os.path.exists(seg):
         subprocess.run(command)
     else:
         verification_check = False

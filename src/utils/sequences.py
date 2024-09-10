@@ -11,10 +11,13 @@ from SimpleITK import WriteImage
 
 def load_nii(path_folder: str, as_array: bool = False) -> SimpleITK.Image:
     """  This function loads a NIfTI."""
-    if as_array:
-        return GetArrayFromImage(ReadImage(str(path_folder)))
-    else:
-        return ReadImage(str(path_folder))
+    try:
+        if as_array:
+            return GetArrayFromImage(ReadImage(str(path_folder)))
+        else:
+            return ReadImage(str(path_folder))
+    except RuntimeError:
+        return None
 
 
 def load_nii_by_id(root: str, patient_id: str, seq: str = "_seg", as_array: bool = False):
@@ -25,34 +28,16 @@ def load_nii_by_id(root: str, patient_id: str, seq: str = "_seg", as_array: bool
         logger.warning(f" Sequence '{seq}' not found.")
         return None
 
-    if as_array:
-        return GetArrayFromImage(ReadImage(nii_path))
-    else:
-        return ReadImage(f"{root}/{patient_id}/{patient_id}{seq}.nii.gz")
+    try:
+        if as_array:
+            return GetArrayFromImage(ReadImage(nii_path))
+        else:
+            return ReadImage(f"{root}/{patient_id}/{patient_id}{seq}.nii.gz")
+    except RuntimeError:
+        return None
 
 
-def read_sequences_dict(root, patient_id):
-    sequences = {}
-
-    # TODO: check what if any of the sequences are not within the dataset
-    t1_path = f"{root}/{patient_id}/{patient_id}_t1.nii.gz"
-    t1ce_path = f"{root}/{patient_id}/{patient_id}_t1ce.nii.gz"
-    t2_path = f"{root}/{patient_id}/{patient_id}_t2.nii.gz"
-    flair_path = f"{root}/{patient_id}/{patient_id}_flair.nii.gz"
-
-    if os.path.exists(t1_path):
-        sequences["t1"] = load_nii(t1_path, as_array=True)
-    if os.path.exists(t1ce_path):
-        sequences["t1c"] = load_nii(t1ce_path, as_array=True)
-    if os.path.exists(t2_path):
-        sequences["t2"] = load_nii(t2_path, as_array=True)
-    if os.path.exists(flair_path):
-        sequences["flair"] = load_nii(flair_path, as_array=True)
-
-    return sequences
-
-
-def read_sequences_dict_v2(root, patient_id, sequences=["_t1", "_t1ce", "_t2", "_flair"]):
+def read_sequences_dict(root, patient_id, sequences=["_t1", "_t1ce", "_t2", "_flair"]):
     out = {}
 
     for seq in sequences:
