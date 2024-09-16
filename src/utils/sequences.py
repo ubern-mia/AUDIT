@@ -177,3 +177,19 @@ def count_labels(segmentation, mapping_names=None):
         pixels_dict = {mapping_names.get(k, k).lower(): v for k, v in pixels_dict.items()}
 
     return pixels_dict
+
+
+def fit_brain_boundaries(sequence: np.ndarray):
+    sequence = sequence.copy()
+
+    # Getting all non-xero indexes
+    z_indexes, y_indexes, x_indexes = np.nonzero(sequence != 0)
+
+    # Calculating lower and upper boundaries by each dimension. Add a extra pixel in each dimension
+    zmin, ymin, xmin = [max(0, int(np.min(idx))) for idx in (z_indexes, y_indexes, x_indexes)]
+    zmax, ymax, xmax = [int(np.max(arr)) for arr in (z_indexes, y_indexes, x_indexes)]
+
+    # Fitting sequences and segmentation to brain boundaries
+    sequence = sequence[zmin:zmax, ymin:ymax, xmin:xmax]
+
+    return sequence
