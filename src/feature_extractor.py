@@ -7,6 +7,7 @@ import pandas as pd
 from colorama import Fore
 
 from src.features.spatial import SpatialFeatures
+from src.features.texture import TextureFeatures
 from src.features.statistical import StatisticalFeatures
 from src.features.tumor import TumorFeatures
 from src.utils.operations.file_operations import load_config_file
@@ -55,6 +56,20 @@ def extract_features(path_images: str, config_file: dict) -> pd.DataFrame:
             sequences_spacing = get_spacing(img=load_nii_by_id(path_images, subject_id, "_t1ce"))
             seg_spacing = get_spacing(img=load_nii_by_id(path_images, subject_id, "_seg"))
 
+            # extract first order (statistical) information from sequences
+            stats_features = {
+                key: StatisticalFeatures(seq[seq > 0]).extract_features()
+                for key, seq in sequences.items()
+                if seq is not None
+            }
+
+            # extract second order (texture) information from sequences
+            texture_feats = {
+                key: TextureFeatures(seq, remove_empty_planes=True).extract_features()
+                for key, seq in sequences.items()
+                if seq is not None
+            }
+
             # calculate spatial features (dimensions and brain center mass)
             sf = SpatialFeatures(sequence=sequences.get("t1ce"), spacing=sequences_spacing)
             spatial_features = sf.extract_features()
@@ -65,24 +80,8 @@ def extract_features(path_images: str, config_file: dict) -> pd.DataFrame:
             )
             tumor_features = tf.extract_features(sf.center_mass.values())
 
-            # extract first order (statistical) information from sequences
-            stats_features = {
-                key: StatisticalFeatures(seq[seq > 0]).extract_features()
-                for key, seq in sequences.items()
-                if seq is not None
-            }
-
-            # TODO: revise this functionality, as some values were equals to 1 for all subjects
-            # extract second order (texture) information from sequences
-            # stats_features = {
-            #     key: StatisticalFeatures(seq[seq > 0]).extract_features()
-            #     for key, seq in sequences.items()
-            #     if seq is not None
-            # }
-
-            patient_info_df = store_subject_information(subject_id, spatial_features, tumor_features, stats_features)
-
             # Add info to the main df
+            patient_info_df = store_subject_information(subject_id, spatial_features, tumor_features, stats_features, texture_feats)
             data = pd.concat([data, patient_info_df], ignore_index=True)
 
         data = extract_longitudinal_info(config_file, data)
@@ -91,7 +90,7 @@ def extract_features(path_images: str, config_file: dict) -> pd.DataFrame:
 
 
 def store_subject_information(
-    subject_id: str, spatial_features: dict, tumor_features: dict, stats_features: dict
+    subject_id: str, spatial_features: dict, tumor_features: dict, stats_features: dict, texture_feats: dict
 ) -> pd.DataFrame:
     """
     Stores the extracted features for a single patient in a DataFrame.
@@ -121,7 +120,9 @@ def store_subject_information(
         patient_info.update(prefixed_stats)
 
     # including texture information
-    # patient_info.update(textures_values)
+    for seq, dict_stats in texture_feats.items():
+        prefixed_textures = {f"{seq}_{k}": v for k, v in dict_stats.items()}
+        patient_info.update(prefixed_textures)
 
     # from dict to dataframe
     patient_info_df = pd.DataFrame(patient_info, index=[0])

@@ -1,78 +1,103 @@
 import numpy as np
-import SimpleITK as sitk
-from radiomics import featureextractor
-from skimage.feature import graycomatrix
-from skimage.feature import graycoprops
+from skimage.feature import graycomatrix, graycoprops
+from src.utils.sequences import fit_brain_boundaries
+from loguru import logger
 
 
-# TODO: create a class as the others
-def compute_texture_values(image_array, texture="contrast"):
+class TextureFeatures:
     """
-    Compute the contrast values for each 2D plane in a 3D image array.
+    A class to compute second order texture features from a given MRI image.
 
-    Parameters:
-    image_array (np.array): A 3D numpy array representing the MRI image.
+    Attributes:
+    ----------
+    image_array : np.ndarray
+        A 3D numpy array representing the MRI image.
 
-    Returns:
-    np.array: An array of contrast values for each 2D plane in the image.
+    Methods:
+    -------
+    compute_texture_values(texture="contrast"):
+        Computes texture values for each 2D plane in the 3D image array.
+    extract_features(texture="contrast") -> dict:
+        Extracts texture features from the MRI image.
     """
 
-    # Normalize the image to values between 0 and 255
-    image_array = (255 * (image_array - np.min(image_array)) / (np.max(image_array) - np.min(image_array))).astype(
-        np.uint8
-    )
+    def __init__(self, sequence, remove_empty_planes=False):
+        """
+        Constructs all the necessary attributes for the TextureFeatures object.
 
-    # Define distances and angles for GLCM calculation
-    distances = [1]
-    angles = [0, np.pi / 4, np.pi / 2, 3 * np.pi / 4]
+        Parameters:
+        ----------
+        sequence : np.ndarray
+            A 3D numpy array representing the MRI image.
+        """
+        self.sequence = sequence
+        self.remove_empty_planes = remove_empty_planes
 
-    # Initialize a list to store the contrast for each plane
-    contrast_values = []
+    def compute_texture_values(self, texture="contrast"):
+        """
+        Computes texture values for each 2D plane in the 3D image array.
 
-    # Iterate over each 2D plane in the Z dimension
-    for z in range(image_array.shape[0]):
-        plane = image_array[z, :, :]
+        Parameters:
+        ----------
+        texture : str
+            The texture feature to compute (default is "contrast").
 
-        # Compute GLCM for the current plane
-        glcm = graycomatrix(plane, distances=distances, angles=angles, levels=256, symmetric=True, normed=True)
+        Returns:
+        -------
+        np.ndarray
+            An array of texture values for each 2D plane in the image.
+        """
+        sequence = self.sequence.copy()
+        if self.remove_empty_planes:
+            sequence = fit_brain_boundaries(self.sequence)
 
-        # Compute contrast using skimage.feature.graycoprops
-        contrast = graycoprops(glcm, prop=texture).mean()
+        # Normalize the image to values between 0 and 255
+        image_array = (255 * (sequence - np.min(sequence)) / (np.max(sequence) - np.min(sequence))).astype(np.uint8)
 
-        # Store the contrast of the current plane
-        contrast_values.append(contrast)
+        # Define distances and angles for GLCM calculation
+        distances = [1]
+        angles = [0, np.pi / 4, np.pi / 2, 3 * np.pi / 4]
 
-    return np.array(contrast_values)
+        # Initialize a list to store the texture values for each plane
+        texture_values = []
 
+        # Iterate over each 2D plane in the Z dimension
+        for z in range(image_array.shape[0]):
+            plane = image_array[z, :, :]
 
-# Function to extract radiomics features using PyRadiomics
-# TODO: Check whether to remove method or keep it and don't use it
-def extract_radiomics_features(image_path):
-    """
-    Extract radiomics features from a medical image without using a segmentation mask.
+            # Compute GLCM for the current plane
+            glcm = graycomatrix(plane, distances=distances, angles=angles, levels=256, symmetric=True, normed=True)
 
-    Parameters:
-    image_path (str): Path to the input medical image (e.g., MRI).
+            # Compute the texture feature using skimage.feature.graycoprops
+            feature_value = graycoprops(glcm, prop=texture).mean()
 
-    Returns:
-    dict: Dictionary containing extracted radiomics features.
-    """
-    # Initialize PyRadiomics feature extractor
-    extractor = featureextractor.RadiomicsFeatureExtractor()
+            # Store the texture value of the current plane
+            texture_values.append(feature_value)
 
-    # Load the image using SimpleITK
-    image = sitk.ReadImage(image_path)
+        return np.array(texture_values)
 
-    # Create a dummy mask that covers the entire image
-    mask = sitk.GetImageFromArray(np.ones(sitk.GetArrayFromImage(image).shape, dtype=np.uint8))
-    mask.CopyInformation(image)
+    def extract_features(self, textures=None) -> dict:
+        """
+        Extracts texture features from the MRI image.
 
-    # Ensure image has the correct spacing
-    image.SetSpacing((1.0, 1.0, 1.0))
-    mask.SetSpacing((1.0, 1.0, 1.0))
+        Parameters:
+        ----------
+        texture : str
+            The texture feature to compute (default is "contrast").
 
-    # Extract features
-    result = extractor.execute(image, mask)
+        Returns:
+        -------
+        dict
+            A dictionary containing texture features for each plane.
+        """
+        if not textures:
+            textures = ['contrast', 'dissimilarity', 'homogeneity', 'ASM', 'energy']
 
-    # Return extracted features
-    return result
+        features = {}
+        for texture in textures:
+            texture_values = self.compute_texture_values(texture=texture)
+
+            # Create a dictionary to store texture features
+            features.update({f"{texture}": np.mean(texture_values)})
+
+        return features
