@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import skew
+from scipy.stats import kurtosis
 
 
 class StatisticalFeatures:
@@ -33,6 +34,9 @@ class StatisticalFeatures:
 
     get_skewness():
         Computes the skewness of the intensity values in the sequence.
+
+    get_kurtosis():
+        Computes the kurtosis of the intensity values in the sequence.
 
     get_stats_from_sequence():
         Computes and returns all statistical metrics as a dictionary.
@@ -77,6 +81,10 @@ class StatisticalFeatures:
         """Computes the skewness of the intensity values in the sequence."""
         return skew(self.sequence.flatten())
 
+    def get_kurtosis(self):
+        """Computes the kurtosis of the intensity values in the sequence."""
+        return kurtosis(self.sequence.flatten())
+
     def extract_features(self):
         """
         Computes and returns all statistical metrics as a dictionary.
@@ -92,6 +100,7 @@ class StatisticalFeatures:
             - std_intensity
             - range_intensity
             - skewness
+            - kurtosis
         """
         return {
             "max_intensity": self.get_max_intensity(),
@@ -101,4 +110,5 @@ class StatisticalFeatures:
             "std_intensity": self.get_std_intensity(),
             "range_intensity": self.get_range_intensity(),
             "skewness": self.get_skewness(),
+            "kurtosis": self.get_kurtosis(),
         }
