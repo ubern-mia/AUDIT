@@ -1,5 +1,7 @@
 from pathlib import Path
 from datetime import datetime
+
+import pandas as pd
 from loguru import logger
 from pprint import pformat
 
@@ -25,9 +27,11 @@ if __name__ == "__main__":
         extracted_metrics = extract_custom_metrics(config_file=config)
     elif config["package"] == 'pymia':
         extracted_metrics = extract_pymia_metrics(config_file=config)
+    else:
+        extracted_metrics = pd.DataFrame()
 
     logger.info(f"Finishing metric extraction")
 
     # store information
-    extracted_metrics.to_csv(f"{output_path}/extracted_information_{config['filename']}_pymia.csv", index=False)
+    extracted_metrics.to_csv(f"{output_path}/extracted_information_{config['filename']}.csv", index=False)
     logger.info(f"Results exported to CSV file")
