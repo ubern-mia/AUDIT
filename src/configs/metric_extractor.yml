@@ -3,9 +3,9 @@ data_path: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_images'
 
 # Paths to model predictions
 model_predictions_paths:
-  mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_1'
-  mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_2'
-  mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/nw_seg/nw_mvp_23'
+  mvp_1: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_seg/NW_mvp_1'
+  mvp_2: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_seg/NW_mvp_2'
+  mvp_2.3: '/home/carlos/Documentos/proyectos/AUDIT/datasets/NW/NW_seg/NW_mvp_23'
 
 # Mapping of labels to their numeric values
 labels:
@@ -14,8 +14,24 @@ labels:
   NEC: 2
   ENH: 3
 
+# List of metrics to compute
+metrics:
+  dice: true
+  jacc: true
+  accu: true
+  prec: true
+  sens: true
+  spec: true
+  haus: true
+  size: true
+
+# library used for computing all the metrics
+package: pymia
+calculate_stats: false
+
 # Path where output metrics will be saved
 output_path: '/home/carlos/Documentos/proyectos/AUDIT/outputs/metrics'
 
 # Filename for the extracted information
 filename: 'NW'
+

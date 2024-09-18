@@ -5,19 +5,7 @@ from numpy import logical_and as l_and
 from numpy import logical_not as l_not
 from scipy.spatial.distance import directed_hausdorff
 
-HAUS = "haus"
-DICE = "dice"
-SENS = "sens"
-SPEC = "spec"
-ACCU = "accu"
-JACC = "jacc"
-PREC = "prec"
-SIZE = "size"
-METRICS = [HAUS, DICE, SENS, SPEC, ACCU, JACC, PREC, SIZE]
 
-
-# TODO: check whether it'd be nice to create a common class called Metric and heritage from it to the rest of metrics.
-#  Check how PyMIA was built
 def one_hot_encoding(segmentation, labels, skip_background=True):
     """
     Perform one-hot encoding on a segmentation map.
@@ -77,6 +65,7 @@ def calculate_metrics(
     segmentation: np.ndarray,
     patient: str,
     regions: list,
+    metrics: list,
     skip_background=True,
     spacing: np.array = np.array([1, 1, 1]),
 ) -> list:
@@ -102,7 +91,7 @@ def calculate_metrics(
     metrics_list = []
     for n, r in enumerate(regions):
 
-        metrics = dict(ID=patient, region=r)
+        output_metrics = dict(ID=patient, region=r)
 
         # Ground truth and segmentation for i-th region
         gt = ground_truth[n]
@@ -111,17 +100,22 @@ def calculate_metrics(
         #  cardinalities metrics tp, tn, fp, fn
         tp, tn, fp, fn = calculate_confusion_matrix_elements(gt, seg)
 
-        # Computing all metrics
-        metrics[HAUS] = hausdorff_distance(gt, seg)
-        metrics[DICE] = dice_score(tp, fp, fn, gt, seg)
-        metrics[SENS] = sensitivity(tp, fn)
-        metrics[SPEC] = specificity(tn, fp)
-        metrics[ACCU] = accuracy(tp, tn, fp, fn)
-        metrics[JACC] = jaccard_index(tp, fp, fn, gt, seg)
-        metrics[PREC] = precision(tp, fp)
-        metrics[SIZE] = Counter(seg.flatten()).get(1, np.nan) * spacing.prod()
+        # compute selected metrics
+        available_metrics = {
+            'haus': lambda: hausdorff_distance(gt, seg),
+            'dice': lambda: dice_score(tp, fp, fn, gt, seg),
+            'sens': lambda: sensitivity(tp, fn),
+            'spec': lambda: specificity(tn, fp),
+            'accu': lambda: accuracy(tp, tn, fp, fn),
+            'jacc': lambda: jaccard_index(tp, fp, fn, gt, seg),
+            'prec': lambda: precision(tp, fp),
+            'size': lambda: Counter(seg.flatten()).get(1, np.nan) * spacing.prod()
+        }
+        for metric in metrics:
+            if metric in available_metrics:
+                output_metrics[metric.upper()] = available_metrics[metric]()
 
-        metrics_list.append(metrics)
+        metrics_list.append(output_metrics)
 
     return metrics_list
 
