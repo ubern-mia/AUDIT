@@ -37,11 +37,12 @@ def filter_datasets(
     return df
 
 
-def setup_datasets_sidebar(data_paths):
+def setup_datasets_sidebar(data, data_paths):
     """
     Set up the sidebar for dataset selection and configuration.
 
     Args:
+        data (pd.DataFrame): Raw dataset
         data_paths (dict): Dictionary with paths to datasets.
 
     Returns:
@@ -54,7 +55,8 @@ def setup_datasets_sidebar(data_paths):
                 label="Select datasets to visualize:", options=data_paths.keys(), default=data_paths.keys()
             )
         with st.sidebar.expander("Features", expanded=True):
-            select_x_axis = st.selectbox(label="X-axis variable:", options=allowed_features.keys(), index=0)
+            available_features = [k for k, v in allowed_features.items() if v in data.columns]
+            select_x_axis = st.selectbox(label="X-axis variable:", options=available_features, index=0)
 
     return selected_sets, select_x_axis
 
@@ -226,7 +228,7 @@ def univariate():
     df = read_datasets_from_dict(data_paths)
 
     # Set up sidebar and plot options
-    selected_sets, select_x_axis = setup_datasets_sidebar(data_paths)
+    selected_sets, select_x_axis = setup_datasets_sidebar(df, data_paths)
     if len(selected_sets) == 0:
         st.error("Please, select a dataset from the left sidebar", icon="🚨")
     else:
