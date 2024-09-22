@@ -69,6 +69,10 @@ class StatisticalFeatures:
         """Computes the median intensity value in the sequence."""
         return np.median(self.sequence)
 
+    def get_percentile_n(self, n):
+        """Computes the n-th percentile of the intensity values in the sequence."""
+        return np.percentile(self.sequence, n)
+
     def get_std_intensity(self):
         """Computes the standard deviation of intensity values in the sequence."""
         return self.sequence.std()
@@ -97,6 +101,8 @@ class StatisticalFeatures:
             - min_intensity
             - mean_intensity
             - median_intensity
+            - 10_percentile_intensity
+            - 90_percentile_intensity
             - std_intensity
             - range_intensity
             - skewness
@@ -107,6 +113,8 @@ class StatisticalFeatures:
             "min_intensity": self.get_min_intensity(),
             "mean_intensity": self.get_mean_intensity(),
             "median_intensity": self.get_median_intensity(),
+            "10_perc_intensity": self.get_percentile_n(10),
+            "90_perc_intensity": self.get_percentile_n(90),
             "std_intensity": self.get_std_intensity(),
             "range_intensity": self.get_range_intensity(),
             "skewness": self.get_skewness(),
