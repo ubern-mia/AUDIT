@@ -55,6 +55,7 @@ class TumorFeatures:
         self.tumor_location = None
         self.number_pixels = None
         self.tumor_slices = None
+        self.position_tumor_slices = None
         self.segmentation = segmentation
         self.spacing = spacing
         self.mapping_names = mapping_names
@@ -157,6 +158,21 @@ class TumorFeatures:
 
         return {f"{k}_tumor_slice": len(v) for k, v in dict(zip(self.planes, self.get_tumor_slices())).items()}
 
+    def calculate_position_tumor_slices(self):
+        position_tumor_slices = {}
+        if self.segmentation is None:
+            position_tumor_slices.update({f"lower_{k}_tumor_slice": np.nan for k, v in
+                                          dict(zip(self.planes, self.get_tumor_slices())).items()})
+            position_tumor_slices.update({f"upper_{k}_tumor_slice": np.nan for k, v in
+                                          dict(zip(self.planes, self.get_tumor_slices())).items()})
+        else:
+            position_tumor_slices.update({f"lower_{k}_tumor_slice": np.min(v) for k, v in
+                                          dict(zip(self.planes, self.get_tumor_slices())).items()})
+            position_tumor_slices.update({f"upper_{k}_tumor_slice": np.max(v) for k, v in
+                                          dict(zip(self.planes, self.get_tumor_slices())).items()})
+
+        return position_tumor_slices
+
     def calculate_tumor_pixel(self):
         if self.segmentation is None:
             return {f"lesion_size_{k.lower()}": np.nan for k in self.mapping_names.values()}
@@ -171,13 +187,13 @@ class TumorFeatures:
     def calculate_tumor_distance(self, brain_centre_mass):
         tumor_location = {}
 
-        if np.isnan(brain_centre_mass).any():
+        if np.isnan(list(brain_centre_mass)).any()or not bool(brain_centre_mass):
             logger.warning("Tumor location calculation failed. Assigning (nan, nan, nan)")
             return {f"{k}_tumor_location": np.nan for k in self.tumor_centre_mass_per_label}
 
         for k, v in self.tumor_centre_mass_per_label.items():
             if not np.isnan(v).any():
-                tumor_location[f"{k}_tumor_location"] = euclidean(brain_centre_mass, v)
+                tumor_location[f"{k}_tumor_location"] = euclidean(list(brain_centre_mass), v)
             else:
                 tumor_location[f"{k}_tumor_location"] = np.nan
         return tumor_location
@@ -211,10 +227,13 @@ class TumorFeatures:
         self.center_mass_dict = self.calculate_tumor_center_mass()
 
         # calculate tumor location for each label
-        self.tumor_location = self.calculate_tumor_distance(list(brain_centre_mass))
+        self.tumor_location = self.calculate_tumor_distance(brain_centre_mass)
 
         # calculate the number of tumor slices
         self.tumor_slices = self.calculate_tumor_slices()
+
+        # calculate the minimum and maximum tumor slice per plane
+        self.position_tumor_slices = self.calculate_position_tumor_slices()
 
         # calculate number of tumor pixels
         self.number_pixels = self.calculate_tumor_pixel()
@@ -229,4 +248,5 @@ class TumorFeatures:
             **self.number_pixels,
             **self.lesion_size,
             **self.tumor_slices,
+            **self.position_tumor_slices
         }

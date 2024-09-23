@@ -81,7 +81,7 @@ def extract_features(path_images: str, config_file: dict, dataset_name: str) -> 
                 tf = TumorFeatures(
                     segmentation=seg, spacing=seg_spacing, mapping_names=dict(zip(numeric_label, label_names))
                 )
-                tumor_features = tf.extract_features(sf.center_mass.values())
+                tumor_features = tf.extract_features(sf.center_mass.values() if 'spatial' in features_to_extract else {})
 
             # Add info to the main df
             patient_info_df = store_subject_information(
