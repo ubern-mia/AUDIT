@@ -98,6 +98,7 @@ class TextureFeatures:
             texture_values = self.compute_texture_values(texture=texture)
 
             # Create a dictionary to store texture features
-            features.update({f"{texture}": np.mean(texture_values)})
+            features.update({f"mean_{texture}": np.mean(texture_values)})
+            features.update({f"std_{texture}": np.std(texture_values)})
 
         return features
