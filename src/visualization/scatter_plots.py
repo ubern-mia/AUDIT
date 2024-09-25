@@ -83,6 +83,9 @@ def multivariate_features_highlighter(
     if x_label is None:
         x_label = f"{pretty_string(x_axis)}"
 
+    if legend_title is None:
+        legend_title = f"{pretty_string(color)}"
+
     # define the scatterplot
     if color == "Dataset":
         fig = px.scatter(
@@ -95,7 +98,7 @@ def multivariate_features_highlighter(
             log_x=log_x,
             log_y=log_y,
         )
-        fig.update_layout(legend_title=color, legend=dict(yanchor="top", xanchor="right"))
+        fig.update_layout(legend_title=legend_title, legend=dict(yanchor="top", xanchor="right"))
     else:
         fig = px.scatter(
             data,

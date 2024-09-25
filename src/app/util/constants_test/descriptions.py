@@ -1,3 +1,6 @@
+from src.app.util.constants_test.features import Features
+
+
 class ConstantsAPP:
     def __init__(self):
         self.mia_url = "https://www.artorg.unibe.ch/research/mia/index_eng.html"
@@ -5,6 +8,7 @@ class ConstantsAPP:
         self.sub_header = ""
         self.description = ""
         self.contact = "[Contact us - MIA group](%s)" % self.mia_url
+        self.features = Features()
 
         self.mapping_buttons_metrics = {
             "Dice": "dice",
@@ -196,36 +200,6 @@ class UnivariatePage(ConstantsAPP):
                                              identifying underlying patterns and trends.
         """
 
-        self.mapping_buttons_columns = {
-            "Lesion size (All labels)": "lesion_size",
-            "Lesion size (ENH)": "lesion_size_enh",
-            "Lesion size (EDE)": "lesion_size_ede",
-            "Lesion size (NEC)": "lesion_size_nec",
-            "Tumor location (All labels)": "whole_tumor_location",
-            "Tumor location (ENH)": "enh_tumor_location",
-            "Tumor location (EDE)": "ede_tumor_location",
-            "Tumor location (NEC)": "nec_tumor_location",
-            "Max. intensity (T1)": "t1_max_intensity",
-            "Min. intensity (T1)": "t1_min_intensity",
-            "Mean intensity (T1)": "t1_mean_intensity",
-            "Std. intensity (T1)": "t1_std_intensity",
-            "Skewness intensity (T1)": "t1_skewness",
-            "Max. intensity (T1ce)": "t1ce_max_intensity",
-            "Min. intensity (T1ce)": "t1ce_min_intensity",
-            "Mean intensity (T1ce)": "t1ce_mean_intensity",
-            "Std intensity (T1ce)": "t1ce_std_intensity",
-            "Skewness intensity (T1ce)": "t1c2_skewness",
-            "Max. intensity (T2)": "t2_max_intensity",
-            "Min. intensity (T2)": "t2_min_intensity",
-            "Mean intensity (T2)": "t2_mean_intensity",
-            "Std intensity (T2)": "t2_std_intensity",
-            "Skewness intensity (T2)": "t2_skewness",
-            "Max. intensity (FLAIR)": "flair_max_intensity",
-            "Min. intensity (FLAIR)": "flair_min_intensity",
-            "Mean intensity (FLAIR)": "flair_mean_intensity",
-            "Std intensity (FLAIR)": "flair_std_intensity",
-            "Skewness intensity (FLAIR)": "flair_skewness",
-        }
 
 
 class MultivariatePage(ConstantsAPP):

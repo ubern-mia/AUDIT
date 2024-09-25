@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from src.app.util.constants import PairwiseModelPerformanceComparisonPage
+from src.app.util.constants_test.descriptions import PairwiseModelPerformanceComparisonPage
 from src.metrics.commons import calculate_absolute_error
 from src.metrics.commons import calculate_ratio_improvement
 from src.metrics.commons import calculate_relative_error

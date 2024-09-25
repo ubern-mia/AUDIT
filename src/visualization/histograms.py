@@ -73,16 +73,17 @@ def custom_histogram(data, x_axis, color_var, n_bins, bins_size=None, y_label=No
     # Create histogram for each color category
     fig = go.Figure()
 
-    for color_value in data[color_var].unique():
-        filtered_data = data[data[color_var] == color_value]
-        fig.add_trace(
-            go.Histogram(
-                x=filtered_data[x_axis],
-                name=color_value,
-                marker=dict(color=color_map[color_value], line=dict(width=0.8, color="black")),
-                autobinx=False,
+    for n, color_value in enumerate(data[color_var].unique()):
+        filtered_data = data[data[color_var] == color_value][x_axis]
+        if not filtered_data.isnull().all():
+            fig.add_trace(
+                go.Histogram(
+                    x=filtered_data,
+                    name=color_value,
+                    marker=dict(color=color_map[color_value], line=dict(width=0.8, color="black")),
+                    autobinx=False,
+                )
             )
-        )
 
     # Update layout for stacked histogram
     fig.update_layout(
@@ -142,9 +143,10 @@ def custom_distplot(data, x_axis, color_var, y_label=None, x_label=None, histnor
 
     for color_value in unique_values:
         filtered_data = data[data[color_var] == color_value][x_axis]
-        hist_data.append(filtered_data[~np.isnan(filtered_data)])  # removing nan values
-        group_labels.append(color_value)
-        colors.append(color_map[color_value])
+        if not filtered_data.isnull().all():
+            hist_data.append(filtered_data[~np.isnan(filtered_data)])  # removing nan values
+            group_labels.append(color_value)
+            colors.append(color_map[color_value])
 
     opt_bins = optimal_num_bins(np.concatenate(hist_data))
 

@@ -1,11 +1,10 @@
 import os
-from itertools import count
 
 import numpy as np
 import streamlit as st
 from stqdm import stqdm
 
-from src.app.util.constants import SegmentationErrorMatrixPage
+from src.app.util.constants_test.descriptions import SegmentationErrorMatrixPage
 from src.metrics.confusion_matrix import mistakes_per_class_optim
 from src.metrics.confusion_matrix import normalize_matrix_per_row
 from src.utils.operations.file_operations import load_config_file
@@ -13,7 +12,7 @@ from src.utils.operations.itk_operations import run_comparison_segmentation_itk_
 from src.utils.operations.misc_operations import capitalizer
 from src.utils.operations.misc_operations import pretty_string
 from src.utils.operations.misc_operations import snake_case
-from src.utils.sequences import load_nii_by_id, count_labels
+from src.utils.sequences import load_nii_by_id
 from src.visualization.confusion_matrices import plt_confusion_matrix_plotly
 from src.visualization.sequences import plot_seq
 

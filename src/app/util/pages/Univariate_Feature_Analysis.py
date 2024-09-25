@@ -1,40 +1,26 @@
 import streamlit as st
 from streamlit_plotly_events import plotly_events
+import pandas as pd
 
-from src.app.util.constants import UnivariatePage
+from src.app.util.commons.data_preprocessing import processing_data
+from src.app.util.commons.checks import health_checks
+from src.app.util.constants_test.descriptions import UnivariatePage
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.itk_operations import run_itk_snap
 from src.visualization.boxplot import boxplot_highlighter
 from src.visualization.histograms import custom_distplot
 from src.visualization.histograms import custom_histogram
+from src.app.util.constants_test.features import Features
 
+# Load constants
 const = UnivariatePage()
+const_features = Features()
 
 # Load configuration and data
 config = load_config_file("./src/configs/app.yml")
 datasets_root_path = config.get("datasets_path")
 data_paths = config.get("features")
-allowed_features = UnivariatePage().mapping_buttons_columns
-
-
-def filter_datasets(
-    df, filtering_method, selected_sets, select_x_axis, remove_low, remove_up, clip_low, clip_up, num_std_devs
-):
-    df = df[df.set.isin(selected_sets)]
-    mean, std_dev = df[allowed_features.get(select_x_axis)].mean(), df[allowed_features.get(select_x_axis)].std()
-
-    # Apply filtering
-    if filtering_method == "Removing outliers":
-        df = df[df[allowed_features.get(select_x_axis)].between(remove_low, remove_up)]
-    elif filtering_method == "Clipping outliers":
-        df[allowed_features.get(select_x_axis)] = df[allowed_features.get(select_x_axis)].clip(clip_low, clip_up)
-    elif filtering_method == "Standard deviations":
-        upper_bound = mean + int(num_std_devs) * std_dev
-        lower_bound = mean - int(num_std_devs) * std_dev
-        df = df[df[allowed_features.get(select_x_axis)].between(lower_bound, upper_bound)]
-
-    return df
 
 
 def setup_datasets_sidebar(data, data_paths):
@@ -55,10 +41,12 @@ def setup_datasets_sidebar(data, data_paths):
                 label="Select datasets to visualize:", options=data_paths.keys(), default=data_paths.keys()
             )
         with st.sidebar.expander("Features", expanded=True):
-            available_features = [k for k, v in allowed_features.items() if v in data.columns]
-            select_x_axis = st.selectbox(label="X-axis variable:", options=available_features, index=0)
+            select_category = st.selectbox(label="Feature category:", options=const_features.categories, index=0)
 
-    return selected_sets, select_x_axis
+            available_features = [k for k, v in const_features.get_features(select_category).items() if v in data.columns]
+            select_x_axis = st.selectbox(label="Feature name:", options=available_features, index=0)
+
+    return selected_sets, select_category, select_x_axis
 
 
 def setup_histogram_options(plot_type):
@@ -124,25 +112,25 @@ def setup_filtering_options(df, feature):
         if filtering_method == "Removing outliers":
             remove_low, remove_up = st.slider(
                 "Remove outliers within a range of values",
-                min_value=df[allowed_features.get(feature)].min(),
-                max_value=df[allowed_features.get(feature)].max(),
-                value=(df[allowed_features.get(feature)].min(), df[allowed_features.get(feature)].max()),
+                min_value=df[feature].min(),
+                max_value=df[feature].max(),
+                value=(df[feature].min(), df[feature].max()),
             )
         elif filtering_method == "Clipping outliers":
             clip_low, clip_up = st.slider(
                 "Clip outliers within a range of values",
-                min_value=df[allowed_features.get(feature)].min(),
-                max_value=df[allowed_features.get(feature)].max(),
-                value=(df[allowed_features.get(feature)].min(), df[allowed_features.get(feature)].max()),
+                min_value=df[feature].min(),
+                max_value=df[feature].max(),
+                value=(df[feature].min(), df[feature].max()),
             )
         elif filtering_method == "Standard deviations":
-            # mean, std_dev = df[allowed_features.get(feature)].mean(), df[allowed_features.get(feature)].std()
+            # mean, std_dev = df[feature].mean(), df[feature].std()
             num_std_devs = st.number_input(label="Number of standard deviations", min_value=1, step=1, value=3)
 
     return filtering_method, remove_low, remove_up, clip_low, clip_up, num_std_devs
 
 
-def main_plotting_logic(data, plot_type, select_x_axis, n_bins, bins_size):
+def main_plotting_logic(data, plot_type, feature, n_bins, bins_size):
     """
     Main function to handle plotting logic based on user selections.
 
@@ -156,13 +144,13 @@ def main_plotting_logic(data, plot_type, select_x_axis, n_bins, bins_size):
 
     # Plot visualization
     if plot_type == "Probability":
-        fig = custom_distplot(data, x_axis=allowed_features.get(select_x_axis), color_var="set", histnorm="probability")
+        fig = custom_distplot(data, x_axis=feature, color_var="set", histnorm="probability")
     else:
         if n_bins:
-            fig = custom_histogram(data, x_axis=allowed_features.get(select_x_axis), color_var="set", n_bins=n_bins)
+            fig = custom_histogram(data, x_axis=feature, color_var="set", n_bins=n_bins)
         elif bins_size:
             fig = custom_histogram(
-                data, x_axis=allowed_features.get(select_x_axis), color_var="set", n_bins=None, bins_size=bins_size
+                data, x_axis=feature, color_var="set", n_bins=None, bins_size=bins_size
             )
         else:
             st.write(":red[Please, select the number of bins or bins size]",)
@@ -171,7 +159,7 @@ def main_plotting_logic(data, plot_type, select_x_axis, n_bins, bins_size):
     st.markdown(const.description)
 
 
-def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels, plot_type, highlight_subject):
+def main_interactive_boxplot(datasets_root_path, data, feature, labels, plot_type, highlight_subject):
     """
     Function to handle interactive boxplot and ITK-SNAP integration.
 
@@ -183,7 +171,7 @@ def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels, pl
 
     boxplot_fig = boxplot_highlighter(
         data,
-        x_axis=allowed_features.get(select_x_axis),
+        x_axis=feature,
         color_var="set",
         plot_type=plot_type,
         highlight_point=highlight_subject,
@@ -219,6 +207,29 @@ def main_interactive_boxplot(datasets_root_path, data, select_x_axis, labels, pl
                 st.error("Ups, something wrong happened when opening the file in ITK-SNAP", icon="🚨")
 
 
+def main(data, select_feature_name):
+
+    with st.sidebar.expander(label="Highlight subject"):
+        highlight_subject = st.selectbox(
+            label="Enter patient ID to highlight", options=[None] + list(data.ID.unique()), index=0
+        )
+    # Run interactive boxplot logic
+    st.subheader("Boxplot")
+    data.reset_index(drop=True, inplace=True)
+    st.markdown(const.description_boxplot)
+    plot_type = st.selectbox(label="Type of plot to visualize", options=["Box", "Violin"], index=0)
+    main_interactive_boxplot(
+        datasets_root_path, data, select_feature_name, config.get("labels"), plot_type, highlight_subject
+    )
+
+    # Run main plotting logic
+    st.subheader("Continuous distribution")
+    st.markdown(const.description_distribution)
+    plot_type = st.selectbox(label="Type of plot to visualize", options=["Histogram", "Probability"], index=1)
+    n_bins, bins_size = setup_histogram_options(plot_type)
+    main_plotting_logic(data, plot_type, select_feature_name, n_bins, bins_size)
+
+
 def univariate():
     # Load configuration and data
     st.header(const.header)
@@ -228,34 +239,27 @@ def univariate():
     df = read_datasets_from_dict(data_paths)
 
     # Set up sidebar and plot options
-    selected_sets, select_x_axis = setup_datasets_sidebar(df, data_paths)
-    if len(selected_sets) == 0:
-        st.error("Please, select a dataset from the left sidebar", icon="🚨")
-    else:
+    selected_sets, select_category, select_feature_name = setup_datasets_sidebar(df, data_paths)
+    proceed = health_checks(selected_sets, [select_feature_name])
+    if proceed[0]:
+        select_feature_name = const_features.get_features(select_category).get(select_feature_name, None)
         filtering_method, remove_low, remove_up, clip_low, clip_up, num_std_devs = setup_filtering_options(
-            df, select_x_axis
+            df, select_feature_name
         )
 
         # filtering data
-        df = filter_datasets(
-            df, filtering_method, selected_sets, select_x_axis, remove_low, remove_up, clip_low, clip_up, num_std_devs
-        )
-        with st.sidebar.expander(label="Highlight subject"):
-            highlight_subject = st.selectbox(
-                label="Enter patient ID to highlight", options=[None] + list(df.ID.unique()), index=0
-            )
-        # Run interactive boxplot logic
-        st.subheader("Boxplot")
-        df.reset_index(drop=True, inplace=True)
-        st.markdown(const.description_boxplot)
-        plot_type = st.selectbox(label="Type of plot to visualize", options=["Box", "Violin"], index=0)
-        main_interactive_boxplot(
-            datasets_root_path, df, select_x_axis, config.get("labels"), plot_type, highlight_subject
+        df = processing_data(
+            data=df,
+            sets=selected_sets,
+            filtering_method=filtering_method,
+            filtering_feature=select_feature_name,
+            remove_low=remove_low,
+            remove_up=remove_up,
+            clip_low=clip_low,
+            clip_up=clip_up,
+            num_std_devs=num_std_devs
         )
 
-        # Run main plotting logic
-        st.subheader("Continuous distribution")
-        st.markdown(const.description_distribution)
-        plot_type = st.selectbox(label="Type of plot to visualize", options=["Histogram", "Probability"], index=1)
-        n_bins, bins_size = setup_histogram_options(plot_type)
-        main_plotting_logic(df, plot_type, select_x_axis, n_bins, bins_size)
+        main(df, select_feature_name)
+    else:
+        st.error(proceed[-1], icon='🚨')

@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 
-from src.app.util.constants import LongitudinalAnalysis
+from src.app.util.constants_test.descriptions import LongitudinalAnalysis
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.misc_operations import capitalizer
