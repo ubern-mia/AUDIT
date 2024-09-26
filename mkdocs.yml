@@ -8,7 +8,9 @@ nav:
     - Metric extractor: user-guide/metric-extractor.md
     - Utils: user-guide/utils.md
   - Dashboard: APP.md
-  - Tutorials: tutorials.md
+  - Tutorials:
+      - Postprocess predictions: tutorials/postprocess_outputs.md
+      - Others: tutorials/tutorials.md
   - About:
     - License: about/LICENSE.md
     - Release Notes: about/release-notes.md
