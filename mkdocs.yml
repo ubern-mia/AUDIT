@@ -46,8 +46,7 @@ theme:
 plugins:
   - social
   - search
-  - mkdocstrings
-
+#  - mkdocstrings
 
 extra:
   social:
