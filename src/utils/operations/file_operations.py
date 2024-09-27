@@ -140,20 +140,69 @@ def copy_files_by_extension(src_dir: str, dst_dir: str, ext: str):
                 print(f"Copied: {src_file_path} -> {dst_file_path}")
 
 
-def delete_files_by_extension(root_dir: str, ext: str):
+def delete_files_by_extension(root_dir: str, ext: str, verbose=False):
     """
     Deletes all files with a specific extension in a directory and its subdirectories.
 
     Args:
         root_dir: The root directory where the search will start.
         ext: The file extension of the files to be deleted.
+        verbose: Whether print the log
     """
     for subdir, _, files in os.walk(root_dir):
         for file in files:
             if file.endswith(ext):
                 file_path = os.path.join(subdir, file)
                 os.remove(file_path)
-                print(f"Deleted: {file_path}")
+                if verbose:
+                    print(f"Deleted file: {file_path}")
+
+
+def organize_files_into_folders(folder_path, extension='.nii.gz', verbose=False):
+    # List all files in the given folder
+    files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+
+    for file in files:
+        # Extract the file name without extension (excluding .nii.gz)
+        file_name = file.split(extension)[0]
+
+        # Create a new folder for the file
+        folder_name = os.path.join(folder_path, file_name)
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
+
+        # Move the file into the new folder
+        src_path = os.path.join(folder_path, file)
+        dst_path = os.path.join(folder_name, file)
+        shutil.move(src_path, dst_path)
+        if verbose:
+            print(f"Organizing file: {file}")
+
+    print(f"Organized {len(files)} files into respective folders.")
+
+
+def add_suffix_to_files(folder_path, suffix='pred', ext='.nii.gz', verbose=False):
+    # Walk through all subfolders and files in the given folder
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            # Check if the file is a .nii.gz file
+            if file.endswith(ext):
+                # Construct the old file path
+                old_file_path = os.path.join(root, file)
+
+                # Split the file name and add the "_pred" suffix before ".nii.gz"
+                new_file_name = file.replace(ext, f'{suffix}{ext}')
+
+                # Construct the new file path
+                new_file_path = os.path.join(root, new_file_name)
+
+                # Rename the file
+                os.rename(old_file_path, new_file_path)
+
+                if verbose:
+                    print(f"Renaming file: {old_file_path} to {new_file_path}")
+
+    print("Renaming completed.")
 
 
 def concatenate_csv_files(directory: str, output_file: str):
