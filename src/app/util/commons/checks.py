@@ -1,5 +1,6 @@
 
 
+
 def health_checks(selected_sets, select_feature_names: list = []):
     if len(selected_sets) == 0:
         return False, "Please, select a dataset from the left sidebar."
@@ -7,3 +8,10 @@ def health_checks(selected_sets, select_feature_names: list = []):
         return False, f'Please, select an available category.'
     else:
         return True, ''
+
+
+def models_sanity_check(baseline_model, benchmark_model):
+    if baseline_model == benchmark_model:
+        return False
+    else:
+        return True

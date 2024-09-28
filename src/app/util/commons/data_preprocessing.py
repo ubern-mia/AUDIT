@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import List, Union
 
 
 def select_datasets(data, sets=None):
@@ -45,8 +46,8 @@ def filter_outliers(
 
 def processing_data(
         data: pd.DataFrame,
-        sets: str = None,
-        features: str = None,
+        sets: Union[List[str], str] = None,
+        features: Union[List[str], str] = None,
         filtering_method: str = None,
         filtering_feature: str = None,
         remove_low: float = None,

@@ -1,12 +1,19 @@
 class Metrics:
     def __init__(self):
-        self.common = {
-            "Dice": "dice",
-            "Hausdorff distance": "haus",
-            "Jaccard": "jacc",
-            "Accuracy": "accu",
-            "Precision": "prec",
-            "Specificity": "spec",
-            "Sensitivity": "sens",
+        self.metrics = {
+            "Dice": "DICE",
+            "Hausdorff distance": "HAUS",
+            "Jaccard": "JACC",
+            "Accuracy": "ACCU",
+            "Precision": "PREC",
+            "Specificity": "SPEC",
+            "Sensitivity": "SENS",
         }
 
+        self.orderby = {
+            "Ascending": True,
+            "Descending": False
+        }
+
+    def get_metrics(self):
+        return self.metrics

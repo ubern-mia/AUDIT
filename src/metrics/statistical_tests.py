@@ -114,6 +114,11 @@ def mann_whitney_test_post_hoc(samples, alpha=0.05):
     return combine_matrices(matrix, rejected)
 
 
+"""
+SAMPLES COMPARISON TESTS
+"""
+
+
 def paired_ttest(sample1, sample2, alpha=0.05):
     """
     Perform paired t-test between two samples and interpret the result.
@@ -164,13 +169,13 @@ def wilcoxon_test(sample1, sample2, alpha=0.05):
     # Interpret the result
     if p_value <= alpha:
         interpretation = (
-            f"Given the alpha {alpha}, reject the null hypothesis. There is a significant difference "
-            f"between the samples."
+            f"Given the significance level {alpha}, it rejects the null hypothesis. The differences between both samples"
+            f"are statistically significant."
         )
     else:
         interpretation = (
-            f"Given the alpha {alpha}, fail to reject the null hypothesis. There is no significant "
-            f"difference between the samples."
+            f"Given the significance level {alpha}, it fails to reject the null hypothesis. The differences between "
+            f"both samples are not statistically significant."
         )
 
     # Return the test statistic, p-value, and interpretation

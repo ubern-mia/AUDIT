@@ -2,7 +2,7 @@ site_name: AUDIT - Analysis & Evaluation Dashboard of Artificial Intelligence
 site_url: https://caumente.github.io/AUDIT/
 
 nav:
-  - Home: index.md
+  - AUDIT library: index.md
   - User Guide:
     - Feature extractor: user-guide/feature-extractor.md
     - Metric extractor: user-guide/metric-extractor.md

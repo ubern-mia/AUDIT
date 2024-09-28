@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def calculate_relative_error(data, init, end):
     """
     Calculate the relative error between two columns in a DataFrame.
@@ -42,3 +45,14 @@ def calculate_ratio_improvement(data, init, end):
     """
 
     return (data[end]) / (data[init])
+
+
+def calculate_improvements(data, init, end, values=['relative', 'absolute', 'ratio']):
+    if 'relative' in values:
+        data["relative"] = calculate_relative_error(data, init, end)
+    if 'absolute' in values:
+        data["absolute"] = calculate_absolute_error(data, init, end)
+    if 'ratio' in values:
+        data["ratio"] = calculate_ratio_improvement(data, init, end)
+
+    return data.replace([np.inf, -np.inf], np.nan)

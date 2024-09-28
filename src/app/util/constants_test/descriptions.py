@@ -341,9 +341,9 @@ class PairwiseModelPerformanceComparisonPage(ConstantsAPP):
         **Description**: The following figure illustrates the percentage difference in a selected
         metric between two models across various regions for each patient. In this bar chart, each bar represents the
         difference in a selected metric for a specific brain region (Average, NEC, ENH, and EDE), comparing the baseline
-        model with the new model. The length of each bar indicates the magnitude of the improvement or decline in
+        model with the benchmark model. The length of each bar indicates the magnitude of the improvement or decline in
         performance, with longer bars representing larger differences. The green color of the bars indicates the overall
-        gain achieved by the new model over the baseline model.
+        gain achieved by the benchmark model over the baseline model.
 
         Additionally, there is a checkbox labeled "Aggregated," which, when checked, aggregates the metric across all
         patients, providing a summarized view of the model's performance differences.
@@ -364,11 +364,11 @@ class PairwiseModelPerformanceComparisonPage(ConstantsAPP):
         For all the formulas are presented, M represents any of the available metrics (Dice score, accuracy, ...).
         """
 
-        self.absolute_formula = r"""\text{Absolute} = M_{\text{New model}} - M_{\text{Baseline model}}"""
+        self.absolute_formula = r"""\text{Absolute} = M_{\text{Benchmark model}} - M_{\text{Baseline model}}"""
         self.relative_formula = (
-            r"""\text{Relative} = \frac{M_{\text{New model}} - M_{\text{Baseline model}}}{M_{\text{Baseline model}}}"""
+            r"""\text{Relative} = \frac{M_{\text{Benchmark model}} - M_{\text{Baseline model}}}{M_{\text{Baseline model}}}"""
         )
-        self.ratio_formula = r"""\text{Ratio} = \frac{M_{\text{New model}}}{M_{\text{Baseline model}}}"""
+        self.ratio_formula = r"""\text{Ratio} = \frac{M_{\text{Benchmark model}}}{M_{\text{Baseline model}}}"""
 
         self.colorbar = {"decrease": "#ffbf69", "increase": "#90be6d"}
 
