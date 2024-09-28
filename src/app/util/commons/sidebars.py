@@ -23,7 +23,7 @@ def setup_sidebar_multi_datasets(data_paths):
 
 def setup_sidebar_single_dataset(data):
     with st.sidebar.expander("Datasets", expanded=True):
-        selected_set = st.selectbox("Select dataset to analyze:", options= list(data.set.unique()), index=0)
+        selected_set = st.selectbox("Select dataset to analyze:", options=list(data.set.unique()), index=0)
 
     return selected_set
 
@@ -38,7 +38,7 @@ def setup_sidebar_single_metric(data):
 
 def setup_sidebar_single_model(data):
     with st.sidebar.expander("Models", expanded=True):
-        selected_model = st.selectbox("Select model to analyze:", options=list(data.set.unique()), index=0)
+        selected_model = st.selectbox("Select model to analyze:", options=list(data.model.unique()), index=0)
 
     return selected_model
 
@@ -269,3 +269,17 @@ def setup_button_data_download(df):
         file_name="raw_data_statistical_test.csv",
         mime="text/csv",
     )
+
+
+def setup_sidebar_regions(data, aggregated):
+    selected_regions = None
+    if not aggregated:
+        with st.sidebar.expander("Regions", expanded=True):
+            available_regions = list(data.region.unique())
+            selected_regions = st.multiselect(
+                label="Select the regions to visualize:",
+                options=available_regions,
+                default=available_regions
+            )
+
+    return selected_regions

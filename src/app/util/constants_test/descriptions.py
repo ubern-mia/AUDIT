@@ -201,7 +201,6 @@ class UnivariatePage(ConstantsAPP):
         """
 
 
-
 class MultivariatePage(ConstantsAPP):
     def __init__(self):
         super().__init__()
@@ -225,21 +224,6 @@ class MultivariatePage(ConstantsAPP):
             more detailed information. This interactivity enhances the analytical capabilities, allowing for a more
             thorough investigation of the data.
         """
-
-        self.mapping_buttons_columns = {
-            "Lesion size (All labels)": "lesion_size",
-            "Lesion size (ENH)": "lesion_size_enh",
-            "Lesion size (EDE)": "lesion_size_ede",
-            "Lesion size (NEC)": "lesion_size_nec",
-            "Tumor location (All labels)": "whole_tumor_location",
-            "Tumor location (ENH)": "enh_tumor_location",
-            "Tumor location (EDE)": "ede_tumor_location",
-            "Tumor location (NEC)": "nec_tumor_location",
-            "Mean intensity (T1)": "t1_mean_intensity",
-            "Mean intensity (T1ce)": "t1ce_mean_intensity",
-            "Mean intensity (T2)": "t2_mean_intensity",
-            "Mean intensity (FLAIR)": "flair_mean_intensity",
-        }
 
 
 class SegmentationErrorMatrixPage(ConstantsAPP):
@@ -281,56 +265,6 @@ class ModelPerformanceAnalysisPage(ConstantsAPP):
         model performance across different data sources.
         """
 
-        self.mapping_buttons_columns = {
-            "Lesion size (All labels)": "lesion_size",
-            "Lesion size (ENH)": "lesion_size_enh",
-            "Lesion size (EDE)": "lesion_size_ede",
-            "Lesion size (NEC)": "lesion_size_nec",
-            "Tumor location (All labels)": "whole_tumor_location",
-            "Tumor location (ENH)": "enh_tumor_location",
-            "Tumor location (EDE)": "ede_tumor_location",
-            "Tumor location (NEC)": "nec_tumor_location",
-            "Max. intensity (T1)": "t1_max_intensity",
-            "Min. intensity (T1)": "t1_min_intensity",
-            "Mean intensity (T1)": "t1_mean_intensity",
-            "Std. intensity (T1)": "t1_std_intensity",
-            "Skewness intensity (T1)": "t1_skewness",
-            "Max. intensity (T1ce)": "t1ce_max_intensity",
-            "Min. intensity (T1ce)": "t1ce_min_intensity",
-            "Mean intensity (T1ce)": "t1ce_mean_intensity",
-            "Std intensity (T1ce)": "t1c2_std_intensity",
-            "Skewness intensity (T1ce)": "t1c2_skewness",
-            "Max. intensity (T2)": "t2_max_intensity",
-            "Min. intensity (T2)": "t2_min_intensity",
-            "Mean intensity (T2)": "t2_mean_intensity",
-            "Std intensity (T2)": "t2_std_intensity",
-            "Skewness intensity (T2)": "t2_skewness",
-            "Max. intensity (FLAIR)": "flair_max_intensity",
-            "Min. intensity (FLAIR)": "flair_min_intensity",
-            "Mean intensity (FLAIR)": "flair_mean_intensity",
-            "Std intensity (FLAIR)": "flair_std_intensity",
-            "Skewness intensity (FLAIR)": "flair_skewness",
-            "Axial tumor center of mass": "axial_whole_center_mass",
-            "Coronal tumor center of mass": "coronal_whole_center_mass",
-            "Sagittal tumor center of mass": "sagittal_whole_center_mass",
-            "Axial brain center of mass": "axial_brain_centre_mass",
-            "Coronal brain center of mass": "coronal_brain_centre_mass",
-            "Sagittal brain center of mass": "sagittal_brain_centre_mass",
-            "Axial tumor slices": "axial_tumor_slices",
-            "Coronal tumor slices": "coronal_tumor_slices",
-            "Sagittal tumor slices": "sagittal_tumor_slices",
-        }
-
-    # mapping_buttons_metrics = {
-    #     "Dice": "dice",
-    #     "Hausdorff distance": "haus",
-    #     "Jaccard": "jacc",
-    #     "Accuracy": "acc",
-    #     "Precision": "prec",
-    #     "Specificity": "spec",
-    #     "Sensitivity": "sens"
-    # }
-
 
 class PairwiseModelPerformanceComparisonPage(ConstantsAPP):
     def __init__(self):
@@ -371,22 +305,6 @@ class PairwiseModelPerformanceComparisonPage(ConstantsAPP):
         self.ratio_formula = r"""\text{Ratio} = \frac{M_{\text{Benchmark model}}}{M_{\text{Baseline model}}}"""
 
         self.colorbar = {"decrease": "#ffbf69", "increase": "#90be6d"}
-
-        self.mapping_buttons_columns = {
-            "Patient ID": "ID",
-            "Lesion size (All labels)": "lesion_size",
-            "Lesion size (ENH)": "lesion_size_enh",
-            "Lesion size (EDE)": "lesion_size_ede",
-            "Lesion size (NEC)": "lesion_size_nec",
-            "Tumor location (All labels)": "whole_tumor_location",
-            "Tumor location (ENH)": "enh_tumor_location",
-            "Tumor location (EDE)": "ede_tumor_location",
-            "Tumor location (NEC)": "nec_tumor_location",
-            "Mean intensity (T1)": "t1_mean_intensity",
-            "Mean intensity (T1ce)": "t1ce_mean_intensity",
-            "Mean intensity (T2)": "t2_mean_intensity",
-            "Mean intensity (FLAIR)": "flair_mean_intensity",
-        }
 
 
 class MultiModelPerformanceComparisonsPage(ConstantsAPP):
@@ -453,65 +371,3 @@ class SubjectsExploration(ConstantsAPP):
         #####
         ....
         """
-
-
-# class Features:
-#     mapping_features = {
-#         'Patient ID': 'ID',
-#         'Axial dim.': 'axial_dim',
-#         'Coronal dim.': 'coronal_dim',
-#         'Sagittal dim.': 'sagittal_dim',
-#         'Brain CM (Axial)': 'axial_brain_centre_mass',
-#         'Brain CM (Coronal)': 'coronal_brain_centre_mass',
-#         'Brain CM (Sagittal)': 'sagittal_brain_centre_mass',
-#         'No. tumor slices (Axial)': 'axial_tumor_slices',
-#         'No. tumor slices (Coronal)': 'coronal_tumor_slices',
-#         'No. tumor slices (Sagittal)': 'sagittal_tumor_slices',
-#         'Lower tumor slice (Axial)': 'min_axial_tumor_slice',
-#         'Upper tumor slice (Axial)': 'max_axial_tumor_slice',
-#         'Lower tumor slices (Coronal)': 'min_coronal_tumor_slice',
-#         'Upper tumor slice (Coronal)': 'max_coronal_tumor_slice',
-#         'Lower. tumor slices (Sagittal)': 'min_sagittal_tumor_slice',
-#         'Upper tumor slice (Sagittal)': 'max_sagittal_tumor_slice',
-#         'No. pixels (BKG)': 'tumor_pixel_bkg',
-#         'No. pixels (ENH)': 'tumor_pixel_enh',
-#         'No. pixels (EDE)': 'tumor_pixel_ede',
-#         'No. pixels (NEC)': 'tumor_pixel_nec',
-#         'Tumor location (All labels)': 'whole_tumor_location',
-#         'Tumor location (ENH)': 'enh_tumor_location',
-#         'Tumor location (EDE)': 'ede_tumor_location',
-#         'Tumor location (NEC)': 'nec_tumor_location',
-#         'Lesion size': 'lesion_size',
-#         'Tumor CM (Whole Axial)': 'axial_whole_center_mass',
-#         'Tumor CM (Whole Coronal)': 'coronal_whole_center_mass',
-#         'Tumor CM (Whole Sagittal)': 'sagittal_whole_center_mass',
-#         'Tumor CM (ENH Axial)': 'axial_enh_center_mass',
-#         'Tumor CM (ENH Coronal)': 'coronal_enh_center_mass',
-#         'Tumor CM (ENH Sagittal)': 'sagittal_enh_center_mass',
-#         'Tumor CM (EDE Axial)': 'axial_ede_center_mass',
-#         'Tumor CM (EDE Coronal)': 'coronal_ede_center_mass',
-#         'Tumor CM (EDE Sagittal)': 'sagittal_ede_center_mass',
-#         'Tumor CM (NEC Axial)': 'axial_nec_center_mass',
-#         'Tumor CM (NEC Coronal)': 'coronal_nec_center_mass',
-#         'Tumor CM (NEC Sagittal)': 'sagittal_nec_center_mass',
-#         'Max. intensity (T1)': 't1_max_intensity',
-#         'Min. intensity (T1)': 't1_min_intensity',
-#         'Mean intensity (T1)': 't1_mean_intensity',
-#         'Std. intensity (T1)': 't1_std_intensity',
-#         'Skewness intensity (T1)': 't1_skewness',
-#         'Max. intensity (T1ce)': 't1ce_max_intensity',
-#         'Min. intensity (T1ce)': 't1ce_min_intensity',
-#         'Mean intensity (T1ce)': 't1ce_mean_intensity',
-#         'Std intensity (T1ce)': 't1ce_std_intensity',
-#         'Skewness intensity (T1ce)': 't1ce_skewness',
-#         'Max. intensity (T2)': 't2_max_intensity',
-#         'Min. intensity (T2)': 't2_min_intensity',
-#         'Mean intensity (T2)': 't2_mean_intensity',
-#         'Std intensity (T2)': 't2_std_intensity',
-#         'Skewness intensity (T2)': 't2_skewness',
-#         'Max. intensity (FLAIR)': 'flair_max_intensity',
-#         'Min. intensity (FLAIR)': 'flair_min_intensity',
-#         'Mean intensity (FLAIR)': 'flair_mean_intensity',
-#         'Std intensity (FLAIR)': 'flair_std_intensity',
-#         'Skewness intensity (FLAIR)': 'flair_skewness'
-#     }

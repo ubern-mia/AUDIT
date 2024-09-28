@@ -10,6 +10,13 @@ def health_checks(selected_sets, select_feature_names: list = []):
         return True, ''
 
 
+def dataset_sanity_check(selected_sets):
+    if len(selected_sets) == 0:
+        return False
+    else:
+        return True
+
+
 def models_sanity_check(baseline_model, benchmark_model):
     if baseline_model == benchmark_model:
         return False
