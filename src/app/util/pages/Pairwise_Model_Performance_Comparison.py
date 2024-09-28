@@ -28,7 +28,7 @@ from src.app.util.constants_test.features import Features
 
 
 # Load constants
-const = PairwiseModelPerformanceComparisonPage()
+const_descriptions = PairwiseModelPerformanceComparisonPage()
 const_metrics = Metrics()
 metrics_dict = const_metrics.get_metrics()
 orderby_dict = const_metrics.orderby
@@ -36,8 +36,8 @@ const_features = Features()
 
 # Load configuration files
 config = load_config_file("./src/configs/app.yml")
-metrics_data_paths = config.get("metrics")
-features_data_paths = config.get("features")
+metrics_paths = config.get("metrics")
+features_paths = config.get("features")
 
 
 def setup_sidebar(data, aggregated=True):
@@ -45,11 +45,8 @@ def setup_sidebar(data, aggregated=True):
         st.header("Configuration")
 
         selected_set = setup_sidebar_single_dataset(data)
-
         baseline_model, benchmark_model = setup_sidebar_pairwise_models(data, selected_set)
-
         selected_metric = setup_sidebar_single_metric(data)
-
         num_max_patients, selected_sorted, selected_order = setup_metrics_customization(baseline_model, benchmark_model, aggregated)
 
     return selected_set, baseline_model, benchmark_model, selected_metric, num_max_patients, selected_sorted, selected_order
@@ -78,7 +75,7 @@ def process_metrics(data, selected_metric, baseline_model, benchmark_model, aggr
     # computing improvements
     out = calculate_improvements(pivot_df, baseline_model, benchmark_model)
     out["metric"] = selected_metric
-    out["color_bar"] = np.where(out[improvement_type] < 0, const.colorbar.get("decrease"), const.colorbar.get("increase"))
+    out["color_bar"] = np.where(out[improvement_type] < 0, const_descriptions.colorbar.get("decrease"), const_descriptions.colorbar.get("increase"))
 
     return out
 
@@ -173,22 +170,22 @@ def perform_statistical_test(
 def pairwise_comparison():
 
     # Defining page
-    st.subheader(const.header)
-    st.markdown(const.sub_header)
+    st.subheader(const_descriptions.header)
+    st.markdown(const_descriptions.sub_header)
     show_descriptions = st.toggle("Show formulas")
     if show_descriptions:
-        st.markdown(const.description)
-        st.latex(const.absolute_formula)
-        st.latex(const.relative_formula)
-        st.latex(const.ratio_formula)
+        st.markdown(const_descriptions.description)
+        st.latex(const_descriptions.absolute_formula)
+        st.latex(const_descriptions.relative_formula)
+        st.latex(const_descriptions.ratio_formula)
 
     # type of improvement and aggregation
     improvement_type = setup_improvement_button()
     agg = setup_aggregation_button()
 
     # Load datasets
-    raw_metrics = read_datasets_from_dict(metrics_data_paths)
-    raw_features = read_datasets_from_dict(features_data_paths)
+    raw_metrics = read_datasets_from_dict(metrics_paths)
+    raw_features = read_datasets_from_dict(features_paths)
     df_stats = raw_metrics.drop(columns="region").groupby(["ID", "model", "set"]).mean().reset_index()
 
     # Setup sidebar

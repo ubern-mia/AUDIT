@@ -187,7 +187,7 @@ def models_performance_boxplot(data, points="outliers", aggregated=None):
         facet_row=facet_row,
         points=points,
         custom_data=["model", "metric", "score"],
-        title="Models' performance by region",
+        title="Average models' performance" if aggregated else "Models' performance by region",
         color_discrete_sequence=constants.discrete_color_palette,
     )
 

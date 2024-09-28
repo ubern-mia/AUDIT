@@ -15,7 +15,7 @@ from src.utils.operations.itk_operations import run_itk_snap
 from src.visualization.scatter_plots import multivariate_features_highlighter
 
 # Load constants
-const = MultivariatePage()
+const_descriptions = MultivariatePage()
 const_features = Features()
 
 # Load configuration
@@ -72,8 +72,8 @@ def main(data, x_axis, y_axis, color_axis):
 
 def multivariate():
     # Define page layout
-    st.header(const.header)
-    st.markdown(const.sub_header)
+    st.header(const_descriptions.header)
+    st.markdown(const_descriptions.sub_header)
 
     # Load datasets
     df = read_datasets_from_dict(features_information)
@@ -89,7 +89,7 @@ def multivariate():
 
         main(df, select_x_feature_name, select_y_feature_name, select_color_feature_name)
 
-        st.markdown(const.description)
+        st.markdown(const_descriptions.description)
     else:
         st.error(proceed[-1], icon='🚨')
 

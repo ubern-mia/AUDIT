@@ -19,31 +19,20 @@ from src.visualization.histograms import custom_histogram
 from src.app.util.constants_test.features import Features
 
 # Load constants
-const = UnivariatePage()
+const_descriptions = UnivariatePage()
 const_features = Features()
 
 # Load configuration and data
 config = load_config_file("./src/configs/app.yml")
-datasets_path = config.get("datasets_path")
-data_paths = config.get("features")
+datasets_paths = config.get("datasets_path")
+features_paths = config.get("features")
 
 
 def setup_sidebar(data, data_paths):
-    """
-    Set up the sidebar for dataset selection and configuration.
-
-    Args:
-        data (pd.DataFrame): Raw dataset
-        data_paths (dict): Dictionary with paths to datasets.
-
-    Returns:
-        tuple: Selected datasets, x-axis feature, histogram parameters, and filtering options.
-    """
     with st.sidebar:
         st.header("Configuration")
 
         selected_sets = setup_sidebar_multi_datasets(data_paths)
-
         select_feature = setup_sidebar_features(data, name="Features", key="features")
 
     return selected_sets, select_feature
@@ -61,7 +50,7 @@ def histogram_logic(data, plot_type, feature, n_bins, bins_size):
             st.write(":red[Please, select the number of bins or bins size]",)
 
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-    st.markdown(const.description)
+    st.markdown(const_descriptions.description)
 
 
 def boxplot_logic(datasets_root_path, data, feature, labels, plot_type, highlight_subject):
@@ -110,13 +99,13 @@ def main(data, select_feature_name):
     # Visualize boxplot
     st.subheader("Boxplot")
     data.reset_index(drop=True, inplace=True)
-    st.markdown(const.description_boxplot)
+    st.markdown(const_descriptions.description_boxplot)
     plot_type = st.selectbox(label="Type of plot to visualize", options=["Box", "Violin"], index=0)
-    boxplot_logic(datasets_path, data, select_feature_name, config.get("labels"), plot_type, highlight_subject)
+    boxplot_logic(datasets_paths, data, select_feature_name, config.get("labels"), plot_type, highlight_subject)
 
     # Visualize histogram
     st.subheader("Continuous distribution")
-    st.markdown(const.description_distribution)
+    st.markdown(const_descriptions.description_distribution)
     plot_type = st.selectbox(label="Type of plot to visualize", options=["Histogram", "Probability"], index=1)
     n_bins, bins_size = setup_histogram_options(plot_type)
     histogram_logic(data, plot_type, select_feature_name, n_bins, bins_size)
@@ -124,14 +113,14 @@ def main(data, select_feature_name):
 
 def univariate():
     # Load configuration and data
-    st.header(const.header)
-    st.markdown(const.sub_header)
+    st.header(const_descriptions.header)
+    st.markdown(const_descriptions.sub_header)
 
     # Load datasets
-    df = read_datasets_from_dict(data_paths)
+    df = read_datasets_from_dict(features_paths)
 
     # Set up sidebar and plot options
-    selected_sets, selected_feature = setup_sidebar(df, data_paths)
+    selected_sets, selected_feature = setup_sidebar(df, features_paths)
     filtering_method, r_low, r_up, c_low, c_up, num_std_devs = setup_filtering_options(df, selected_feature)
 
     proceed = health_checks(selected_sets, [selected_feature])

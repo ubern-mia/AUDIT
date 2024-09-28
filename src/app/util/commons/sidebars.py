@@ -36,11 +36,34 @@ def setup_sidebar_single_metric(data):
     return selected_metric
 
 
+def setup_sidebar_multi_metrics(data):
+    available_metrics = [k for k, v in metrics_dict.items() if v in data.columns]
+    with st.sidebar.expander("Metrics", expanded=True):
+        selected_metrics = st.multiselect(
+            label="Select metrics to analyze:",
+            options=available_metrics,
+            default=available_metrics[0]
+        )
+
+    return selected_metrics
+
+
 def setup_sidebar_single_model(data):
     with st.sidebar.expander("Models", expanded=True):
         selected_model = st.selectbox("Select model to analyze:", options=list(data.model.unique()), index=0)
 
     return selected_model
+
+
+def setup_sidebar_multi_model(data):
+    with st.sidebar.expander("Models", expanded=True):
+        selected_models = st.multiselect(
+            label="Select models to analyze:",
+            options=list(data.model.unique()),
+            default=list(data.model.unique())
+        )
+
+    return selected_models
 
 
 def setup_sidebar_pairwise_models(data, selected_set):

@@ -3,104 +3,92 @@ import streamlit as st
 
 from src.app.util.constants_test.descriptions import MultiModelPerformanceComparisonsPage
 from src.utils.operations.file_operations import load_config_file
+from src.app.util.commons.sidebars import setup_sidebar_single_dataset
+from src.app.util.commons.sidebars import setup_sidebar_multi_model
+from src.app.util.commons.sidebars import setup_sidebar_regions
+from src.app.util.commons.sidebars import setup_sidebar_multi_metrics
+from src.app.util.commons.sidebars import setup_aggregation_button
 from src.utils.operations.file_operations import read_datasets_from_dict
-from src.utils.operations.misc_operations import capitalizer
-from src.utils.operations.misc_operations import pretty_string
-from src.utils.operations.misc_operations import snake_case
-from src.visualization.boxplot import models_performance_boxplot
 
-const = MultiModelPerformanceComparisonsPage()
-mapping_buttons_metrics = const.mapping_buttons_metrics
-mapping_buttons_columns = const.mapping_buttons_columns
+from src.visualization.boxplot import models_performance_boxplot
+from src.app.util.commons.data_preprocessing import processing_data
+from src.app.util.constants_test.metrics import Metrics
+
+const_descriptions = MultiModelPerformanceComparisonsPage()
+const_metrics = Metrics()
+metrics_dict = const_metrics.get_metrics()
 
 # load config files
 config = load_config_file("./src/configs/app.yml")
-metrics_data_paths = config.get("metrics")
-features_data_paths = config.get("features")
-metrics_available = const.mapping_buttons_metrics.keys()
+metrics_paths = config.get("metrics")
+features_paths = config.get("features")
 
 
 def setup_sidebar(data):
-    # left sidebar
     with st.sidebar:
         st.header("Configuration")
 
-        # select dataset
-        with st.sidebar.expander("Datasets", expanded=True):
-            sets_available = list(data.set.unique())
-            selected_set = st.selectbox(label="Select dataset to analyze:", options=sets_available, index=0)
-
-        # select model
-        with st.sidebar.expander("Models", expanded=True):
-            models_available = [capitalizer(pretty_string(m)) for m in list(data.model.unique())]
-            selected_models = st.multiselect(
-                label="Select the models to compare:", options=models_available, default=models_available
-            )
-        # select region
-        with st.sidebar.expander("Regions", expanded=True):
-            regions_available = list(data.region.unique())
-            selected_regions = st.multiselect(
-                label="Select the region to visualize:", options=regions_available, default=regions_available
-            )
-        # select metrics
-        with st.sidebar.expander("Metrics", expanded=True):
-            # metrics_available = list(data_melted.metric.unique())
-            selected_metrics = st.multiselect(
-                label="Select the metrics to compare:", options=metrics_available, default="Dice"
-            )
-            selected_metrics = [mapping_buttons_metrics[m] for m in selected_metrics]
-        # contact
-        st.write(const.contact)
+        selected_set = setup_sidebar_single_dataset(data)
+        selected_models = setup_sidebar_multi_model(data)
+        selected_regions = setup_sidebar_regions(data, aggregated=False)
+        selected_metrics = setup_sidebar_multi_metrics(data)
+        selected_metrics = [metrics_dict.get(m) for m in selected_metrics]
 
     return selected_set, selected_models, selected_regions, selected_metrics
 
 
-def main(data, selected_set, selected_models, selected_regions, selected_metrics):
-    # filters
-    data = data[data["set"] == selected_set]
-    data = data[data["model"].isin([snake_case(m) for m in selected_models])]
-    data["model"] = data["model"].apply(pretty_string).apply(capitalizer)
-    data = data[data["region"].isin(selected_regions)]
+def visualize_data(data, agg):
+    # Show the plot
+    st.markdown(const_descriptions.description)
+    fig = models_performance_boxplot(data, aggregated=agg)
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
-    # reshape the dataset
+
+def main_table(data, agg):
+    # postprocessing data
+    data.rename(columns={v: k for k, v in metrics_dict.items()}, inplace=True)
     data_melted = pd.melt(
         data,
         id_vars=["model", "region"],
         var_name="metric",
         value_name="score",
-        value_vars=[mapping_buttons_metrics[m] for m in metrics_available],
+        value_vars=data.drop(columns=["ID", "model", "region", "set"]).columns,
     )
-    data_melted = data_melted[data_melted["metric"].isin(selected_metrics)]
-
-    # whether aggregating the results or not
-    selected_aggregated = st.checkbox("Aggregated.", value=True, help="It aggregates all the regions, if enabled.")
 
     # general results
-    if not selected_aggregated:
-        aggregated = data.drop(columns=["ID", "set"]).groupby(["region", "model"]).agg(["mean", "std"])
-    else:
-        aggregated = data.drop(columns=["ID", "set", "region"]).groupby(["model"]).agg(["mean", "std"])
-    formatted = pd.DataFrame(index=aggregated.index)
+    group_cols = ["model", "region"] if not agg else ["model"]
+    aggregated = data.drop(columns=["ID", "set"]).groupby(group_cols).agg(["mean", "std"])
 
-    # st.table(aggregated.groupby("model").mean().reset_index())
-    for metric in selected_metrics:
+    # formatting results
+    formatted = pd.DataFrame(index=aggregated.index)
+    for metric in data_melted.metric.unique():
         formatted[metric] = aggregated[metric].apply(lambda x: f"{x['mean']:.3f} ± {x['std']:.3f}", axis=1)
     st.dataframe(formatted, use_container_width=True)
 
-    # Show the plot
-    st.markdown(const.description)
-    fig = models_performance_boxplot(data_melted, aggregated=selected_aggregated)
-    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+    return data_melted
 
 
 def multi_model():
 
     # Defining page
-    st.subheader(const.header)
-    st.markdown(const.sub_header)
+    st.subheader(const_descriptions.header)
+    st.markdown(const_descriptions.sub_header)
 
-    raw_metrics = read_datasets_from_dict(metrics_data_paths)
+    # Load the data
+    raw_metrics = read_datasets_from_dict(metrics_paths)
+    agg = setup_aggregation_button()
 
     # calling main function
     selected_set, selected_models, selected_regions, selected_metrics = setup_sidebar(raw_metrics)
-    main(raw_metrics, selected_set, selected_models, selected_regions, selected_metrics)
+
+    df = processing_data(
+        data=raw_metrics,
+        models=selected_models,
+        sets=selected_set,
+        regions=selected_regions,
+        features=["ID", 'region', 'model', 'set'] + selected_metrics
+    )
+
+    data_melted = main_table(df, agg)
+
+    visualize_data(data_melted, agg)
