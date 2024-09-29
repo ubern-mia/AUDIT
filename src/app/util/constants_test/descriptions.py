@@ -348,3 +348,24 @@ class SubjectsExplorationPage(ConstantsAPP):
         #####
         ....
         """
+
+        self.features_explanation = """
+            - Anatomical features refer to the structural characteristics of biological entities. This category includes
+            details about the physical structure, shape, size, and spatial arrangement of tumors.
+    
+            - Statistical features involve numerical attributes derived from MRI quantitative measurements. These features
+             are used to describe the distribution, variability, etc.
+    
+            - Texture features describe patterns and variations within an MRI. These features capture details about the
+            surface characteristics, smoothness, roughness, that are visually discernible but not necessarily related to
+            intensity.
+            """
+
+        self.iqr_explanation = """
+            The Inter Quantile Range (IQR) method for outlier detection is a statistical technique used to identify
+            outliers in a dataset. It relies on the spread of the middle 50% of the data, providing a robust measure
+            of variability that is not influenced by extreme values. The IQR method is a non-parametric technique
+            suitable for a variety of data distributions, including normal, skewed, and even data with heavy
+            tails. It does not rely on the assumption of normality, making it a versatile and robust choice for outlier
+            detection in many scenario
+        """

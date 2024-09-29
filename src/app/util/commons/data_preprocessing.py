@@ -38,6 +38,15 @@ def select_models(data, models=None):
         return data
 
 
+def select_subjects(data, subjects=None):
+    if isinstance(subjects, list):
+        return data[data.ID.isin(subjects)]
+    elif isinstance(subjects, str):
+        return data[data.ID == subjects]
+    else:
+        return data
+
+
 def filter_outliers(
         data: pd.DataFrame,
         filtering_method: str = None,
@@ -68,6 +77,7 @@ def processing_data(
         models: Union[List[str], str] = None,
         features: Union[List[str], str] = None,
         regions: Union[List[str], str] = None,
+        subjects: Union[List[str], str] = None,
         filtering_method: str = None,
         filtering_feature: str = None,
         remove_low: float = None,
@@ -80,6 +90,7 @@ def processing_data(
     data = select_models(data, models=models)
     data = select_features(data, features=features)
     data = select_regions(data, regions=regions)
+    data = select_subjects(data, subjects=subjects)
     data = filter_outliers(data, filtering_method, filtering_feature, remove_low, remove_up, clip_low, clip_up, num_std_devs)
 
     return data

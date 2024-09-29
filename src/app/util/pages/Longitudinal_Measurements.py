@@ -7,7 +7,7 @@ from src.utils.operations.file_operations import read_datasets_from_dict
 from src.app.util.commons.data_preprocessing import processing_data
 from src.app.util.commons.sidebars import setup_sidebar_single_dataset
 from src.app.util.commons.sidebars import setup_sidebar_single_model
-from src.app.util.commons.sidebars import setup_sidebar_single_subject
+from src.app.util.commons.sidebars import setup_sidebar_longitudinal_subject
 from src.visualization.time_series import plot_longitudinal
 from src.visualization.time_series import plot_longitudinal2
 
@@ -84,7 +84,7 @@ def longitudinal():
 
     # filter subject
     df['longitudinal_id'] = df['longitudinal_id'].apply(clean_longitudinal_id)
-    selected_subject = setup_sidebar_single_subject(df)
+    selected_subject = setup_sidebar_longitudinal_subject(df)
     df = df[df.longitudinal_id == selected_subject]
 
     # Main functionality

@@ -4,7 +4,9 @@ site_url: https://caumente.github.io/AUDIT/
 nav:
   - AUDIT library: index.md
   - User Guide:
-    - Feature extractor: user-guide/feature-extractor.md
+    - Feature extractor:
+      - Statistical features: user-guide/features/statistical.md
+      - Texture features: user-guide/features/texture.md
     - Metric extractor: user-guide/metric-extractor.md
     - Utils: user-guide/utils.md
   - Dashboard: APP.md
