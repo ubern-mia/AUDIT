@@ -306,3 +306,14 @@ def setup_sidebar_regions(data, aggregated):
             )
 
     return selected_regions
+
+
+def setup_sidebar_single_subject(data):
+    with st.sidebar.expander("Subjects", expanded=True):
+        subject_selected = st.selectbox(
+            label="Select a subject to visualize:",
+            options=sorted(data.longitudinal_id.unique()),
+            index=0
+        )
+
+    return subject_selected

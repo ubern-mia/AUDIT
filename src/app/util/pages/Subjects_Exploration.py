@@ -1,12 +1,12 @@
 import pandas as pd
 import streamlit as st
 
-from src.app.util.constants_test.descriptions import SubjectsExploration
+from src.app.util.constants_test.descriptions import SubjectsExplorationPage
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.misc_operations import pretty_string
 
-const = SubjectsExploration()
+const = SubjectsExplorationPage()
 
 # Load configuration and data
 config = load_config_file("./src/configs/app.yml")

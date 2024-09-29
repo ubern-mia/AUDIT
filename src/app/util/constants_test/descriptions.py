@@ -10,29 +10,6 @@ class ConstantsAPP:
         self.contact = "[Contact us - MIA group](%s)" % self.mia_url
         self.features = Features()
 
-        self.mapping_buttons_metrics = {
-            "Dice": "dice",
-            # "Hausdorff distance": "haus",
-            "Jaccard": "jacc",
-            "Accuracy": "accu",
-            "Precision": "prec",
-            "Specificity": "spec",
-            "Sensitivity": "sens",
-        }
-
-        self.mapping_buttons_columns = {
-            "Patient ID": "ID",
-            "Lesion size (All labels)": "lesion_size",
-            "Lesion size (ENH)": "lesion_size_enh",
-            "Lesion size (EDE)": "lesion_size_ede",
-            "Lesion size (NEC)": "lesion_size_nec",
-            "Tumor location (All labels)": "whole_tumor_location",
-            "Tumor location (ENH)": "enh_tumor_location",
-            "Tumor location (EDE)": "ede_tumor_location",
-            "Tumor location (NEC)": "nec_tumor_location",
-        }
-
-        self.mapping_order_by = {"Ascending": True, "Descending": False}
 
         self.mapping_feature_types = {
             "axial_dim": "anatomical",
@@ -328,7 +305,7 @@ class MultiModelPerformanceComparisonsPage(ConstantsAPP):
         """
 
 
-class LongitudinalAnalysis(ConstantsAPP):
+class LongitudinalAnalysisPage(ConstantsAPP):
     def __init__(self):
         super().__init__()
 
@@ -356,7 +333,7 @@ class LongitudinalAnalysis(ConstantsAPP):
         """
 
 
-class SubjectsExploration(ConstantsAPP):
+class SubjectsExplorationPage(ConstantsAPP):
     def __init__(self):
         super().__init__()
 
