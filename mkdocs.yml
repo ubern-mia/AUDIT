@@ -16,7 +16,9 @@ nav:
     - Utils:
       - Sequences: user-guide/utils/sequences.md
   - Dashboard:
-    - Home page: APP.md
+    - Home page: app/APP.md
+    - Univariate page: app/univariate.md
+    - Multivariate page: app/multivariate.md
   - Tutorials:
       - Postprocess predictions: tutorials/postprocess_outputs.md
       - Others: tutorials/tutorials.md
