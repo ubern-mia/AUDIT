@@ -10,8 +10,11 @@ nav:
       - Texture features: user-guide/features/texture.md
       - Tumor features: user-guide/features/tumor.md
       - Spatial features: user-guide/features/spatial.md
-    - Metric extractor: user-guide/metric-extractor.md
-    - Utils: user-guide/utils.md
+    - Metric extractor:
+      - Metric extractor: user-guide/metric/metric_extractor.md
+      - Custom metrics: user-guide/metric/custom_metrics.md
+    - Utils:
+      - Sequences: user-guide/utils/sequences.md
   - Dashboard: APP.md
   - Tutorials:
       - Postprocess predictions: tutorials/postprocess_outputs.md
