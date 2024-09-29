@@ -1,6 +1,5 @@
-[//]: # (::: src.features.spatial.SpatialFeatures)
+[//]: # (::: src.features.statistical.StatisticalFeatures)
 
-## StatisticalFeatures
 
 The `StatisticalFeatures` class provides a convenient way to compute several common statistical metrics from a given
 array of data.
@@ -93,32 +92,4 @@ Returns (`dict`): All statistical features.
 
 ----------------------------  
 
-### Use
 
-```python
-from src.features.statistical import StatisticalFeatures
-from src.utils.sequences import load_nii
-
-sequence = load_nii("path/to/MRI/sequence.nii.gz", as_array=True)
-stats_features =StatisticalFeatures(sequence[sequence > 0]).extract_features()
-
-print(stats_features)
-```
-
-----------------------------  
-
-## TextureFeatures
-
-The `SpatialFeatures` class provides a convenient way to compute several common statistical metrics from a given
-array of data.
-
-
-
-----------------------------  
-
-## SpatialFeatures
-
-
-----------------------------  
-
-## TumorFeatures

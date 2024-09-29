@@ -5,8 +5,11 @@ nav:
   - AUDIT library: index.md
   - User Guide:
     - Feature extractor:
+      - Feature extractor: user-guide/features/feature_extractor.md
       - Statistical features: user-guide/features/statistical.md
       - Texture features: user-guide/features/texture.md
+      - Tumor features: user-guide/features/tumor.md
+      - Spatial features: user-guide/features/spatial.md
     - Metric extractor: user-guide/metric-extractor.md
     - Utils: user-guide/utils.md
   - Dashboard: APP.md

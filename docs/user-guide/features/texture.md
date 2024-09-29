@@ -1,6 +1,5 @@
-[//]: # (::: src.features.spatial.SpatialFeatures)
+[//]: # (::: src.features.texture.TextureFeatures)
 
-## TextureFeatures
 
 The `TextureFeatures` class provides an efficient mechanism for calculating second-order texture features from a given
 3D magnetic resonance image (MRI).
@@ -37,6 +36,7 @@ remove empty planes. The class will compute texture features across 2D planes, m
 - sequence (np.ndarray): A 3D MRI image in the form of a NumPy array from which texture features will be calculated.
 - remove_empty_planes (bool): A flag to indicate whether empty planes (e.g., non-brain areas) should be removed from the MRI sequence. Defaults to False. 
 
+----------------------------  
 
 #### `compute_texture_values(texture="contrast")`
 
@@ -49,6 +49,8 @@ texture (str): The texture feature to compute (e.g., "contrast", "homogeneity").
 
 Returns (`np.ndarray`): An array of texture values for each 2D plane in the 3D MRI sequence.
 
+----------------------------  
+
 #### `extract_features(textures=None)`
 Description:
 
@@ -60,8 +62,5 @@ Extracts all specified texture features from the MRI image. This method iterates
     default set includes: 'contrast', 'dissimilarity', 'homogeneity', 'ASM', 'energy', 'correlation'
 
 Returns (`dict`): A dictionary where the keys represent the texture feature names, and the values represent the mean 
-and standard deviation for each feature. The keys will follow the pattern:
-
-
-By utilizing the TextureFeatures class, you can quickly compute these second-order texture features, providing rich information on the spatial relationships and patterns within MRI images.
+and standard deviation for each feature.
 
