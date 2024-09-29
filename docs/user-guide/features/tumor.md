@@ -95,7 +95,7 @@ the lesion size in voxels.
 
 ----------------------------  
 
-#### `calculate_tumor_distance(brain_centre_mass)`
+#### `calculate_tumor_distance()`
 
 **Parameters**:
 

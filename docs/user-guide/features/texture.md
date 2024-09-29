@@ -16,7 +16,7 @@ It also supports an option to remove empty planes, improving accuracy when worki
 The following texture features are available:
 
 - **Contrast**: A measure of the intensity contrast between a pixel and its neighbor over the whole image.
-- **Dissimilarityv: Measures the local intensity variations.
+- **Dissimilarity**: Measures the local intensity variations.
 - **Homogeneity**: Measures the closeness of the distribution of elements in the GLCM to the GLCM diagonal.
 - **ASM (Angular Second Moment)**: A measure of the texture uniformity.
 - **Energy**: The square root of ASM, indicating the texture’s level of orderliness.
@@ -38,27 +38,27 @@ remove empty planes. The class will compute texture features across 2D planes, m
 
 ----------------------------  
 
-#### `compute_texture_values(texture="contrast")`
+#### `compute_texture_values()`
 
 **Description**:
 Computes the specified texture feature for each 2D plane in the 3D image. The GLCM is calculated for each 2D slice, and the texture feature is extracted using graycoprops from the skimage.feature module.
 
 **Parameters**:
 
-texture (str): The texture feature to compute (e.g., "contrast", "homogeneity"). Defaults to "contrast".
+- `texture` (`str`): The texture feature to compute (e.g., "contrast", "homogeneity"). Defaults to "contrast".
 
 Returns (`np.ndarray`): An array of texture values for each 2D plane in the 3D MRI sequence.
 
 ----------------------------  
 
-#### `extract_features(textures=None)`
+#### `extract_features()`
 Description:
 
 Extracts all specified texture features from the MRI image. This method iterates through the given list of texture features, computing the mean and standard deviation for each one across all 2D planes in the MRI sequence.
 
 **Parameters**:
 
-- textures (list of str): A list of texture features to compute (e.g., 'contrast', 'energy'). If not provided, the 
+- `textures` (`list[str]): A list of texture features to compute (e.g., 'contrast', 'energy'). If not provided, the 
     default set includes: 'contrast', 'dissimilarity', 'homogeneity', 'ASM', 'energy', 'correlation'
 
 Returns (`dict`): A dictionary where the keys represent the texture feature names, and the values represent the mean 
