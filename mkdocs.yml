@@ -61,10 +61,9 @@ extra:
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/caumente/AUDIT
-#    - icon: fontawesome/brands/twitter
-#      link:
-#    - icon: fontawesome/brands/linkedin
-#      link:
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML
 
 markdown_extensions:
   - pymdownx.highlight:
