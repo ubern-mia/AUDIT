@@ -6,7 +6,7 @@ wide range of features including spatial, tumor-related, statistical, and textur
 is composed of two core components: the feature_extractor.py script, which orchestrates the entire process, and the 
 underlying feature extraction logic contained in src.features.main.py.
 
-### The pipeline operates as follows:
+The pipeline operates as follows:
 
 - **Configuration and Logging**: The process begins by loading configuration settings from a YAML file, specifying data 
 paths, features to extract, and output directories. A logging system is set up to monitor and record the progress of 
@@ -33,4 +33,5 @@ a CSV file.
 This pipeline provides an automated and extensible framework for processing large-scale MRI datasets, ensuring that 
 all relevant features are extracted and saved for downstream analysis, such as predictive modeling or visualization.
 
-
+In the following sections, the users can explore in detail the different methods provided by AUDIT to extract relevant 
+information from MRIs.
