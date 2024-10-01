@@ -7,8 +7,8 @@ from src.app.util.commons.sidebars import setup_sidebar_features
 from src.app.util.commons.sidebars import setup_sidebar_color
 from src.app.util.commons.sidebars import setup_highlight_patient
 from src.app.util.commons.checks import health_checks
-from src.app.util.constants_test.descriptions import MultivariatePage
-from src.app.util.constants_test.features import Features
+from src.app.util.constants.descriptions import MultivariatePage
+from src.app.util.constants.features import Features
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.itk_operations import run_itk_snap

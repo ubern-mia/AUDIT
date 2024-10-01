@@ -11,13 +11,13 @@ from src.app.util.commons.sidebars import setup_sidebar_single_metric
 from src.app.util.commons.sidebars import setup_sidebar_multi_datasets
 from src.app.util.commons.sidebars import setup_aggregation_button
 from src.app.util.commons.sidebars import setup_sidebar_regions
-from src.app.util.constants_test.descriptions import ModelPerformanceAnalysisPage
+from src.app.util.constants.descriptions import ModelPerformanceAnalysisPage
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.misc_operations import pretty_string
 from src.visualization.scatter_plots import multivariate_metric_feature
 from src.app.util.commons.checks import dataset_sanity_check
-from src.app.util.constants_test.metrics import Metrics
+from src.app.util.constants.metrics import Metrics
 
 
 # Load constants

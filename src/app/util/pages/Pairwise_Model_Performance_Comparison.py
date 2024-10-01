@@ -12,7 +12,7 @@ from src.app.util.commons.sidebars import setup_clip_sidebar
 from src.app.util.commons.sidebars import setup_statistical_test
 from src.app.util.commons.sidebars import setup_button_data_download
 from src.app.util.commons.checks import models_sanity_check
-from src.app.util.constants_test.descriptions import PairwiseModelPerformanceComparisonPage
+from src.app.util.constants.descriptions import PairwiseModelPerformanceComparisonPage
 from src.app.util.commons.data_preprocessing import processing_data
 from src.metrics.commons import calculate_improvements
 from src.metrics.statistical_tests import normality_test
@@ -23,8 +23,8 @@ from src.utils.operations.file_operations import read_datasets_from_dict
 from src.visualization.barplots import aggregated_pairwise_model_performance
 from src.visualization.barplots import individual_pairwise_model_performance
 from src.visualization.histograms import plot_histogram
-from src.app.util.constants_test.metrics import Metrics
-from src.app.util.constants_test.features import Features
+from src.app.util.constants.metrics import Metrics
+from src.app.util.constants.features import Features
 
 
 # Load constants

@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 
-from src.app.util.constants_test.descriptions import MultiModelPerformanceComparisonsPage
+from src.app.util.constants.descriptions import MultiModelPerformanceComparisonsPage
 from src.utils.operations.file_operations import load_config_file
 from src.app.util.commons.sidebars import setup_sidebar_single_dataset
 from src.app.util.commons.sidebars import setup_sidebar_multi_model
@@ -12,7 +12,7 @@ from src.utils.operations.file_operations import read_datasets_from_dict
 
 from src.visualization.boxplot import models_performance_boxplot
 from src.app.util.commons.data_preprocessing import processing_data
-from src.app.util.constants_test.metrics import Metrics
+from src.app.util.constants.metrics import Metrics
 
 const_descriptions = MultiModelPerformanceComparisonsPage()
 const_metrics = Metrics()

@@ -9,14 +9,14 @@ from src.app.util.commons.sidebars import setup_highlight_patient
 from src.app.util.commons.sidebars import setup_filtering_options
 from src.app.util.commons.sidebars import setup_histogram_options
 from src.app.util.commons.checks import health_checks
-from src.app.util.constants_test.descriptions import UnivariatePage
+from src.app.util.constants.descriptions import UnivariatePage
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.itk_operations import run_itk_snap
 from src.visualization.boxplot import boxplot_highlighter
 from src.visualization.histograms import custom_distplot
 from src.visualization.histograms import custom_histogram
-from src.app.util.constants_test.features import Features
+from src.app.util.constants.features import Features
 
 # Load constants
 const_descriptions = UnivariatePage()

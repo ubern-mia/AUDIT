@@ -1,5 +1,5 @@
 """
-  Copyright 2024 Mitchell Isaac Parker
+  Copyright 2024 Carlos Aumente Maestro
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -90,41 +90,39 @@ def home_page():
     left_info_col, right_info_col = st.columns(2)
     left_info_col.markdown(
         """
-        ### Authors
-        Please feel free to contact us with any issues, comments, or questions. [Contact Us](UO297103@uniovi.es)
+        ## Authors
 
         ##### Carlos Aumente
         - Email: <UO297103@uniovi.es>
         - GitHub: https://github.com/caumente/
 
         ##### Mauricio Reyes
+        ##### Michael Müller
+        ##### Beatriz Remeseiro
+        ##### Jorge Diez
 
-        - Email: <------------>
+        Please feel free to contact us with any issues, comments, or questions. [Contact Us](UO297103@uniovi.es)
         """,
         unsafe_allow_html=True,
     )
 
-    # right_info_col.markdown(
-    #     """
-    #     ### Funding
-    #
-    #     - NIH NIGMS F30 GM142263 (to M.P.)
-    #     - NIH NIGMS R35 GM122517 (to R.D.)
-    #      """
-    # )
-
     right_info_col.markdown(
         """
         ### License
-        Apache License 2.0
+        [Under Apache License 2.0](https://github.com/caumente/AUDIT/blob/main/LICENSE.md)
         """
     )
     right_info_col.markdown(
         """
         ### Documentation
-        [Documentation](#)
-        [GitHub Repository](#)
-        Under Apache License 2.0
+        [Documentation](https://caumente.github.io/AUDIT/)
+         """
+    )
+    right_info_col.markdown(
+        """
+        ### Code repository
+        [GitHub Repository](https://github.com/caumente/AUDIT/)
+
         """
     )
 

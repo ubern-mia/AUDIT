@@ -1,14 +1,14 @@
 import pandas as pd
 import streamlit as st
 
-from src.app.util.constants_test.descriptions import SubjectsExplorationPage
+from src.app.util.constants.descriptions import SubjectsExplorationPage
 from src.app.util.commons.sidebars import setup_sidebar_single_dataset
 from src.app.util.commons.sidebars import setup_sidebar_single_subjects
 from src.app.util.commons.data_preprocessing import processing_data
 from src.utils.operations.file_operations import load_config_file
 from src.utils.operations.file_operations import read_datasets_from_dict
 from src.utils.operations.misc_operations import pretty_string
-from src.app.util.constants_test.features import Features
+from src.app.util.constants.features import Features
 
 # Load constants
 const_descriptions = SubjectsExplorationPage()
@@ -55,7 +55,7 @@ def show_subject_information(data):
 def iqr_outliers_detector(data, subject, deviation=1.5):
     outliers_iqr = {}
     for c in data.columns:
-        if c in const_descriptions.mapping_feature_types.keys():
+        if c in const_features.get_features(const_features.categories).values():
             q1 = data[c].quantile(0.25)
             q3 = data[c].quantile(0.75)
             iqr = q3 - q1

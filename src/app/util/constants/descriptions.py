@@ -1,4 +1,4 @@
-from src.app.util.constants_test.features import Features
+from src.app.util.constants.features import Features
 
 
 class ConstantsAPP:
