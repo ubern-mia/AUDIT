@@ -230,7 +230,7 @@ def setup_metrics_customization(baseline_model, benchmark_model, aggregated):
         with st.sidebar.expander("Customization", expanded=True):
             num_max_patients = st.number_input("Maximum patients to visualize", min_value=1, value=5, step=1)
             mapping_buttons_columns_perf = {
-                **const_features.get_multiple_features("common").copy(),
+                **const_features.get_multiple_features(["common"]).copy(),
                 **mapping_performance,
             }
             selected_sorted = st.selectbox("Sorted by:", options=mapping_buttons_columns_perf)

@@ -1,5 +1,7 @@
 import pandas as pd
 import streamlit as st
+import warnings
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 from src.app.util.constants.descriptions import SubjectsExplorationPage
 from src.app.util.commons.sidebars import setup_sidebar_single_dataset
@@ -55,7 +57,7 @@ def show_subject_information(data):
 def iqr_outliers_detector(data, subject, deviation=1.5):
     outliers_iqr = {}
     for c in data.columns:
-        if c in const_features.get_features(const_features.categories).values():
+        if c in const_features.get_multiple_features(const_features.categories).values():
             q1 = data[c].quantile(0.25)
             q3 = data[c].quantile(0.75)
             iqr = q3 - q1

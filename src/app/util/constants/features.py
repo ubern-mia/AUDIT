@@ -159,18 +159,10 @@ class Features:
         elif category == "common":
             return self.common
 
-    def get_multiple_features(self, *categories):
+    def get_multiple_features(self, categories):
         features = {}
         for category in categories:
-            features.update(getattr(self, category, {}))
+            category_lower = category.lower()
+            if hasattr(self, category_lower):
+                features.update(getattr(self, category_lower))
         return features
-
-
-
-# if __name__ == '__main__':
-#     features = Features()
-#
-#     # Get combined features from 'statistical' and 'spatial'
-#     combined_features = features.get_combined_features('statistical', 'spatial')
-#
-#     print(combined_features)
